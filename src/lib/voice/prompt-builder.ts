@@ -31,9 +31,9 @@ ${hoursText}`);
   if (f.multilingual) {
     blocks.push(`IDIOMA:
 Detecta automáticamente si el cliente habla español o inglés y responde en ese mismo idioma.
-Mantén el idioma elegido durante TODA la llamada sin cambiar. Si el cliente habla español, responde TODO en español.`);
+Mantén el idioma elegido durante toda la llamada.`);
   } else {
-    blocks.push(`IDIOMA: Responde SIEMPRE en español, sin excepción. Nunca cambies al inglés aunque el cliente lo haga.`);
+    blocks.push(`IDIOMA: Responde siempre en español.`);
   }
 
   // ── Nivel 1: Receptionist ──────────────────────────────────────────────────
@@ -119,8 +119,6 @@ ${agent.knowledge_base.trim()}
 
 Usa esta información para responder preguntas sobre productos, precios, disponibilidad y servicios.
 Si algo no está en esta lista, dilo honestamente y ofrece tomar sus datos para que el equipo les contacte.`);
-  } else {
-    blocks.push(`Cuando te pregunten sobre servicios, precios o detalles específicos del negocio, indica amablemente que puedes tomar sus datos y el equipo les contactará con la información detallada.`);
   }
 
   // ── Closing rules ──────────────────────────────────────────────────────────
