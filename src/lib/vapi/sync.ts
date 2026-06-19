@@ -11,7 +11,7 @@ function headers() {
   };
 }
 
-function buildTools(agent: VoiceAgent) {
+async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
   const base = `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools`;
   const id = agent.id;
   const tools = [];
@@ -107,10 +107,24 @@ function buildTools(agent: VoiceAgent) {
     });
   }
 
-  return tools;
+  const ids: string[] = [];
+  for (const tool of tools) {
+    const res = await fetch(`${VAPI_URL}/tool`, {
+      method: 'POST',
+      headers: headers(),
+      body: JSON.stringify(tool),
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.id) ids.push(data.id);
+    } else {
+      console.error('Vapi createTool error:', tool.function.name, await res.text());
+    }
+  }
+  return ids;
 }
 
-function buildVapiAssistant(agent: VoiceAgent) {
+function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
   const agentName = agent.agent_name?.trim() || 'CentinelIA';
   const voiceId = agent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID;
   const hasElevenLabs = !!voiceId && voiceId.length > 0;
@@ -121,7 +135,7 @@ function buildVapiAssistant(agent: VoiceAgent) {
       provider: 'anthropic',
       model: 'claude-3-5-haiku-20241022',
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
-      tools: buildTools(agent),
+      ...(toolIds.length > 0 ? { toolIds } : {}),
     },
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
@@ -151,10 +165,11 @@ function buildVapiAssistant(agent: VoiceAgent) {
 }
 
 export async function createVapiAssistant(agent: VoiceAgent): Promise<string | null> {
+  const toolIds = await createVapiTools(agent);
   const res = await fetch(`${VAPI_URL}/assistant`, {
     method: 'POST',
     headers: headers(),
-    body: JSON.stringify(buildVapiAssistant(agent)),
+    body: JSON.stringify(buildVapiAssistant(agent, toolIds)),
   });
   if (!res.ok) {
     console.error('Vapi createAssistant error:', await res.text());
@@ -165,10 +180,11 @@ export async function createVapiAssistant(agent: VoiceAgent): Promise<string | n
 }
 
 export async function updateVapiAssistant(vapiAssistantId: string, agent: VoiceAgent): Promise<boolean> {
+  const toolIds = await createVapiTools(agent);
   const res = await fetch(`${VAPI_URL}/assistant/${vapiAssistantId}`, {
     method: 'PATCH',
     headers: headers(),
-    body: JSON.stringify(buildVapiAssistant(agent)),
+    body: JSON.stringify(buildVapiAssistant(agent, toolIds)),
   });
   if (!res.ok) {
     console.error('Vapi updateAssistant error:', await res.text());
