@@ -11,6 +11,105 @@ function headers() {
   };
 }
 
+function buildTools(agent: VoiceAgent) {
+  const base = `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools`;
+  const id = agent.id;
+  const tools = [];
+
+  if (agent.features.lead_qualification) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'crear_lead',
+        description: 'Registra los datos de un prospecto interesado en contratar servicios.',
+        parameters: {
+          type: 'object',
+          properties: {
+            nombre:      { type: 'string', description: 'Nombre completo del prospecto' },
+            negocio:     { type: 'string', description: 'Nombre del negocio' },
+            giro:        { type: 'string', description: 'Giro o industria del negocio' },
+            servicio:    { type: 'string', description: 'Servicio que necesita' },
+            presupuesto: { type: 'string', description: 'Presupuesto aproximado' },
+            timeline:    { type: 'string', description: 'Para cuándo lo necesita' },
+            email:       { type: 'string', description: 'Correo electrónico' },
+            whatsapp:    { type: 'string', description: 'Número de WhatsApp' },
+          },
+          required: ['nombre', 'servicio'],
+        },
+      },
+      server: { url: `${base}/crear-lead?agent_id=${id}` },
+    });
+  }
+
+  if (agent.features.appointment_booking) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'agendar_cita',
+        description: 'Agenda, modifica o cancela una cita.',
+        parameters: {
+          type: 'object',
+          properties: {
+            accion:   { type: 'string', enum: ['agendar', 'modificar', 'cancelar'], description: 'Acción a realizar' },
+            nombre:   { type: 'string', description: 'Nombre del cliente' },
+            servicio: { type: 'string', description: 'Servicio para la cita' },
+            fecha:    { type: 'string', description: 'Fecha de la cita (ej: lunes 23 de junio)' },
+            hora:     { type: 'string', description: 'Hora de la cita' },
+            telefono: { type: 'string', description: 'Teléfono de confirmación' },
+          },
+          required: ['accion', 'nombre'],
+        },
+      },
+      server: { url: `${base}/agendar-cita?agent_id=${id}` },
+    });
+  }
+
+  if (agent.features.order_taking) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'registrar_pedido',
+        description: 'Registra un pedido por teléfono.',
+        parameters: {
+          type: 'object',
+          properties: {
+            nombre:    { type: 'string', description: 'Nombre del cliente' },
+            telefono:  { type: 'string', description: 'Teléfono del cliente' },
+            items:     { type: 'string', description: 'Descripción de los productos o servicios pedidos' },
+            tipo:      { type: 'string', enum: ['entrega', 'recoger'], description: 'Entrega a domicilio o recoger en sucursal' },
+            direccion: { type: 'string', description: 'Dirección de entrega (solo si tipo es entrega)' },
+            notas:     { type: 'string', description: 'Notas adicionales del pedido' },
+          },
+          required: ['nombre', 'items', 'tipo'],
+        },
+      },
+      server: { url: `${base}/registrar-pedido?agent_id=${id}` },
+    });
+  }
+
+  if (agent.features.smart_transfer) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'notificar_transferencia',
+        description: 'Notifica al equipo por WhatsApp antes de transferir la llamada a un humano.',
+        parameters: {
+          type: 'object',
+          properties: {
+            nombre:  { type: 'string', description: 'Nombre del cliente' },
+            motivo:  { type: 'string', description: 'Motivo de la transferencia' },
+            resumen: { type: 'string', description: 'Resumen breve de la conversación' },
+          },
+          required: ['motivo'],
+        },
+      },
+      server: { url: `${base}/notificar-transferencia?agent_id=${id}` },
+    });
+  }
+
+  return tools;
+}
+
 function buildVapiAssistant(agent: VoiceAgent) {
   const agentName = agent.agent_name?.trim() || 'CentinelIA';
   const voiceId = agent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID;
@@ -22,6 +121,7 @@ function buildVapiAssistant(agent: VoiceAgent) {
       provider: 'anthropic',
       model: 'claude-3-5-haiku-20241022',
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
+      tools: buildTools(agent),
     },
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
