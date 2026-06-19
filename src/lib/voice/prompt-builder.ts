@@ -39,9 +39,9 @@ Mantén el idioma elegido durante toda la llamada.`);
   // ── Nivel 1: Receptionist ──────────────────────────────────────────────────
   if (f.receptionist) {
     blocks.push(`RECEPCIÓN:
-Cuando alguien llame, saluda cordialmente e identifica en qué puedes ayudar.
-Puedes responder preguntas sobre horarios, ubicación, servicios y precios generales.
-Si no sabes la respuesta a algo específico, ofrece tomar sus datos para que alguien del equipo les contacte.`);
+El saludo inicial ya fue enviado — NO vuelvas a presentarte ni a saludar. Responde directamente lo que el cliente pregunta.
+Puedes responder preguntas sobre horarios, ubicación, servicios y precios.
+Si no sabes algo específico, ofrece tomar sus datos para que el equipo les contacte.`);
   }
 
   // ── Nivel 1: Lead qualification ────────────────────────────────────────────

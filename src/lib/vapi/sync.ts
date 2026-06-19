@@ -29,7 +29,7 @@ function buildVapiAssistant(agent: VoiceAgent) {
     firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
     backgroundSound: 'office',
-    backchannelingEnabled: true,
+    backchannelingEnabled: false,
     serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/webhook`,
     serverUrlSecret: process.env.VAPI_WEBHOOK_SECRET,
     analysisPlan: {
