@@ -41,6 +41,8 @@ export default function NuevoAgentePage() {
       transfer_whatsapp:     fd.get('transfer_whatsapp'),
       calendar_url:          fd.get('calendar_url'),
       timezone:              fd.get('timezone') || 'America/Monterrey',
+      phone_number:          fd.get('phone_number'),
+      transfer_number:       fd.get('transfer_number'),
       plan,
       features,
       minutes_included:      PLAN_MINUTES[plan],
@@ -102,6 +104,8 @@ export default function NuevoAgentePage() {
           <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" placeholder="+52 81 1633 3559" />
           <Field label="Link de calendario (Calendly / Google Cal)" name="calendar_url" placeholder="https://calendly.com/..." />
           <Field label="Zona horaria" name="timezone" placeholder="America/Monterrey" />
+          <Field label="Número Vapi (número que recibe las llamadas)" name="phone_number" placeholder="+19284158163" />
+          <Field label="Número de transferencia (cuando el agente transfiere)" name="transfer_number" placeholder="+52 81 1633 3559" />
         </Section>
 
         {/* Feature toggles */}
