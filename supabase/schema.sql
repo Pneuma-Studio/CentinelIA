@@ -41,6 +41,7 @@ create table if not exists voice_agents (
   calendar_url          text,
   crm_webhook           text,
   knowledge_base        text,
+  agent_name            text,
   minutes_included      integer not null default 200,
   minutes_used          integer not null default 0,
   minutes_reset_date    date not null default (date_trunc('month', now()) + interval '1 month')::date,

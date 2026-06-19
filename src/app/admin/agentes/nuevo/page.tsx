@@ -43,6 +43,8 @@ export default function NuevoAgentePage() {
       timezone:              fd.get('timezone') || 'America/Monterrey',
       phone_number:          fd.get('phone_number'),
       transfer_number:       fd.get('transfer_number'),
+      knowledge_base:        fd.get('knowledge_base'),
+      agent_name:            plan === 'pro' ? fd.get('agent_name') : null,
       plan,
       features,
       minutes_included:      PLAN_MINUTES[plan],
@@ -106,6 +108,21 @@ export default function NuevoAgentePage() {
           <Field label="Zona horaria" name="timezone" placeholder="America/Monterrey" />
           <Field label="Número Vapi (número que recibe las llamadas)" name="phone_number" placeholder="+19284158163" />
           <Field label="Número de transferencia (cuando el agente transfiere)" name="transfer_number" placeholder="+52 81 1633 3559" />
+        </Section>
+
+        {/* Agent name */}
+        <Section title="Identidad del agente">
+          <div className="p-3 rounded-lg mb-1" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'rgba(255,255,255,0.7)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio (ej: Sofía, Valeria, Carlos).
+            </p>
+          </div>
+          <Field
+            label="Nombre del agente"
+            name="agent_name"
+            placeholder="Ej: Sofía (solo Plan Pro)"
+            disabled={plan !== 'pro'}
+          />
         </Section>
 
         {/* Knowledge base */}
@@ -172,8 +189,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Field({ label, name, required, placeholder, textarea, rows }: {
-  label: string; name: string; required?: boolean; placeholder?: string; textarea?: boolean; rows?: number;
+function Field({ label, name, required, placeholder, textarea, rows, disabled }: {
+  label: string; name: string; required?: boolean; placeholder?: string; textarea?: boolean; rows?: number; disabled?: boolean;
 }) {
   const base = {
     background: 'rgba(255,255,255,0.05)',
@@ -191,8 +208,8 @@ function Field({ label, name, required, placeholder, textarea, rows }: {
         {label}{required && <span style={{ color: '#00e5ff' }}> *</span>}
       </label>
       {textarea
-        ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} style={{ ...base, resize: 'vertical' }} />
-        : <input name={name} required={required} placeholder={placeholder} style={base} />
+        ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} disabled={disabled} style={{ ...base, resize: 'vertical', opacity: disabled ? 0.4 : 1 }} />
+        : <input name={name} required={required} placeholder={placeholder} disabled={disabled} style={{ ...base, opacity: disabled ? 0.4 : 1 }} />
       }
     </div>
   );

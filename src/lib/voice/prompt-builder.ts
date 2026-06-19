@@ -3,25 +3,30 @@ import type { VoiceAgent } from '@/types/agent';
 export function buildSystemPrompt(agent: VoiceAgent): string {
   const { features, business_hours, timezone } = agent;
   const f = features;
+  const agentName = agent.agent_name?.trim() || 'CentinelIA';
 
   const hoursText = formatBusinessHours(business_hours);
 
   const blocks: string[] = [];
 
   // ── Identity ──────────────────────────────────────────────────────────────
-  blocks.push(`Eres el asistente de voz de ${agent.business_name}.
+  blocks.push(`Eres ${agentName}, el asistente de voz de ${agent.business_name}.
 ${agent.business_description}
 Dirección: ${agent.business_address ?? 'disponible en nuestro sitio web'}.
 Teléfono de contacto: ${agent.business_phone_display}.
 Zona horaria: ${timezone}.
 Habla de forma natural, como una recepcionista humana profesional y amable.
-Sé conciso — las respuestas en llamadas deben ser breves y claras.`);
+Sé conciso — las respuestas en llamadas deben ser breves y claras.
+Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."`);
 
   // ── Business hours ─────────────────────────────────────────────────────────
   blocks.push(`HORARIO DE ATENCIÓN:
 ${hoursText}`);
 
   // ── Multilingual (Pro) ────────────────────────────────────────────────────
+  // ── Closing rules update for agent name ───────────────────────────────────
+  // (agentName used in closing rules below)
+
   if (f.multilingual) {
     blocks.push(`IDIOMA:
 Detecta automáticamente si el cliente habla español o inglés y responde en ese mismo idioma.
@@ -118,7 +123,7 @@ Si algo no está en esta lista, dilo honestamente y ofrece conectarlos con el eq
   // ── Closing rules ──────────────────────────────────────────────────────────
   blocks.push(`REGLAS GENERALES:
 - Nunca menciones que eres una IA a menos que te pregunten directamente.
-- Si te preguntan directamente si eres IA, sé honesto: "Soy un asistente de voz automatizado de ${agent.business_name}."
+- Si te preguntan directamente si eres IA, sé honesto: "Soy ${agentName}, un asistente de voz automatizado de ${agent.business_name}."
 - Nunca des información inventada. Si no sabes algo, di que verificarán y te contactarán.
 - Despídete siempre de forma cordial al terminar la llamada.
 - Llamadas abusivas o inapropiadas: termina la llamada con un aviso cortés.`);

@@ -43,6 +43,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
       timezone:               fd.get('timezone') || 'America/Monterrey',
       phone_number:           fd.get('phone_number'),
       knowledge_base:         fd.get('knowledge_base'),
+      agent_name:             plan === 'pro' ? fd.get('agent_name') : null,
       plan,
       features,
       minutes_included: PLAN_MINUTES[plan],
@@ -107,6 +108,19 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
           <Field label="Número Vapi" name="phone_number" defaultValue={agent.phone_number} />
         </Section>
 
+        {/* Agent name */}
+        <Section title="Identidad del agente">
+          <div className="p-3 rounded-lg mb-1" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
+            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'rgba(255,255,255,0.7)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
+            </p>
+          </div>
+          <Field label="Nombre del agente" name="agent_name"
+            placeholder="Ej: Sofía (solo Plan Pro)"
+            defaultValue={agent.agent_name ?? ''}
+            disabled={plan !== 'pro'} />
+        </Section>
+
         {/* Knowledge base */}
         <Section title="Base de conocimiento">
           <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -156,9 +170,9 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Field({ label, name, required, placeholder, textarea, rows, defaultValue }: {
+function Field({ label, name, required, placeholder, textarea, rows, defaultValue, disabled }: {
   label: string; name: string; required?: boolean; placeholder?: string;
-  textarea?: boolean; rows?: number; defaultValue?: string;
+  textarea?: boolean; rows?: number; defaultValue?: string; disabled?: boolean;
 }) {
   const base = {
     background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
@@ -171,8 +185,8 @@ function Field({ label, name, required, placeholder, textarea, rows, defaultValu
         {label}{required && <span style={{ color: '#00e5ff' }}> *</span>}
       </label>
       {textarea
-        ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} defaultValue={defaultValue} style={{ ...base, resize: 'vertical' }} />
-        : <input name={name} required={required} placeholder={placeholder} defaultValue={defaultValue} style={base} />
+        ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} defaultValue={defaultValue} disabled={disabled} style={{ ...base, resize: 'vertical', opacity: disabled ? 0.4 : 1 }} />
+        : <input name={name} required={required} placeholder={placeholder} defaultValue={defaultValue} disabled={disabled} style={{ ...base, opacity: disabled ? 0.4 : 1 }} />
       }
     </div>
   );

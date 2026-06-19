@@ -12,11 +12,12 @@ function headers() {
 }
 
 function buildVapiAssistant(agent: VoiceAgent) {
+  const agentName = agent.agent_name?.trim() || 'CentinelIA';
   const voiceId = agent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID;
   const hasElevenLabs = !!voiceId && voiceId.length > 0;
 
   return {
-    name: `CentinelIA — ${agent.business_name}`,
+    name: `${agentName} — ${agent.business_name}`,
     model: {
       provider: 'anthropic',
       model: 'claude-haiku-4-5-20251001',
@@ -25,7 +26,7 @@ function buildVapiAssistant(agent: VoiceAgent) {
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
       : { provider: 'vapi', voiceId: 'Valentina' },
-    firstMessage: `Gracias por llamar a ${agent.business_name}. ¿En qué le puedo ayudar?`,
+    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
     backgroundSound: 'office',
     backchannelingEnabled: true,
