@@ -1,0 +1,160 @@
+// ─── Plans ────────────────────────────────────────────────────────────────────
+
+export type Plan = 'basico' | 'estandar' | 'pro';
+
+// ─── Feature flags ────────────────────────────────────────────────────────────
+
+export interface AgentFeatures {
+  // Nivel 1 — todos los planes
+  receptionist: boolean;        // Info del negocio 24/7
+  lead_qualification: boolean;  // Calificar prospectos → CRM
+  appointment_booking: boolean; // Agendar / modificar / cancelar citas
+
+  // Nivel 2 — estándar y pro
+  existing_client_support: boolean; // Consultar info del cliente en tiempo real
+  smart_transfer: boolean;          // Transferir a humano + notificar por WhatsApp
+  order_taking: boolean;            // Tomar pedidos y registrarlos
+
+  // Nivel 3 — solo pro
+  multilingual: boolean;        // Español + inglés automático
+  client_memory: boolean;       // Recordar historial del cliente
+  whatsapp_escalation: boolean; // WhatsApp si línea ocupada o fuera de horario
+}
+
+// ─── Business hours ───────────────────────────────────────────────────────────
+
+export interface BusinessHours {
+  monday:    DaySchedule;
+  tuesday:   DaySchedule;
+  wednesday: DaySchedule;
+  thursday:  DaySchedule;
+  friday:    DaySchedule;
+  saturday:  DaySchedule;
+  sunday:    DaySchedule;
+}
+
+export interface DaySchedule {
+  open:  boolean;
+  from?: string; // "09:00"
+  to?:   string; // "18:00"
+}
+
+// ─── Voice Agent ──────────────────────────────────────────────────────────────
+
+export interface VoiceAgent {
+  id: string;
+  client_name: string;
+  business_name: string;
+  business_description: string;
+  business_address?: string;
+  business_phone_display: string; // número que el agente menciona verbalmente
+  phone_number: string;           // número Twilio/Vapi asignado
+  vapi_agent_id?: string;
+  elevenlabs_voice_id?: string;
+  plan: Plan;
+  features: AgentFeatures;
+  business_hours: BusinessHours;
+  timezone: string;               // 'America/Monterrey'
+  transfer_number?: string;       // número al que transferir en smart_transfer
+  transfer_whatsapp?: string;     // WhatsApp del dueño para notificaciones
+  calendar_url?: string;          // Calendly / Google Cal link para citas
+  crm_webhook?: string;           // webhook externo del sistema del cliente
+  minutes_included: number;
+  minutes_used: number;
+  minutes_reset_date: string;     // ISO date del próximo reset
+  notion_client_id?: string;      // link al cliente en Pneuma Studio CRM
+  active: boolean;
+  created_at: string;
+  updated_at: string;
+}
+
+// ─── Call log ─────────────────────────────────────────────────────────────────
+
+export type CallOutcome =
+  | 'lead_created'
+  | 'appointment_booked'
+  | 'order_taken'
+  | 'transferred'
+  | 'info_provided'
+  | 'unanswered'
+  | 'escalated_whatsapp'
+  | 'other';
+
+export interface VoiceCall {
+  id: string;
+  agent_id: string;
+  vapi_call_id?: string;
+  caller_number: string;
+  duration_seconds: number;
+  transcript?: string;
+  summary?: string;
+  outcome: CallOutcome;
+  lead_created: boolean;
+  appointment_created: boolean;
+  order_created: boolean;
+  transferred: boolean;
+  cost_usd?: number;
+  created_at: string;
+}
+
+// ─── Plan defaults ────────────────────────────────────────────────────────────
+
+export const PLAN_FEATURES: Record<Plan, AgentFeatures> = {
+  basico: {
+    receptionist:            true,
+    lead_qualification:      true,
+    appointment_booking:     true,
+    existing_client_support: false,
+    smart_transfer:          false,
+    order_taking:            false,
+    multilingual:            false,
+    client_memory:           false,
+    whatsapp_escalation:     false,
+  },
+  estandar: {
+    receptionist:            true,
+    lead_qualification:      true,
+    appointment_booking:     true,
+    existing_client_support: true,
+    smart_transfer:          true,
+    order_taking:            true,
+    multilingual:            false,
+    client_memory:           false,
+    whatsapp_escalation:     false,
+  },
+  pro: {
+    receptionist:            true,
+    lead_qualification:      true,
+    appointment_booking:     true,
+    existing_client_support: true,
+    smart_transfer:          true,
+    order_taking:            true,
+    multilingual:            true,
+    client_memory:           true,
+    whatsapp_escalation:     true,
+  },
+};
+
+export const PLAN_MINUTES: Record<Plan, number> = {
+  basico:   200,
+  estandar: 500,
+  pro:      1500,
+};
+
+export const PLAN_LABELS: Record<Plan, string> = {
+  basico:   'Básico',
+  estandar: 'Estándar',
+  pro:      'Pro',
+};
+
+export const FEATURE_LABELS: Record<keyof AgentFeatures, string> = {
+  receptionist:            'Recepcionista 24/7',
+  lead_qualification:      'Calificación de prospectos',
+  appointment_booking:     'Agendamiento de citas',
+  existing_client_support: 'Atención a clientes existentes',
+  smart_transfer:          'Transferencia inteligente',
+  order_taking:            'Toma de pedidos',
+  multilingual:            'Multiidioma (ES + EN)',
+  client_memory:           'Memoria de cliente',
+  whatsapp_escalation:     'Escalación a WhatsApp',
+};
