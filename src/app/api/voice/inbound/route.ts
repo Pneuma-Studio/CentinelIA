@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
         tools,
       },
       voice: {
-        provider: 'elevenlabs',
+        provider: '11labs',
         voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
         stability: 0.5,
         similarityBoost: 0.75,
