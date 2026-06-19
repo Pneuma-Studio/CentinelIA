@@ -106,6 +106,15 @@ Usa la herramienta enviar_whatsapp_escalacion para enviar un mensaje automático
 Número de WhatsApp del negocio: ${agent.transfer_whatsapp ?? '[WhatsApp no configurado]'}`);
   }
 
+  // ── Knowledge base ────────────────────────────────────────────────────────
+  if (agent.knowledge_base?.trim()) {
+    blocks.push(`INFORMACIÓN DEL NEGOCIO (productos, precios, servicios, FAQs):
+${agent.knowledge_base.trim()}
+
+Usa esta información para responder preguntas sobre productos, precios, disponibilidad y servicios.
+Si algo no está en esta lista, dilo honestamente y ofrece conectarlos con el equipo.`);
+  }
+
   // ── Closing rules ──────────────────────────────────────────────────────────
   blocks.push(`REGLAS GENERALES:
 - Nunca menciones que eres una IA a menos que te pregunten directamente.

@@ -108,6 +108,21 @@ export default function NuevoAgentePage() {
           <Field label="Número de transferencia (cuando el agente transfiere)" name="transfer_number" placeholder="+52 81 1633 3559" />
         </Section>
 
+        {/* Knowledge base */}
+        <Section title="Base de conocimiento">
+          <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Pega aquí el menú, catálogo de productos, precios, servicios y preguntas frecuentes del negocio.
+            El agente usará esta información para responder preguntas durante las llamadas.
+          </p>
+          <Field
+            label="Catálogo / precios / FAQs"
+            name="knowledge_base"
+            textarea
+            rows={8}
+            placeholder={`Ejemplo:\n\nSERVICIOS:\n- Corte de cabello: $150\n- Tinte completo: $450\n- Tratamiento: $300\n\nFAQs:\n¿Tienen estacionamiento? Sí, estacionamiento gratuito en la parte trasera.\n¿Aceptan tarjeta? Sí, todas las tarjetas.`}
+          />
+        </Section>
+
         {/* Feature toggles */}
         <Section title="Funcionalidades activas">
           <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
@@ -157,8 +172,8 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Field({ label, name, required, placeholder, textarea }: {
-  label: string; name: string; required?: boolean; placeholder?: string; textarea?: boolean;
+function Field({ label, name, required, placeholder, textarea, rows }: {
+  label: string; name: string; required?: boolean; placeholder?: string; textarea?: boolean; rows?: number;
 }) {
   const base = {
     background: 'rgba(255,255,255,0.05)',
@@ -176,7 +191,7 @@ function Field({ label, name, required, placeholder, textarea }: {
         {label}{required && <span style={{ color: '#00e5ff' }}> *</span>}
       </label>
       {textarea
-        ? <textarea name={name} rows={3} placeholder={placeholder} style={{ ...base, resize: 'vertical' }} />
+        ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} style={{ ...base, resize: 'vertical' }} />
         : <input name={name} required={required} placeholder={placeholder} style={base} />
       }
     </div>

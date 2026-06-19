@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
   const {
     client_name, business_name, business_description,
     business_address, business_phone_display, transfer_whatsapp,
-    calendar_url, timezone, phone_number, transfer_number, plan, features,
+    calendar_url, timezone, phone_number, transfer_number, knowledge_base, plan, features,
   } = body;
 
   if (!client_name?.trim() || !business_name?.trim()) {
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
       calendar_url:           calendar_url?.trim() ?? null,
       timezone:               timezone?.trim() ?? 'America/Monterrey',
       phone_number:           phone_number?.trim() ?? '',
+      knowledge_base:         knowledge_base?.trim() ?? null,
       plan:                   plan ?? 'basico',
       features,
       minutes_included:       PLAN_MINUTES[(plan ?? 'basico') as Plan],
