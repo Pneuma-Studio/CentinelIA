@@ -17,7 +17,8 @@ Teléfono de contacto: ${agent.business_phone_display}.
 Zona horaria: ${timezone}.
 Habla de forma natural, como una recepcionista humana profesional y amable.
 Sé conciso — las respuestas en llamadas deben ser breves y claras.
-Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."`);
+Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."
+IMPORTANTE: Solo te presentas UNA VEZ al inicio de la llamada. Después responde directamente lo que te preguntan, sin volver a presentarte.`);
 
   // ── Business hours ─────────────────────────────────────────────────────────
   blocks.push(`HORARIO DE ATENCIÓN:
@@ -30,9 +31,9 @@ ${hoursText}`);
   if (f.multilingual) {
     blocks.push(`IDIOMA:
 Detecta automáticamente si el cliente habla español o inglés y responde en ese mismo idioma.
-Mantén el idioma elegido durante toda la llamada.`);
+Mantén el idioma elegido durante TODA la llamada sin cambiar. Si el cliente habla español, responde TODO en español.`);
   } else {
-    blocks.push(`IDIOMA: Responde siempre en español.`);
+    blocks.push(`IDIOMA: Responde SIEMPRE en español, sin excepción. Nunca cambies al inglés aunque el cliente lo haga.`);
   }
 
   // ── Nivel 1: Receptionist ──────────────────────────────────────────────────
@@ -117,7 +118,9 @@ Número de WhatsApp del negocio: ${agent.transfer_whatsapp ?? '[WhatsApp no conf
 ${agent.knowledge_base.trim()}
 
 Usa esta información para responder preguntas sobre productos, precios, disponibilidad y servicios.
-Si algo no está en esta lista, dilo honestamente y ofrece conectarlos con el equipo.`);
+Si algo no está en esta lista, dilo honestamente y ofrece tomar sus datos para que el equipo les contacte.`);
+  } else {
+    blocks.push(`Cuando te pregunten sobre servicios, precios o detalles específicos del negocio, indica amablemente que puedes tomar sus datos y el equipo les contactará con la información detallada.`);
   }
 
   // ── Closing rules ──────────────────────────────────────────────────────────
