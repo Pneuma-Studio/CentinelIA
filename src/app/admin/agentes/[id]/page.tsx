@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Phone, Globe, Calendar, CheckCircle, XCircle } from 'lucide-react';
+import { ArrowLeft, Phone, Globe, Calendar, CheckCircle, XCircle, Pencil } from 'lucide-react';
 import type { VoiceAgent, VoiceCall } from '@/types/agent';
 import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
@@ -54,6 +54,12 @@ export default async function AgentDetailPage({ params }: Props) {
           </div>
           <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{agent.client_name}</p>
         </div>
+        <Link href={`/admin/agentes/${agent.id}/editar`}
+          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-opacity"
+          style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.7)', border: '1px solid rgba(255,255,255,0.1)' }}>
+          <Pencil size={13} />
+          Editar
+        </Link>
         <AgentActions agentId={agent.id} active={agent.active} />
       </div>
 
