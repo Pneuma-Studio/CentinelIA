@@ -1,7 +1,8 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { PLAN_MINUTES } from '@/types/agent';
-import type { Plan } from '@/types/agent';
+import { createVapiAssistant, assignAssistantToPhone } from '@/lib/vapi/sync';
+import type { Plan, VoiceAgent } from '@/types/agent';
 
 export async function GET() {
   const supabase = createAdminClient();
@@ -32,6 +33,7 @@ export async function POST(req: NextRequest) {
   resetDate.setMonth(resetDate.getMonth() + 1);
   resetDate.setDate(1);
 
+  // 1. Save agent to Supabase
   const { data, error } = await supabase
     .from('voice_agents')
     .insert({
@@ -55,5 +57,24 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (error) return NextResponse.json({ error: error.message }, { status: 500 });
-  return NextResponse.json(data, { status: 201 });
+
+  const agent = data as VoiceAgent;
+
+  // 2. Create Vapi assistant with full system prompt
+  const vapiAssistantId = await createVapiAssistant(agent);
+
+  if (vapiAssistantId) {
+    // 3. Save vapi_agent_id back to Supabase
+    await supabase
+      .from('voice_agents')
+      .update({ vapi_agent_id: vapiAssistantId })
+      .eq('id', agent.id);
+
+    // 4. Assign assistant to the phone number in Vapi
+    if (agent.phone_number) {
+      await assignAssistantToPhone(agent.phone_number, vapiAssistantId);
+    }
+  }
+
+  return NextResponse.json({ ...agent, vapi_agent_id: vapiAssistantId }, { status: 201 });
 }
