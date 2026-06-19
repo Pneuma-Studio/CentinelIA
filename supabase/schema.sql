@@ -49,6 +49,25 @@ create table if not exists voice_agents (
   updated_at            timestamptz not null default now()
 );
 
+-- Voice Leads ─────────────────────────────────────────────────────────────────
+create table if not exists leads_voice (
+  id          uuid primary key default gen_random_uuid(),
+  agent_id    uuid not null references voice_agents(id) on delete cascade,
+  nombre      text,
+  negocio     text,
+  giro        text,
+  servicio    text,
+  presupuesto text,
+  timeline    text,
+  email       text,
+  whatsapp    text,
+  source      text not null default 'llamada',
+  created_at  timestamptz not null default now()
+);
+
+create index if not exists leads_voice_agent_id_idx on leads_voice(agent_id);
+create index if not exists leads_voice_created_at_idx on leads_voice(created_at desc);
+
 -- Voice Calls ──────────────────────────────────────────────────────────────────
 create table if not exists voice_calls (
   id                   uuid primary key default gen_random_uuid(),
@@ -88,6 +107,16 @@ create trigger voice_agents_updated_at
 create index if not exists voice_calls_agent_id_idx on voice_calls(agent_id);
 create index if not exists voice_calls_created_at_idx on voice_calls(created_at desc);
 create index if not exists voice_agents_active_idx on voice_agents(active);
+
+-- Increment minutes used ─────────────────────────────────────────────────────
+create or replace function increment_minutes_used(agent_id uuid, minutes integer)
+returns void language plpgsql as $$
+begin
+  update voice_agents
+  set minutes_used = minutes_used + minutes
+  where id = agent_id;
+end;
+$$;
 
 -- Monthly minutes reset (call via cron) ───────────────────────────────────────
 create or replace function reset_monthly_minutes()

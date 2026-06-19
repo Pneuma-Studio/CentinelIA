@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+
+export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const agent_id = searchParams.get('agent_id');
+
+  const body = await req.json();
+  const { nombre, telefono, items, tipo, direccion, notas } =
+    body.toolCallList?.[0]?.function?.arguments ?? body;
+
+  if (!agent_id) {
+    return NextResponse.json({ error: 'agent_id requerido' }, { status: 400 });
+  }
+
+  const supabase = createAdminClient();
+
+  const { data: agent } = await supabase
+    .from('voice_agents')
+    .select('business_name, transfer_whatsapp')
+    .eq('id', agent_id)
+    .single();
+
+  if (agent?.transfer_whatsapp) {
+    const msg = [
+      `🛒 *Nuevo pedido — ${agent.business_name}*`,
+      nombre   ? `👤 ${nombre}`   : null,
+      telefono ? `📱 ${telefono}` : null,
+      `📦 ${items}`,
+      tipo === 'entrega' ? `🚚 Entrega a: ${direccion ?? 'por confirmar'}` : '🏪 Para recoger en sucursal',
+      notas    ? `📝 ${notas}`    : null,
+    ].filter(Boolean).join('\n');
+
+    await sendWhatsApp(agent.transfer_whatsapp, msg);
+  }
+
+  const tipoLabel = tipo === 'entrega' ? 'entrega a domicilio' : 'recoger en sucursal';
+  return NextResponse.json({
+    result: `Su pedido ha sido registrado para ${tipoLabel}. Le confirmamos los detalles por teléfono pronto.`,
+  });
+}
+
+async function sendWhatsApp(to: string, message: string) {
+  const clean = to.replace(/\D/g, '');
+  console.info('WhatsApp notification →', clean, message);
+}
