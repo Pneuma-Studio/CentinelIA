@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { sendWhatsApp } from '@/lib/whatsapp/send';
 
 export async function POST(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -38,9 +39,5 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     result: `Su pedido ha sido registrado para ${tipoLabel}. Le confirmamos los detalles por teléfono pronto.`,
   });
-}
 
-async function sendWhatsApp(to: string, message: string) {
-  const clean = to.replace(/\D/g, '');
-  console.info('WhatsApp notification →', clean, message);
 }

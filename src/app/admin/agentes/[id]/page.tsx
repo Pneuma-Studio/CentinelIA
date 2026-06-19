@@ -7,6 +7,7 @@ import { ArrowLeft, Phone, Globe, Calendar, CheckCircle, XCircle, Pencil } from 
 import type { VoiceAgent, VoiceCall } from '@/types/agent';
 import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
+import CallsSection from './CallsSection';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -112,30 +113,7 @@ export default async function AgentDetailPage({ params }: Props) {
           )}
 
           {/* Recent calls */}
-          <Card title={`Llamadas recientes (${calls.length})`}>
-            {calls.length === 0 ? (
-              <p className="text-sm py-4 text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin llamadas registradas</p>
-            ) : (
-              <div className="flex flex-col gap-2">
-                {calls.map(call => (
-                  <div key={call.id} className="flex items-center justify-between px-3 py-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div>
-                      <div className="text-sm text-white">{call.caller_number || 'Desconocido'}</div>
-                      <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                        {new Date(call.created_at).toLocaleString('es-MX', { timeZone: agent.timezone ?? 'America/Monterrey' })}
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <OutcomeBadge outcome={call.outcome} />
-                      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                        {Math.ceil(call.duration_seconds / 60)} min
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            )}
-          </Card>
+          <CallsSection calls={calls} timezone={agent.timezone ?? 'America/Monterrey'} />
         </div>
 
         {/* Right column */}
@@ -197,21 +175,3 @@ function InfoRow({ label, value, icon, link }: { label: string; value: string; i
   );
 }
 
-const OUTCOME_LABELS: Record<string, { label: string; color: string }> = {
-  lead_created:       { label: 'Lead',       color: '#22c55e' },
-  appointment_booked: { label: 'Cita',        color: '#3b82f6' },
-  order_taken:        { label: 'Pedido',      color: '#f59e0b' },
-  transferred:        { label: 'Transferido', color: '#a855f7' },
-  info_provided:      { label: 'Información', color: '#6b7280' },
-  escalated_whatsapp: { label: 'WhatsApp',    color: '#25D366' },
-  other:              { label: 'Otro',        color: '#4b5563' },
-};
-
-function OutcomeBadge({ outcome }: { outcome: string }) {
-  const o = OUTCOME_LABELS[outcome] ?? OUTCOME_LABELS.other;
-  return (
-    <span className="px-2 py-0.5 rounded-full text-xs font-semibold" style={{ background: `${o.color}22`, color: o.color }}>
-      {o.label}
-    </span>
-  );
-}

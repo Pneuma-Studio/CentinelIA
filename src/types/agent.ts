@@ -95,6 +95,7 @@ export interface VoiceCall {
   appointment_created: boolean;
   order_created: boolean;
   transferred: boolean;
+  recording_url?: string;
   cost_usd?: number;
   created_at: string;
 }
