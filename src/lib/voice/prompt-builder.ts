@@ -1,9 +1,13 @@
 import type { VoiceAgent } from '@/types/agent';
+import { TEMPLATE_MAP } from '@/lib/voice/templates';
 
 export function buildSystemPrompt(agent: VoiceAgent): string {
   const { features, business_hours, timezone } = agent;
   const f = features;
   const agentName = agent.agent_name?.trim() || 'CentinelIA';
+  const tpl = agent.giro_template ? TEMPLATE_MAP[agent.giro_template as keyof typeof TEMPLATE_MAP] : null;
+  const orderLabel      = tpl?.orderLabel      ?? 'producto';
+  const appointmentLabel = tpl?.appointmentLabel ?? 'cita';
 
   const hoursText = formatBusinessHours(business_hours);
 
@@ -61,12 +65,12 @@ Al terminar, confirma que el equipo les contactará en menos de 24 horas.`);
 
   // ── Nivel 1: Appointment booking ──────────────────────────────────────────
   if (f.appointment_booking) {
-    blocks.push(`AGENDAMIENTO DE CITAS:
-Puedes agendar, modificar y cancelar citas.
-${agent.calendar_url ? `Usa este enlace para verificar disponibilidad: ${agent.calendar_url}` : 'Pregunta fecha y hora preferida y usa la herramienta agendar_cita para registrarla.'}
-Pide: nombre, servicio deseado, fecha y hora preferida, teléfono de confirmación.
-Confirma siempre la cita antes de cerrar la llamada.
-Si deben cancelar con anticipación, indícalo (24 horas mínimo).`);
+    blocks.push(`AGENDAMIENTO DE ${appointmentLabel.toUpperCase()}S:
+Puedes agendar, modificar y cancelar ${appointmentLabel}s.
+${agent.calendar_url ? `Usa este enlace para verificar disponibilidad: ${agent.calendar_url}` : `Pregunta fecha y hora preferida y usa la herramienta agendar_cita para registrarla.`}
+Pide: nombre del cliente, servicio o motivo, fecha y hora preferida, teléfono de confirmación.
+Confirma siempre la ${appointmentLabel} antes de cerrar la llamada.
+Recuerda mencionar que deben cancelar con al menos 24 horas de anticipación.`);
   }
 
   // ── Nivel 2: Existing client support ──────────────────────────────────────
@@ -91,9 +95,10 @@ Si nadie contesta, ofrece tomar un mensaje y que alguien les llame de regreso.`)
   if (f.order_taking) {
     blocks.push(`TOMA DE PEDIDOS:
 Puedes recibir pedidos por teléfono.
-Pregunta: qué desean ordenar, cantidad, nombre, teléfono, dirección de entrega o si es para recoger.
+Pregunta: qué ${orderLabel}s desean, cantidad, nombre del cliente, teléfono, si es para entrega a domicilio o para recoger.
+Si es entrega, pide la dirección completa.
 Usa la herramienta registrar_pedido para guardar el pedido.
-Confirma el pedido completo antes de cerrar la llamada y da un tiempo estimado.`);
+Confirma el pedido completo antes de cerrar la llamada y da un tiempo estimado de entrega o preparación.`);
   }
 
   // ── Nivel 3: Client memory ─────────────────────────────────────────────────

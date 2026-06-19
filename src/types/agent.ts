@@ -61,6 +61,7 @@ export interface VoiceAgent {
   crm_webhook?: string;           // webhook externo del sistema del cliente
   knowledge_base?: string;        // catálogo, precios y FAQs del negocio
   agent_name?: string;            // nombre propio del agente (solo Pro, default: CentinelIA)
+  giro_template?: string;         // template de industria: restaurante, consultorio, estetica, agencia, retail, general
   minutes_included: number;
   minutes_used: number;
   minutes_reset_date: string;     // ISO date del próximo reset
