@@ -49,6 +49,7 @@ export async function POST(req: NextRequest) {
       phone_number:           phone_number?.trim() ?? '',
       knowledge_base:         knowledge_base?.trim() ?? null,
       agent_name:             plan === 'pro' ? (agent_name?.trim() ?? null) : null,
+      giro_template:          body.giro_template ?? null,
       plan:                   plan ?? 'basico',
       features,
       minutes_included:       PLAN_MINUTES[(plan ?? 'basico') as Plan],

@@ -3,11 +3,12 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, Phone, Globe, Calendar, CheckCircle, XCircle, Pencil } from 'lucide-react';
+import { ArrowLeft, Phone, Globe, Calendar, CheckCircle, XCircle, Pencil, ExternalLink } from 'lucide-react';
 import type { VoiceAgent, VoiceCall } from '@/types/agent';
 import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
 import CallsSection from './CallsSection';
+import LeadsSection from './LeadsSection';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -92,25 +93,8 @@ export default async function AgentDetailPage({ params }: Props) {
             </div>
           </Card>
 
-          {/* Recent leads */}
-          {leads.length > 0 && (
-            <Card title={`Leads recientes (${leads.length})`}>
-              <div className="flex flex-col gap-2">
-                {leads.map((lead: Record<string, string>) => (
-                  <div key={lead.id} className="px-3 py-2.5 rounded-lg" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                    <div className="flex items-center justify-between">
-                      <span className="text-sm text-white font-medium">{lead.nombre ?? 'Sin nombre'}</span>
-                      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                        {new Date(lead.created_at).toLocaleDateString('es-MX')}
-                      </span>
-                    </div>
-                    {lead.negocio && <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{lead.negocio} · {lead.giro}</div>}
-                    {lead.servicio && <div className="text-xs mt-0.5" style={{ color: '#00e5ff' }}>{lead.servicio}</div>}
-                  </div>
-                ))}
-              </div>
-            </Card>
-          )}
+          {/* Leads */}
+          <LeadsSection initialLeads={leads} />
 
           {/* Recent calls */}
           <CallsSection calls={calls} timezone={agent.timezone ?? 'America/Monterrey'} />
@@ -136,6 +120,26 @@ export default async function AgentDetailPage({ params }: Props) {
             <div className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
               <div className="text-xs mb-2 tracking-widest uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.3)' }}>Vapi Agent ID</div>
               <div className="text-xs font-mono break-all" style={{ color: 'rgba(255,255,255,0.5)' }}>{agent.vapi_agent_id}</div>
+            </div>
+          )}
+
+          {/* Portal link */}
+          {agent.portal_token && (
+            <div className="p-4 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+              <div className="text-xs mb-2 tracking-widest uppercase font-semibold" style={{ color: 'rgba(255,255,255,0.3)' }}>Portal del cliente</div>
+              <a
+                href={`/portal/${agent.portal_token}`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-1.5 text-xs hover:underline"
+                style={{ color: '#00e5ff' }}
+              >
+                <ExternalLink size={11} />
+                Ver portal
+              </a>
+              <div className="text-xs mt-1.5 font-mono break-all" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                /portal/{agent.portal_token?.slice(0, 8)}…
+              </div>
             </div>
           )}
 
