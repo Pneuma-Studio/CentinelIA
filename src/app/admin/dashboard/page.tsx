@@ -1,3 +1,5 @@
+export const dynamic = 'force-dynamic';
+
 import { createAdminClient } from '@/lib/supabase/admin';
 import { PhoneCall, Clock, TrendingUp, Users } from 'lucide-react';
 import type { VoiceAgent, VoiceCall } from '@/types/agent';
