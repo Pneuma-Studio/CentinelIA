@@ -139,7 +139,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     },
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
-      : { provider: 'vapi', voiceId: 'Valentina' },
+      : { provider: 'vapi', voiceId: 'Mia' },
     firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
     transcriber: {
