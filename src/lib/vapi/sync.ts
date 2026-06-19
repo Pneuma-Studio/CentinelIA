@@ -128,8 +128,17 @@ function buildVapiAssistant(agent: VoiceAgent) {
       : { provider: 'vapi', voiceId: 'Valentina' },
     firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
+    transcriber: {
+      provider: 'deepgram',
+      model: 'nova-2',
+      language: 'es',
+      smartFormat: true,
+    },
     backgroundSound: 'office',
     backchannelingEnabled: false,
+    backgroundDenoisingEnabled: true,
+    silenceTimeoutSeconds: 20,
+    maxDurationSeconds: 1800,
     serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/webhook`,
     serverUrlSecret: process.env.VAPI_WEBHOOK_SECRET,
     analysisPlan: {
