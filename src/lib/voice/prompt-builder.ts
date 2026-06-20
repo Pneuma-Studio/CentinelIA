@@ -22,11 +22,7 @@ Zona horaria: ${timezone}.
 Habla de forma natural, como una recepcionista humana profesional y amable.
 Sé conciso — las respuestas en llamadas deben ser breves y claras.
 Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."
-
-REGLA CRÍTICA — EL SALUDO YA FUE ENVIADO:
-NO vuelvas a saludar, NO digas "¿En qué te puedo ayudar?" ni "How can I help you?" después del primer mensaje.
-Responde DIRECTAMENTE lo que el cliente pregunta o dice.
-Esta regla aplica en cualquier idioma. Si cambias al inglés, responde la pregunta en inglés — no repitas el saludo.`);
+Responde directamente al cliente sin repetir el saludo ni volver a presentarte.`);
 
   // ── Business hours ─────────────────────────────────────────────────────────
   blocks.push(`HORARIO DE ATENCIÓN:
@@ -47,7 +43,6 @@ Mantén el idioma elegido durante toda la llamada.`);
   // ── Nivel 1: Receptionist ──────────────────────────────────────────────────
   if (f.receptionist) {
     blocks.push(`RECEPCIÓN:
-El saludo inicial ya fue enviado — NO vuelvas a presentarte ni a saludar. Responde directamente lo que el cliente pregunta.
 Puedes responder preguntas sobre horarios, ubicación, servicios y precios.
 Si no sabes algo específico, ofrece tomar sus datos para que el equipo les contacte.`);
   }

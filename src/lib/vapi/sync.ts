@@ -133,7 +133,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     name: `${agentName} — ${agent.business_name}`,
     model: {
       provider: 'anthropic',
-      model: 'claude-3-5-sonnet-20241022', // requires Anthropic BYOK in Vapi dashboard
+      model: 'claude-3-5-haiku-20241022',
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
       temperature: 0.4,
       maxTokens: 300,
@@ -141,7 +141,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
       : { provider: 'vapi', voiceId: 'Mia' },
-    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
+    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}.`,
     endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
     transcriber: {
       provider: 'deepgram',
