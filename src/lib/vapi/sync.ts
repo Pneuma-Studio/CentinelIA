@@ -135,7 +135,6 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       provider: 'anthropic',
       model: 'claude-3-5-haiku-20241022',
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
-      ...(toolIds.length > 0 ? { toolIds } : {}),
     },
     voice: hasElevenLabs
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
