@@ -146,7 +146,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     transcriber: {
       provider: 'deepgram',
       model: 'nova-2',
-      language: 'es',
+      language: 'multi',
       smartFormat: true,
     },
     backgroundSound: 'office',
