@@ -133,7 +133,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     name: `${agentName} — ${agent.business_name}`,
     model: {
       provider: 'anthropic',
-      model: 'claude-3-5-sonnet-20241022',
+      model: 'claude-3-5-sonnet-20241022', // requires Anthropic BYOK in Vapi dashboard
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
       temperature: 0.4,
       maxTokens: 300,
