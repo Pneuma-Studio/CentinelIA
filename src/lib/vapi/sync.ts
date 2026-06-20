@@ -132,8 +132,8 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
   return {
     name: `${agentName} — ${agent.business_name}`,
     model: {
-      provider: 'openai',
-      model: 'gpt-4o-mini',
+      provider: 'anthropic',
+      model: 'claude-3-5-sonnet-20241022',
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
       temperature: 0.4,
       maxTokens: 300,
