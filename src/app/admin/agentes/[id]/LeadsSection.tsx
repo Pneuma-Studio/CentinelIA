@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { Pencil, Trash2 } from 'lucide-react';
+import { toast } from 'sonner';
 import EditLeadModal from './EditLeadModal';
 
 interface Lead {
@@ -14,22 +15,49 @@ interface Lead {
   timeline?: string;
   email?: string;
   whatsapp?: string;
+  status?: string;
   created_at: string;
 }
+
+const STATUSES = [
+  { value: 'nuevo',      label: 'Nuevo',      color: '#00e5ff' },
+  { value: 'contactado', label: 'Contactado', color: '#3b82f6' },
+  { value: 'cerrado',    label: 'Cerrado',    color: '#22c55e' },
+  { value: 'perdido',    label: 'Perdido',    color: '#6b7280' },
+];
 
 export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] }) {
   const [leads, setLeads] = useState<Lead[]>(initialLeads);
   const [editing, setEditing] = useState<Lead | null>(null);
 
   const handleSaved = (updated: Lead) => {
-    setLeads(prev => prev.map(l => l.id === updated.id ? updated : l));
+    setLeads(prev => prev.map(l => l.id === updated.id ? { ...l, ...updated } : l));
     setEditing(null);
+    toast.success('Lead actualizado');
   };
 
   const handleDelete = async (id: string) => {
     if (!confirm('¿Eliminar este lead?')) return;
+    setLeads(prev => prev.filter(l => l.id !== id));
     const res = await fetch(`/api/admin/leads/${id}`, { method: 'DELETE' });
-    if (res.ok) setLeads(prev => prev.filter(l => l.id !== id));
+    if (!res.ok) {
+      toast.error('Error al eliminar');
+    } else {
+      toast.success('Lead eliminado');
+    }
+  };
+
+  const handleStatus = async (lead: Lead, newStatus: string) => {
+    setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: newStatus } : l));
+    const res = await fetch(`/api/admin/leads/${lead.id}`, {
+      method: 'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status: newStatus }),
+    });
+    if (!res.ok) {
+      setLeads(prev => prev.map(l => l.id === lead.id ? { ...l, status: lead.status } : l));
+      toast.error('Error al actualizar estado');
+    }
   };
 
   return (
@@ -38,51 +66,70 @@ export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] })
         <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.3)' }}>
           Leads recientes ({leads.length})
         </h2>
+
         {leads.length === 0 ? (
-          <p className="text-sm py-4 text-center" style={{ color: 'rgba(255,255,255,0.3)' }}>Sin leads registrados</p>
+          <p className="text-xs py-6 text-center leading-relaxed" style={{ color: 'rgba(255,255,255,0.25)' }}>
+            Sin leads — se registran automáticamente al terminar una llamada
+          </p>
         ) : (
           <div className="flex flex-col gap-2">
-            {leads.map(lead => (
-              <div key={lead.id} className="px-3 py-2.5 rounded-lg group"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <div className="flex items-start justify-between gap-2">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-white font-medium">{lead.nombre ?? 'Sin nombre'}</span>
-                      <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                        {new Date(lead.created_at).toLocaleDateString('es-MX')}
-                      </span>
-                    </div>
-                    {lead.negocio && (
-                      <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                        {lead.negocio}{lead.giro ? ` · ${lead.giro}` : ''}
+            {leads.map(lead => {
+              const status = lead.status ?? 'nuevo';
+              const statusInfo = STATUSES.find(s => s.value === status) ?? STATUSES[0];
+              return (
+                <div key={lead.id} className="px-3 py-2.5 rounded-lg group"
+                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  <div className="flex items-start justify-between gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="text-sm text-white font-medium">{lead.nombre ?? 'Sin nombre'}</span>
+                        {/* Status pill — clickable to cycle */}
+                        <button
+                          onClick={() => {
+                            const idx = STATUSES.findIndex(s => s.value === status);
+                            const next = STATUSES[(idx + 1) % STATUSES.length];
+                            handleStatus(lead, next.value);
+                          }}
+                          className="text-xs px-2 py-0.5 rounded-full font-medium transition-colors hover:opacity-80"
+                          style={{ background: `${statusInfo.color}18`, color: statusInfo.color, border: `1px solid ${statusInfo.color}33` }}
+                        >
+                          {statusInfo.label}
+                        </button>
+                        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                          {new Date(lead.created_at).toLocaleDateString('es-MX')}
+                        </span>
                       </div>
-                    )}
-                    {lead.servicio && (
-                      <div className="text-xs mt-0.5" style={{ color: '#00e5ff' }}>{lead.servicio}</div>
-                    )}
-                    <div className="flex gap-3 mt-1 flex-wrap">
-                      {lead.presupuesto && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>💰 {lead.presupuesto}</span>}
-                      {lead.timeline    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📅 {lead.timeline}</span>}
-                      {lead.whatsapp    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📱 {lead.whatsapp}</span>}
-                      {lead.email       && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📧 {lead.email}</span>}
+                      {lead.negocio && (
+                        <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                          {lead.negocio}{lead.giro ? ` · ${lead.giro}` : ''}
+                        </div>
+                      )}
+                      {lead.servicio && (
+                        <div className="text-xs mt-0.5" style={{ color: '#00e5ff' }}>{lead.servicio}</div>
+                      )}
+                      <div className="flex gap-3 mt-1 flex-wrap">
+                        {lead.presupuesto && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>💰 {lead.presupuesto}</span>}
+                        {lead.timeline    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📅 {lead.timeline}</span>}
+                        {lead.whatsapp    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📱 {lead.whatsapp}</span>}
+                        {lead.email       && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📧 {lead.email}</span>}
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
-                    <button onClick={() => setEditing(lead)}
-                      className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-                      style={{ color: 'rgba(255,255,255,0.4)' }}>
-                      <Pencil size={13} />
-                    </button>
-                    <button onClick={() => handleDelete(lead.id)}
-                      className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors"
-                      style={{ color: 'rgba(255,255,255,0.4)' }}>
-                      <Trash2 size={13} />
-                    </button>
+                    <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
+                      <button onClick={() => setEditing(lead)}
+                        className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+                        style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        <Pencil size={13} />
+                      </button>
+                      <button onClick={() => handleDelete(lead.id)}
+                        className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors"
+                        style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         )}
       </div>

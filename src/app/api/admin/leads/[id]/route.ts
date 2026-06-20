@@ -8,7 +8,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const body = await req.json();
   const supabase = createAdminClient();
 
-  const allowed = ['nombre', 'negocio', 'giro', 'servicio', 'presupuesto', 'timeline', 'email', 'whatsapp'];
+  const allowed = ['nombre', 'negocio', 'giro', 'servicio', 'presupuesto', 'timeline', 'email', 'whatsapp', 'status'];
   const update = Object.fromEntries(
     Object.entries(body).filter(([k]) => allowed.includes(k))
   );

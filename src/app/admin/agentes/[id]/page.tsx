@@ -9,6 +9,7 @@ import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
 import CallsSection from './CallsSection';
 import LeadsSection from './LeadsSection';
+import CopyButton from './CopyButton';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -73,8 +74,8 @@ export default async function AgentDetailPage({ params }: Props) {
           <Card title="Información del negocio">
             <InfoRow label="Descripción" value={agent.business_description} />
             {agent.business_address && <InfoRow label="Dirección" value={agent.business_address} />}
-            {agent.business_phone_display && <InfoRow label="Teléfono" value={agent.business_phone_display} icon={<Phone size={13} />} />}
-            {agent.phone_number && <InfoRow label="Número Vapi" value={agent.phone_number} icon={<Phone size={13} />} />}
+            {agent.business_phone_display && <InfoRow label="Teléfono" value={agent.business_phone_display} icon={<Phone size={13} />} copyable />}
+            {agent.phone_number && <InfoRow label="Número Vapi" value={agent.phone_number} icon={<Phone size={13} />} copyable />}
             {agent.calendar_url && <InfoRow label="Calendario" value={agent.calendar_url} icon={<Globe size={13} />} link />}
             <InfoRow label="Zona horaria" value={agent.timezone} icon={<Calendar size={13} />} />
           </Card>
@@ -166,14 +167,17 @@ function Card({ title, children }: { title: string; children: React.ReactNode })
   );
 }
 
-function InfoRow({ label, value, icon, link }: { label: string; value: string; icon?: React.ReactNode; link?: boolean }) {
+function InfoRow({ label, value, icon, link, copyable }: { label: string; value: string; icon?: React.ReactNode; link?: boolean; copyable?: boolean }) {
   if (!value) return null;
   return (
     <div className="flex gap-3 py-2 border-b" style={{ borderColor: 'rgba(255,255,255,0.05)' }}>
       <span className="text-xs w-28 flex-shrink-0 pt-0.5" style={{ color: 'rgba(255,255,255,0.35)' }}>{label}</span>
-      <span className="text-xs text-white flex items-center gap-1.5 flex-1">
+      <span className="text-xs text-white flex items-center gap-1.5 flex-1 min-w-0">
         {icon}
-        {link ? <a href={value} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">{value}</a> : value}
+        <span className="truncate">
+          {link ? <a href={value} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">{value}</a> : value}
+        </span>
+        {copyable && <CopyButton text={value} />}
       </span>
     </div>
   );
