@@ -20,7 +20,8 @@ export async function POST(req: NextRequest) {
       const endedAt   = call?.endedAt   ? new Date(call.endedAt).getTime()   : 0;
       const durationSeconds = startedAt && endedAt ? Math.round((endedAt - startedAt) / 1000) : 0;
 
-      const outcome      = detectOutcome(message);
+      const structured   = message.analysis?.structuredData ?? null;
+      const outcome      = detectOutcome(message, structured);
       const transcript   = message.transcript ?? null;
       const summary      = message.analysis?.summary ?? null;
       const recordingUrl = call?.recordingUrl ?? null;
@@ -43,11 +44,30 @@ export async function POST(req: NextRequest) {
         cost_usd:            call?.cost ?? null,
       });
 
-      // 2. Update agent minutes
+      // 2. Save lead / appointment / order from structured data
+      if (structured?.nombre && structured?.tipo_contacto !== 'informacion') {
+        if (['lead', 'cita', 'pedido'].includes(structured.tipo_contacto ?? '') ||
+            structured.servicio || structured.pedido_items) {
+          await supabase.from('leads_voice').insert({
+            agent_id:    agentId,
+            nombre:      structured.nombre      ?? null,
+            negocio:     structured.negocio     ?? null,
+            giro:        structured.giro        ?? null,
+            servicio:    structured.servicio    ?? structured.pedido_items ?? null,
+            presupuesto: structured.presupuesto ?? null,
+            timeline:    structured.timeline    ?? structured.cita_fecha ?? null,
+            email:       structured.email       ?? null,
+            whatsapp:    structured.whatsapp    ?? callerNumber ?? null,
+            source:      'llamada',
+          });
+        }
+      }
+
+      // 3. Update agent minutes
       const minutes = Math.ceil(durationSeconds / 60) || 1;
       await supabase.rpc('increment_minutes_used', { agent_id: agentId, minutes });
 
-      // 3. Send WhatsApp summary to business owner
+      // 4. Send WhatsApp summary to business owner
       const { data: agent } = await supabase
         .from('voice_agents')
         .select('business_name, transfer_whatsapp')
@@ -86,7 +106,7 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({ ok: true });
 }
 
-function detectOutcome(message: any): string {
+function detectOutcome(message: any, structured: any): string {
   const toolCalls: string[] = (message.toolCallResults ?? []).map((r: any) => r.name ?? '');
 
   if (toolCalls.includes('crear_lead'))                  return 'lead_created';
@@ -94,6 +114,15 @@ function detectOutcome(message: any): string {
   if (toolCalls.includes('registrar_pedido'))            return 'order_taken';
   if (toolCalls.includes('notificar_transferencia'))     return 'transferred';
   if (toolCalls.includes('enviar_whatsapp_escalacion'))  return 'escalated_whatsapp';
+
+  // Fallback: detect from structured data
+  if (structured) {
+    const tipo = structured.tipo_contacto ?? '';
+    if (tipo === 'lead'         || (structured.nombre && structured.servicio)) return 'lead_created';
+    if (tipo === 'cita'         || structured.cita_fecha)                       return 'appointment_booked';
+    if (tipo === 'pedido'       || structured.pedido_items)                     return 'order_taken';
+    if (tipo === 'transferencia')                                                return 'transferred';
+  }
 
   const transcript = (message.transcript ?? '').toLowerCase();
   if (transcript.length > 50) return 'info_provided';

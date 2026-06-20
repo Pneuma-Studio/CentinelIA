@@ -59,17 +59,18 @@ Si alguien llama interesado en contratar servicios, recopila en conversación na
 5. Para cuándo lo necesita
 6. Email de contacto
 7. WhatsApp (de preferencia)
-Cuando tengas estos datos, usa la herramienta crear_lead para registrarlos.
-Al terminar, confirma que el equipo les contactará en menos de 24 horas.`);
+Una vez que tengas los datos, confírmale al cliente que el equipo les contactará en menos de 24 horas.
+No es necesario hacer nada más — el sistema registra los datos automáticamente al terminar la llamada.`);
   }
 
   // ── Nivel 1: Appointment booking ──────────────────────────────────────────
   if (f.appointment_booking) {
     blocks.push(`AGENDAMIENTO DE ${appointmentLabel.toUpperCase()}S:
 Puedes agendar, modificar y cancelar ${appointmentLabel}s.
-${agent.calendar_url ? `Usa este enlace para verificar disponibilidad: ${agent.calendar_url}` : `Pregunta fecha y hora preferida y usa la herramienta agendar_cita para registrarla.`}
+${agent.calendar_url ? `Comparte este enlace para agendar: ${agent.calendar_url}` : `Pregunta fecha y hora preferida.`}
 Pide: nombre del cliente, servicio o motivo, fecha y hora preferida, teléfono de confirmación.
-Confirma siempre la ${appointmentLabel} antes de cerrar la llamada.
+Confirma la ${appointmentLabel} verbalmente antes de cerrar la llamada.
+El sistema registra la cita automáticamente al terminar la llamada.
 Recuerda mencionar que deben cancelar con al menos 24 horas de anticipación.`);
   }
 
@@ -84,10 +85,9 @@ Nunca inventes información — si no está en el sistema, dilo honestamente.`);
   // ── Nivel 2: Smart transfer ────────────────────────────────────────────────
   if (f.smart_transfer) {
     blocks.push(`TRANSFERENCIA INTELIGENTE:
-Si el cliente solicita hablar con una persona, si la situación es urgente o si no puedes resolver su solicitud:
+Si el cliente solicita hablar con una persona, la situación es urgente, o no puedes resolver su solicitud:
 1. Informa que vas a transferir la llamada
-2. Usa la herramienta notificar_transferencia para avisar al equipo por WhatsApp con un resumen
-3. Transfiere al número: ${agent.transfer_number ?? '[número de transferencia no configurado]'}
+2. Transfiere al número: ${agent.transfer_number ?? '[número de transferencia no configurado]'}
 Si nadie contesta, ofrece tomar un mensaje y que alguien les llame de regreso.`);
   }
 
@@ -97,8 +97,8 @@ Si nadie contesta, ofrece tomar un mensaje y que alguien les llame de regreso.`)
 Puedes recibir pedidos por teléfono.
 Pregunta: qué ${orderLabel}s desean, cantidad, nombre del cliente, teléfono, si es para entrega a domicilio o para recoger.
 Si es entrega, pide la dirección completa.
-Usa la herramienta registrar_pedido para guardar el pedido.
-Confirma el pedido completo antes de cerrar la llamada y da un tiempo estimado de entrega o preparación.`);
+Confirma el pedido completo verbalmente antes de cerrar la llamada y da un tiempo estimado.
+El sistema registra el pedido automáticamente al terminar la llamada.`);
   }
 
   // ── Nivel 3: Client memory ─────────────────────────────────────────────────
