@@ -142,7 +142,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
       : { provider: 'vapi', voiceId: 'Mia' },
     firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}.`,
-    endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',
+    endCallMessage: '',
     transcriber: {
       provider: 'deepgram',
       model: 'nova-2',
