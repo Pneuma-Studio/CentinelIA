@@ -21,8 +21,7 @@ Teléfono de contacto: ${agent.business_phone_display}.
 Zona horaria: ${timezone}.
 Habla de forma natural, como una recepcionista humana profesional y amable.
 Sé conciso — las respuestas en llamadas deben ser breves y claras.
-Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."
-Responde directamente al cliente sin repetir el saludo ni volver a presentarte.`);
+Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."`);
 
   // ── Business hours ─────────────────────────────────────────────────────────
   blocks.push(`HORARIO DE ATENCIÓN:
