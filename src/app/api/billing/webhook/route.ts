@@ -3,6 +3,7 @@ import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { FEATURE_PLAN_CONFIG, MINUTES_PLAN_CONFIG, minutesPlanFromPriceId, nextResetDate } from '@/lib/billing/plans';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
+import { sendEmail, paymentFailedHtml } from '@/lib/email/send';
 import { pauseVapiAgent, resumeVapiAgent } from '@/lib/vapi/control';
 import type { Plan } from '@/types/agent';
 import type { MinutesPlan } from '@/lib/billing/plans';
@@ -139,7 +140,7 @@ export async function POST(req: NextRequest) {
 
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, transfer_whatsapp, phone_number')
+        .select('business_name, client_email, transfer_whatsapp, phone_number')
         .eq('id', agentId)
         .single();
 
@@ -151,6 +152,13 @@ export async function POST(req: NextRequest) {
           agent.transfer_whatsapp,
           `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción CentinelIA. El agente de voz ha sido pausado.\n\nActualiza tu método de pago para reactivar el servicio.`
         );
+      }
+      if (agent?.client_email) {
+        await sendEmail({
+          to: agent.client_email,
+          subject: `💳 Pago fallido — ${agent.business_name}`,
+          html: paymentFailedHtml(agent.business_name),
+        }).catch(console.error);
       }
       break;
     }

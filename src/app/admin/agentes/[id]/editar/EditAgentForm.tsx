@@ -32,13 +32,22 @@ const DEFAULT_HOURS: BusinessHours = {
   sunday:    { open: false },
 };
 
+type Tab = 'info' | 'agente' | 'funciones' | 'horarios';
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'info',     label: 'Información' },
+  { id: 'agente',   label: 'Agente' },
+  { id: 'funciones', label: 'Funciones' },
+  { id: 'horarios', label: 'Horarios' },
+];
+
 export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [plan, setPlan] = useState<Plan>(agent.plan);
-  const [features, setFeatures] = useState<AgentFeatures>(agent.features);
+  const [saving, setSaving]               = useState(false);
+  const [tab, setTab]                     = useState<Tab>('info');
+  const [plan, setPlan]                   = useState<Plan>(agent.plan);
+  const [features, setFeatures]           = useState<AgentFeatures>(agent.features);
   const [businessHours, setBusinessHours] = useState<BusinessHours>(agent.business_hours ?? DEFAULT_HOURS);
-  const [hoursEnabled, setHoursEnabled] = useState<boolean>(!!agent.business_hours);
+  const [hoursEnabled, setHoursEnabled]   = useState<boolean>(!!agent.business_hours);
 
   const handlePlanChange = (p: Plan) => {
     setPlan(p);
@@ -55,6 +64,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
     const fd = new FormData(e.currentTarget);
     const body = {
       client_name:            fd.get('client_name'),
+      client_email:           fd.get('client_email') || null,
       business_name:          fd.get('business_name'),
       business_description:   fd.get('business_description'),
       business_address:       fd.get('business_address'),
@@ -99,138 +109,160 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
         </div>
       </div>
 
+      {/* Tab nav */}
+      <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+        {TABS.map(t => (
+          <button key={t.id} type="button" onClick={() => setTab(t.id)}
+            className="flex-1 py-1.5 rounded-lg text-xs font-medium transition-all"
+            style={{ background: tab === t.id ? '#6C3BFF' : 'transparent', color: tab === t.id ? '#fff' : 'var(--c-text-3)' }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        {/* Plan */}
-        <Section title="Plan">
-          <div className="grid grid-cols-3 gap-3">
-            {PLANS.map(p => (
-              <button key={p} type="button" onClick={() => handlePlanChange(p)}
-                className="p-3 rounded-xl border text-left transition-all"
-                style={{
-                  borderColor: plan === p ? PLAN_COLORS[p] : 'var(--c-border)',
-                  background:  plan === p ? `${PLAN_COLORS[p]}18` : 'var(--c-surface)',
-                }}>
-                <div className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[p]}</div>
-                <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>{PLAN_MINUTES[p]} min/mes</div>
-              </button>
-            ))}
-          </div>
-        </Section>
 
-        {/* Business info */}
-        <Section title="Información del negocio">
-          <Field label="Nombre del cliente (interno)" name="client_name" required defaultValue={agent.client_name} />
-          <Field label="Nombre del negocio" name="business_name" required defaultValue={agent.business_name} />
-          <Field label="Descripción del negocio" name="business_description" textarea defaultValue={agent.business_description} />
-          <Field label="Dirección" name="business_address" defaultValue={agent.business_address ?? ''} />
-          <Field label="Teléfono de contacto (que menciona el agente)" name="business_phone_display" defaultValue={agent.business_phone_display} />
-          <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" defaultValue={agent.transfer_whatsapp ?? ''} />
-          <Field label="Número de transferencia" name="transfer_number" defaultValue={agent.transfer_number ?? ''} />
-          <Field label="Link de calendario" name="calendar_url" defaultValue={agent.calendar_url ?? ''} />
-          <Field label="Zona horaria" name="timezone" defaultValue={agent.timezone} />
-          <Field label="Número Vapi" name="phone_number" defaultValue={agent.phone_number} />
-        </Section>
-
-        {/* Agent name */}
-        <Section title="Identidad del agente">
-          <div className="p-3 rounded-lg mb-1" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
-            <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
-              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
-            </p>
-          </div>
-          <Field label="Nombre del agente" name="agent_name"
-            placeholder="Ej: Sofía (solo Plan Pro)"
-            defaultValue={agent.agent_name ?? ''}
-            disabled={plan !== 'pro'} />
-        </Section>
-
-        {/* Knowledge base */}
-        <Section title="Base de conocimiento">
-          <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>
-            Catálogo de productos, precios, servicios y preguntas frecuentes del negocio.
-          </p>
-          <Field label="Catálogo / precios / FAQs" name="knowledge_base" textarea rows={8}
-            defaultValue={agent.knowledge_base ?? ''}
-            placeholder={`SERVICIOS:\n- Ejemplo: $150\n\nFAQs:\n¿Aceptan tarjeta? Sí.`} />
-        </Section>
-
-        {/* Features */}
-        <Section title="Funcionalidades activas">
-          <div className="flex flex-col gap-2">
-            {(Object.keys(features) as (keyof AgentFeatures)[]).map(key => (
-              <label key={key} className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
-                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <span className="text-sm" style={{ color: features[key] ? 'var(--c-text)' : 'var(--c-text-3)' }}>
-                  {FEATURE_LABELS[key]}
-                </span>
-                <button type="button" onClick={() => toggleFeature(key)}
-                  className="w-10 h-5 rounded-full transition-colors relative"
-                  style={{ background: features[key] ? '#6C3BFF' : 'var(--c-border-2)' }}>
-                  <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
-                    style={{ left: features[key] ? '1.25rem' : '0.125rem' }} />
+        {/* Tab: Información */}
+        <div className={tab !== 'info' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Plan">
+            <div className="grid grid-cols-3 gap-3">
+              {PLANS.map(p => (
+                <button key={p} type="button" onClick={() => handlePlanChange(p)}
+                  className="p-3 rounded-xl border text-left transition-all"
+                  style={{
+                    borderColor: plan === p ? PLAN_COLORS[p] : 'var(--c-border)',
+                    background:  plan === p ? `${PLAN_COLORS[p]}18` : 'var(--c-surface)',
+                  }}>
+                  <div className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[p]}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>{PLAN_MINUTES[p]} min/mes</div>
                 </button>
-              </label>
-            ))}
-          </div>
-        </Section>
+              ))}
+            </div>
+          </Section>
 
-        {/* Business hours */}
-        <Section title="Horario de atención">
-          <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
-            style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <div>
-              <div className="text-sm" style={{ color: 'var(--c-text)' }}>Restringir horario</div>
-              <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>
-                El agente solo contesta en el horario configurado
+          <Section title="Datos del cliente">
+            <Field label="Nombre del cliente (interno)" name="client_name" required defaultValue={agent.client_name} />
+            <Field label="Email del cliente (alertas)" name="client_email" placeholder="cliente@email.com" defaultValue={(agent as any).client_email ?? ''} />
+            <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" defaultValue={agent.transfer_whatsapp ?? ''} />
+          </Section>
+
+          <Section title="Información del negocio">
+            <Field label="Nombre del negocio" name="business_name" required defaultValue={agent.business_name} />
+            <Field label="Descripción del negocio" name="business_description" textarea defaultValue={agent.business_description} />
+            <Field label="Dirección" name="business_address" defaultValue={agent.business_address ?? ''} />
+            <Field label="Teléfono de contacto (que menciona el agente)" name="business_phone_display" defaultValue={agent.business_phone_display} />
+            <Field label="Número de transferencia" name="transfer_number" defaultValue={agent.transfer_number ?? ''} />
+            <Field label="Link de calendario" name="calendar_url" defaultValue={agent.calendar_url ?? ''} />
+            <Field label="Zona horaria" name="timezone" defaultValue={agent.timezone} />
+            <Field label="Número Vapi" name="phone_number" defaultValue={agent.phone_number} />
+          </Section>
+        </div>
+
+        {/* Tab: Agente */}
+        <div className={tab !== 'agente' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Identidad del agente">
+            <div className="p-3 rounded-lg" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
+              <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
+                <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
+              </p>
+            </div>
+            <Field label="Nombre del agente" name="agent_name"
+              placeholder="Ej: Sofía (solo Plan Pro)"
+              defaultValue={agent.agent_name ?? ''}
+              disabled={plan !== 'pro'} />
+          </Section>
+
+          <Section title="Base de conocimiento">
+            <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
+              Catálogo de productos, precios, servicios y preguntas frecuentes del negocio.
+            </p>
+            <Field label="Catálogo / precios / FAQs" name="knowledge_base" textarea rows={12}
+              defaultValue={agent.knowledge_base ?? ''}
+              placeholder={`SERVICIOS:\n- Ejemplo: $150\n\nFAQs:\n¿Aceptan tarjeta? Sí.`} />
+          </Section>
+        </div>
+
+        {/* Tab: Funciones */}
+        <div className={tab !== 'funciones' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Funcionalidades activas">
+            <div className="flex flex-col gap-2">
+              {(Object.keys(features) as (keyof AgentFeatures)[]).map(key => (
+                <label key={key} className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
+                  style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <span className="text-sm" style={{ color: features[key] ? 'var(--c-text)' : 'var(--c-text-3)' }}>
+                    {FEATURE_LABELS[key]}
+                  </span>
+                  <button type="button" onClick={() => toggleFeature(key)}
+                    className="w-10 h-5 rounded-full transition-colors relative"
+                    style={{ background: features[key] ? '#6C3BFF' : 'var(--c-border-2)' }}>
+                    <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                      style={{ left: features[key] ? '1.25rem' : '0.125rem' }} />
+                  </button>
+                </label>
+              ))}
+            </div>
+          </Section>
+        </div>
+
+        {/* Tab: Horarios */}
+        <div className={tab !== 'horarios' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Horario de atención">
+            <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
+              style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div>
+                <div className="text-sm" style={{ color: 'var(--c-text)' }}>Restringir horario</div>
+                <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>
+                  El agente solo contesta en el horario configurado
+                </div>
               </div>
-            </div>
-            <button type="button" onClick={() => setHoursEnabled(v => !v)}
-              className="w-10 h-5 rounded-full transition-colors relative flex-shrink-0"
-              style={{ background: hoursEnabled ? '#6C3BFF' : 'var(--c-border-2)' }}>
-              <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
-                style={{ left: hoursEnabled ? '1.25rem' : '0.125rem' }} />
-            </button>
-          </label>
+              <button type="button" onClick={() => setHoursEnabled(v => !v)}
+                className="w-10 h-5 rounded-full transition-colors relative flex-shrink-0"
+                style={{ background: hoursEnabled ? '#6C3BFF' : 'var(--c-border-2)' }}>
+                <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                  style={{ left: hoursEnabled ? '1.25rem' : '0.125rem' }} />
+              </button>
+            </label>
 
-          {hoursEnabled && (
-            <div className="flex flex-col gap-1 mt-1">
-              {DAYS.map(({ key, label }) => {
-                const s: DaySchedule = businessHours[key] ?? { open: false };
-                return (
-                  <div key={key} className="grid grid-cols-[80px_1fr] items-center gap-3 px-3 py-2 rounded-lg"
-                    style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                    <label className="flex items-center gap-2 cursor-pointer">
-                      <button type="button"
-                        onClick={() => setBusinessHours(h => ({ ...h, [key]: { ...s, open: !s.open } }))}
-                        className="w-8 h-4 rounded-full transition-colors relative flex-shrink-0"
-                        style={{ background: s.open ? '#6C3BFF' : 'var(--c-border-2)' }}>
-                        <span className="absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all"
-                          style={{ left: s.open ? '1rem' : '0.125rem' }} />
-                      </button>
-                      <span className="text-xs" style={{ color: s.open ? 'var(--c-text)' : 'var(--c-text-3)' }}>{label}</span>
-                    </label>
+            {hoursEnabled && (
+              <div className="flex flex-col gap-1">
+                {DAYS.map(({ key, label }) => {
+                  const s: DaySchedule = businessHours[key] ?? { open: false };
+                  return (
+                    <div key={key} className="grid grid-cols-[80px_1fr] items-center gap-3 px-3 py-2 rounded-lg"
+                      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                      <label className="flex items-center gap-2 cursor-pointer">
+                        <button type="button"
+                          onClick={() => setBusinessHours(h => ({ ...h, [key]: { ...s, open: !s.open } }))}
+                          className="w-8 h-4 rounded-full transition-colors relative flex-shrink-0"
+                          style={{ background: s.open ? '#6C3BFF' : 'var(--c-border-2)' }}>
+                          <span className="absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all"
+                            style={{ left: s.open ? '1rem' : '0.125rem' }} />
+                        </button>
+                        <span className="text-xs" style={{ color: s.open ? 'var(--c-text)' : 'var(--c-text-3)' }}>{label}</span>
+                      </label>
 
-                    {s.open ? (
-                      <div className="flex items-center gap-2">
-                        <input type="time" value={s.from ?? '09:00'}
-                          onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, from: e.target.value } }))}
-                          className="rounded px-2 py-1 text-xs outline-none"
-                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
-                        <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>–</span>
-                        <input type="time" value={s.to ?? '18:00'}
-                          onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, to: e.target.value } }))}
-                          className="rounded px-2 py-1 text-xs outline-none"
-                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
-                      </div>
-                    ) : (
-                      <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>Cerrado</span>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </Section>
+                      {s.open ? (
+                        <div className="flex items-center gap-2">
+                          <input type="time" value={s.from ?? '09:00'}
+                            onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, from: e.target.value } }))}
+                            className="rounded px-2 py-1 text-xs outline-none"
+                            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+                          <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>–</span>
+                          <input type="time" value={s.to ?? '18:00'}
+                            onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, to: e.target.value } }))}
+                            className="rounded px-2 py-1 text-xs outline-none"
+                            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+                        </div>
+                      ) : (
+                        <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>Cerrado</span>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </Section>
+        </div>
 
         <button type="submit" disabled={saving}
           className="py-3 rounded-xl font-semibold text-sm transition-opacity"

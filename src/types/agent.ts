@@ -57,6 +57,7 @@ export interface VoiceAgent {
   business_hours: BusinessHours;
   timezone: string;               // 'America/Monterrey'
   transfer_number?: string;       // número al que transferir en smart_transfer
+  client_email?: string;          // email del cliente para alertas
   transfer_whatsapp?: string;     // WhatsApp del dueño para notificaciones
   calendar_url?: string;          // Calendly / Google Cal link para citas
   crm_webhook?: string;           // webhook externo del sistema del cliente

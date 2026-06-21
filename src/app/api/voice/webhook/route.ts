@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
+import { sendEmail, minutesAlertHtml } from '@/lib/email/send';
 import { pauseVapiAgent } from '@/lib/vapi/control';
 
 export async function POST(req: NextRequest) {
@@ -71,7 +72,7 @@ export async function POST(req: NextRequest) {
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, transfer_whatsapp, minutes_used, minutes_included, active, phone_number, vapi_agent_id')
+        .select('business_name, client_email, transfer_whatsapp, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
         .eq('id', agentId)
         .single();
 
@@ -79,26 +80,36 @@ export async function POST(req: NextRequest) {
       const included = agent?.minutes_included ?? 0;
       const pct      = included > 0 ? (used / included) * 100 : 0;
 
+      const resetDateStr = agent?.minutes_reset_date
+        ? new Date(agent.minutes_reset_date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })
+        : '—';
+
       // 5. Auto-pause at 100%
       if (agent?.active && used >= included) {
         await supabase.from('voice_agents').update({ active: false }).eq('id', agentId);
         if (agent.phone_number) await pauseVapiAgent(agent.phone_number);
-        if (agent.transfer_whatsapp) {
-          await sendWhatsApp(
-            agent.transfer_whatsapp,
-            `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de CentinelIA para reactivar el servicio o adquirir minutos adicionales.`
-          );
+        const pauseMsg = `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de CentinelIA para reactivar el servicio o adquirir minutos adicionales.`;
+        if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, pauseMsg);
+        if (agent.client_email) {
+          await sendEmail({
+            to: agent.client_email,
+            subject: `⚠️ Agente pausado — ${agent.business_name}`,
+            html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr }),
+          }).catch(console.error);
         }
         break;
       }
 
       // 6. Warning at 80%
       if (agent?.active && pct >= 80 && (pct - (minutes / included) * 100) < 80) {
-        if (agent.transfer_whatsapp) {
-          await sendWhatsApp(
-            agent.transfer_whatsapp,
-            `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de CentinelIA si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`
-          );
+        const warnMsg = `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de CentinelIA si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`;
+        if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, warnMsg);
+        if (agent.client_email) {
+          await sendEmail({
+            to: agent.client_email,
+            subject: `📊 Aviso: ${Math.round(pct)}% de minutos usados — ${agent.business_name}`,
+            html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr }),
+          }).catch(console.error);
         }
       }
 

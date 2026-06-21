@@ -280,6 +280,21 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             {/* LEFT: main content */}
             <div className="lg:col-span-2 flex flex-col gap-5 order-first lg:order-first">
 
+              {/* Compact minutes bar — mobile only */}
+              <div className="lg:hidden rounded-xl p-4" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>Minutos del mes</span>
+                  <span className="text-xs font-semibold tabular-nums" style={{ color: minutesColor }}>{minutesUsed} / {minutesIncluded}</span>
+                </div>
+                <div className="w-full h-2 rounded-full" style={{ background: minutesBarBg }}>
+                  <div className="h-2 rounded-full transition-all" style={{ width: `${minutesPct}%`, background: minutesColor }} />
+                </div>
+                <div className="flex justify-between text-xs mt-1.5" style={{ color: 'var(--c-text-3)' }}>
+                  <span>{Math.round(minutesPct)}% usado</span>
+                  <span>Reset: {resetDate}</span>
+                </div>
+              </div>
+
               {/* KPI grid */}
               <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {kpiCards.map((card, i) => (
@@ -412,11 +427,11 @@ function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)' }: {
   icon: React.ReactNode; value: string; label: string; sub?: string; valueColor?: string;
 }) {
   return (
-    <div className="rounded-xl p-4" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-      <div className="p-1.5 rounded-lg w-fit mb-2" style={{ background: 'var(--c-surface-2)' }}>{icon}</div>
-      <div className="text-2xl font-bold" style={{ color: valueColor }}>{value}</div>
+    <div className="rounded-xl p-3 sm:p-4" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+      <div className="p-1 sm:p-1.5 rounded-lg w-fit mb-1.5 sm:mb-2" style={{ background: 'var(--c-surface-2)' }}>{icon}</div>
+      <div className="text-xl sm:text-2xl font-bold" style={{ color: valueColor }}>{value}</div>
       <div className="text-xs font-medium mt-0.5" style={{ color: 'var(--c-text)' }}>{label}</div>
-      {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
+      {sub && <div className="text-xs mt-0.5 hidden sm:block" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
     </div>
   );
 }

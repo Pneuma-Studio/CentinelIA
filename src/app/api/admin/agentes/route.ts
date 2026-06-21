@@ -18,7 +18,7 @@ export async function GET() {
 export async function POST(req: NextRequest) {
   const body = await req.json();
   const {
-    client_name, business_name, business_description,
+    client_name, client_email, business_name, business_description,
     business_address, business_phone_display, transfer_whatsapp,
     calendar_url, timezone, phone_number, transfer_number, knowledge_base, agent_name, plan, features,
   } = body;
@@ -38,6 +38,7 @@ export async function POST(req: NextRequest) {
     .from('voice_agents')
     .insert({
       client_name:            client_name.trim(),
+      client_email:           client_email?.trim() ?? null,
       business_name:          business_name.trim(),
       business_description:   business_description?.trim() ?? '',
       business_address:       business_address?.trim() ?? null,

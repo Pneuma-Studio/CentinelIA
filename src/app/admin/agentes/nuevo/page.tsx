@@ -20,6 +20,7 @@ export default function NuevoAgentePage() {
   const [features, setFeatures] = useState<AgentFeatures>(PLAN_FEATURES.basico);
 
   const selectedTpl = AGENT_TEMPLATES.find(t => t.id === template);
+  const [formTab, setFormTab] = useState<'info' | 'agente' | 'funciones'>('info');
 
   const handleTemplateSelect = (id: GiroTemplate) => {
     const tpl = AGENT_TEMPLATES.find(t => t.id === id)!;
@@ -60,6 +61,7 @@ export default function NuevoAgentePage() {
     const fd = new FormData(e.currentTarget);
     const body = {
       client_name:            fd.get('client_name'),
+      client_email:           fd.get('client_email') || null,
       business_name:          fd.get('business_name'),
       business_description:   fd.get('business_description'),
       business_address:       fd.get('business_address'),
@@ -129,7 +131,14 @@ export default function NuevoAgentePage() {
     );
   }
 
-  // Step 2: full form
+  // Step 2: full form (tabbed)
+  type Tab = 'info' | 'agente' | 'funciones';
+  const FORM_TABS: { id: Tab; label: string }[] = [
+    { id: 'info',     label: 'Información' },
+    { id: 'agente',   label: 'Agente' },
+    { id: 'funciones', label: 'Funciones' },
+  ];
+
   return (
     <div className="p-4 md:p-8 max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
@@ -146,79 +155,104 @@ export default function NuevoAgentePage() {
         </div>
       </div>
 
+      {/* Tab nav */}
+      <div className="flex gap-1 p-1 rounded-xl mb-6" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+        {FORM_TABS.map(t => (
+          <button key={t.id} type="button" onClick={() => setFormTab(t.id as any)}
+            className="flex-1 py-1.5 rounded-lg text-xs font-medium transition-all"
+            style={{ background: formTab === t.id ? '#6C3BFF' : 'transparent', color: formTab === t.id ? '#fff' : 'var(--c-text-3)' }}>
+            {t.label}
+          </button>
+        ))}
+      </div>
+
       <form onSubmit={handleSubmit} className="flex flex-col gap-6">
-        <Section title="Plan">
-          <div className="grid grid-cols-3 gap-3">
-            {PLANS.map(p => (
-              <button key={p} type="button" onClick={() => handlePlanChange(p)}
-                className="p-3 rounded-xl border text-left transition-all"
-                style={{
-                  borderColor: plan === p ? PLAN_COLORS[p] : 'var(--c-border)',
-                  background:  plan === p ? `${PLAN_COLORS[p]}18` : 'var(--c-surface)',
-                }}>
-                <div className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[p]}</div>
-                <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>{PLAN_MINUTES[p]} min/mes</div>
-              </button>
-            ))}
-          </div>
-        </Section>
 
-        <Section title="Información del negocio">
-          <Field label="Nombre del cliente (interno)" name="client_name" required />
-          <Field label="Nombre del negocio" name="business_name" required placeholder="Ej: Restaurante El Rincón" />
-          <Field label="Descripción del negocio" name="business_description" textarea
-            placeholder={selectedTpl?.description ? `Ej: ${selectedTpl.description} en Monterrey NL` : undefined} />
-          <Field label="Dirección" name="business_address" />
-          <Field label="Teléfono (que menciona el agente)" name="business_phone_display" placeholder="+52 81 1234 5678" />
-          <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" placeholder="+52 81 1234 5678" />
-          <Field label="Número de transferencia" name="transfer_number" placeholder="+52 81 1234 5678" />
-          {selectedTpl?.features.appointment_booking && (
-            <Field label={`Link de calendario para ${selectedTpl.appointmentLabel}s`} name="calendar_url" placeholder="https://calendly.com/..." />
-          )}
-          <Field label="Zona horaria" name="timezone" placeholder="America/Monterrey" />
-          <Field label="Número Vapi (recibe las llamadas)" name="phone_number" placeholder="+19284158163" />
-        </Section>
-
-        <Section title="Identidad del agente">
-          <div className="p-3 rounded-lg mb-1" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
-            <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
-              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
-            </p>
-          </div>
-          <Field label="Nombre del agente" name="agent_name" placeholder="Ej: Sofía (solo Plan Pro)" disabled={plan !== 'pro'} />
-        </Section>
-
-        <Section title="Base de conocimiento">
-          <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>
-            {selectedTpl?.id === 'restaurante' && 'Pega aquí el menú completo con precios, horarios y FAQs.'}
-            {selectedTpl?.id === 'consultorio' && 'Pega aquí los servicios, doctores, precios y FAQs del consultorio.'}
-            {selectedTpl?.id === 'estetica' && 'Pega aquí el catálogo de servicios con precios y FAQs.'}
-            {selectedTpl?.id === 'agencia' && 'Pega aquí los servicios, precios, proceso de trabajo y FAQs.'}
-            {selectedTpl?.id === 'retail' && 'Pega aquí el catálogo de productos con precios y FAQs.'}
-            {selectedTpl?.id === 'general' && 'Pega aquí la información que el agente necesita para responder preguntas.'}
-          </p>
-          <Field label="Catálogo / precios / FAQs" name="knowledge_base" textarea rows={10}
-            placeholder={selectedTpl?.kbPlaceholder} />
-        </Section>
-
-        <Section title="Funcionalidades activas">
-          <div className="flex flex-col gap-2">
-            {(Object.keys(features) as (keyof AgentFeatures)[]).map(key => (
-              <label key={key} className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
-                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <span className="text-sm" style={{ color: features[key] ? 'var(--c-text)' : 'var(--c-text-3)' }}>
-                  {FEATURE_LABELS[key]}
-                </span>
-                <button type="button" onClick={() => toggleFeature(key)}
-                  className="w-10 h-5 rounded-full transition-colors relative"
-                  style={{ background: features[key] ? '#6C3BFF' : 'var(--c-border-2)' }}>
-                  <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
-                    style={{ left: features[key] ? '1.25rem' : '0.125rem' }} />
+        {/* Tab: Información */}
+        <div className={formTab !== 'info' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Plan">
+            <div className="grid grid-cols-3 gap-3">
+              {PLANS.map(p => (
+                <button key={p} type="button" onClick={() => handlePlanChange(p)}
+                  className="p-3 rounded-xl border text-left transition-all"
+                  style={{
+                    borderColor: plan === p ? PLAN_COLORS[p] : 'var(--c-border)',
+                    background:  plan === p ? `${PLAN_COLORS[p]}18` : 'var(--c-surface)',
+                  }}>
+                  <div className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[p]}</div>
+                  <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>{PLAN_MINUTES[p]} min/mes</div>
                 </button>
-              </label>
-            ))}
-          </div>
-        </Section>
+              ))}
+            </div>
+          </Section>
+
+          <Section title="Datos del cliente">
+            <Field label="Nombre del cliente (interno)" name="client_name" required />
+            <Field label="Email del cliente (alertas)" name="client_email" placeholder="cliente@email.com" />
+            <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" placeholder="+52 81 1234 5678" />
+          </Section>
+
+          <Section title="Información del negocio">
+            <Field label="Nombre del negocio" name="business_name" required placeholder="Ej: Restaurante El Rincón" />
+            <Field label="Descripción del negocio" name="business_description" textarea
+              placeholder={selectedTpl?.description ? `Ej: ${selectedTpl.description} en Monterrey NL` : undefined} />
+            <Field label="Dirección" name="business_address" />
+            <Field label="Teléfono (que menciona el agente)" name="business_phone_display" placeholder="+52 81 1234 5678" />
+            <Field label="Número de transferencia" name="transfer_number" placeholder="+52 81 1234 5678" />
+            {selectedTpl?.features.appointment_booking && (
+              <Field label={`Link de calendario para ${selectedTpl.appointmentLabel}s`} name="calendar_url" placeholder="https://calendly.com/..." />
+            )}
+            <Field label="Zona horaria" name="timezone" placeholder="America/Monterrey" />
+            <Field label="Número Vapi (recibe las llamadas)" name="phone_number" placeholder="+19284158163" />
+          </Section>
+        </div>
+
+        {/* Tab: Agente */}
+        <div className={formTab !== 'agente' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Identidad del agente">
+            <div className="p-3 rounded-lg" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
+              <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
+                <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
+              </p>
+            </div>
+            <Field label="Nombre del agente" name="agent_name" placeholder="Ej: Sofía (solo Plan Pro)" disabled={plan !== 'pro'} />
+          </Section>
+
+          <Section title="Base de conocimiento">
+            <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
+              {selectedTpl?.id === 'restaurante' && 'Pega aquí el menú completo con precios, horarios y FAQs.'}
+              {selectedTpl?.id === 'consultorio' && 'Pega aquí los servicios, doctores, precios y FAQs del consultorio.'}
+              {selectedTpl?.id === 'estetica' && 'Pega aquí el catálogo de servicios con precios y FAQs.'}
+              {selectedTpl?.id === 'agencia' && 'Pega aquí los servicios, precios, proceso de trabajo y FAQs.'}
+              {selectedTpl?.id === 'retail' && 'Pega aquí el catálogo de productos con precios y FAQs.'}
+              {selectedTpl?.id === 'general' && 'Pega aquí la información que el agente necesita para responder preguntas.'}
+            </p>
+            <Field label="Catálogo / precios / FAQs" name="knowledge_base" textarea rows={12}
+              placeholder={selectedTpl?.kbPlaceholder} />
+          </Section>
+        </div>
+
+        {/* Tab: Funciones */}
+        <div className={formTab !== 'funciones' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Funcionalidades activas">
+            <div className="flex flex-col gap-2">
+              {(Object.keys(features) as (keyof AgentFeatures)[]).map(key => (
+                <label key={key} className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
+                  style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <span className="text-sm" style={{ color: features[key] ? 'var(--c-text)' : 'var(--c-text-3)' }}>
+                    {FEATURE_LABELS[key]}
+                  </span>
+                  <button type="button" onClick={() => toggleFeature(key)}
+                    className="w-10 h-5 rounded-full transition-colors relative"
+                    style={{ background: features[key] ? '#6C3BFF' : 'var(--c-border-2)' }}>
+                    <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                      style={{ left: features[key] ? '1.25rem' : '0.125rem' }} />
+                  </button>
+                </label>
+              ))}
+            </div>
+          </Section>
+        </div>
 
         <button type="submit" disabled={saving}
           className="py-3 rounded-xl font-semibold text-sm transition-opacity"
