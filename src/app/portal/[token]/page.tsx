@@ -115,9 +115,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
         {/* Header */}
         <div style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
-          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4 flex-wrap">
-            <div>
-              <h1 className="text-lg sm:text-xl font-bold" style={{ color: 'var(--c-text)' }}>{agentData.business_name}</h1>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 py-4 flex items-center justify-between gap-4">
+            <div className="min-w-0">
+              <h1 className="text-lg sm:text-xl font-bold truncate" style={{ color: 'var(--c-text)' }}>{agentData.business_name}</h1>
               <div className="flex items-center gap-3 mt-0.5 flex-wrap">
                 {agentData.active
                   ? <span className="flex items-center gap-1 text-xs font-medium" style={{ color: '#16a34a' }}><CheckCircle size={12} /> {agentName} activo</span>
@@ -129,7 +129,13 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 )}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 shrink-0">
+              {agentData.plan && (
+                <span className="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium"
+                  style={{ background: 'rgba(108,59,255,0.08)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.15)' }}>
+                  {PLAN_LABELS[agentData.plan]} · {minutesIncluded} min/mes
+                </span>
+              )}
               <ThemeToggle className="!text-[var(--c-text-2)] !bg-[var(--c-surface-2)]" />
               {hasStripe && (
                 <a href={`/api/billing/portal-session?token=${token}`}
@@ -242,23 +248,6 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                     <UsageRow label="Por mes"    value={`${avgMinPerMonth} min`} highlight={avgMinPerMonth > minutesIncluded * 0.9} />
                   </div>
                   <p className="text-xs mt-3" style={{ color: 'var(--c-text-4)' }}>Histórico · {allTimeTotalMin} min en {daysSinceFirst} días</p>
-                </div>
-              )}
-
-              {/* Plan info */}
-              {agentData.plan && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                  <h3 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Tu plan</h3>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm font-semibold" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[agentData.plan] ?? agentData.plan}</span>
-                    <span className="text-xs px-2.5 py-1 rounded-full font-medium" style={{ background: 'rgba(108,59,255,0.08)', color: '#6C3BFF' }}>{minutesIncluded} min/mes</span>
-                  </div>
-                  {hasStripe && (
-                    <a href={`/api/billing/portal-session?token=${token}`}
-                      className="text-xs mt-3 flex items-center gap-1 hover:underline" style={{ color: '#6C3BFF' }}>
-                      Ver facturas y pagos →
-                    </a>
-                  )}
                 </div>
               )}
 
