@@ -9,6 +9,7 @@ import PortalLeadsSection from './PortalLeadsSection';
 import PortalOrdersSection from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
 import BuyMinutesSection from './BuyMinutesSection';
+import MinutesLedgerSection from './MinutesLedgerSection';
 import CollapsibleSection from './CollapsibleSection';
 import BusinessHoursEditor from './BusinessHoursEditor';
 import KnowledgeBaseEditor from './KnowledgeBaseEditor';
@@ -249,6 +250,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   <div className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Minutos extra</div>
                   <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>Se suman al saldo actual al instante. No afectan tu plan mensual.</p>
                   <BuyMinutesSection token={token} />
+                </div>
+
+                {/* Minutes ledger */}
+                <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--c-divider)' }}>
+                  <div className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</div>
+                  <MinutesLedgerSection agentId={agentData.id} />
                 </div>
 
                 {/* Usage averages */}

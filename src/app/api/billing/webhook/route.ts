@@ -41,6 +41,13 @@ export async function POST(req: NextRequest) {
         await supabase.from('voice_agents')
           .update({ minutes_included: (agent?.minutes_included ?? 0) + minutes })
           .eq('id', agentId);
+
+        await supabase.from('minutes_ledger').insert({
+          agent_id:    agentId,
+          amount:      minutes,
+          description: `Compra de ${minutes} minutos extra`,
+          source:      'extra_compra',
+        });
         break;
       }
 
@@ -66,6 +73,13 @@ export async function POST(req: NextRequest) {
         minutes_reset_date:     nextResetDate(),
         grace_period_ends_at:   null,
       }).eq('id', agentId);
+
+      await supabase.from('minutes_ledger').insert({
+        agent_id:    agentId,
+        amount:      minutesCfg.minutes,
+        description: `Activación plan — ${minutesCfg.minutes} minutos incluidos`,
+        source:      'activacion',
+      });
 
       // Re-associate Vapi assistant when reactivating
       const { data: agent } = await supabase
@@ -113,6 +127,21 @@ export async function POST(req: NextRequest) {
         billing_status:       'activo',
         grace_period_ends_at: null,
       }).eq('id', agentId);
+
+      await supabase.from('minutes_ledger').insert({
+        agent_id:    agentId,
+        amount:      minutesCfg.minutes,
+        description: `Renovación mensual — ${minutesCfg.minutes} minutos`,
+        source:      'renovacion',
+      });
+      if (rollover > 0) {
+        await supabase.from('minutes_ledger').insert({
+          agent_id:    agentId,
+          amount:      rollover,
+          description: `Rollover — ${rollover} minutos del mes anterior`,
+          source:      'rollover',
+        });
+      }
 
       // Re-associate Vapi on renewal (in case it was paused for overage)
       const { data: agent } = await supabase
