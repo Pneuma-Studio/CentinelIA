@@ -7,7 +7,7 @@ const PRICE_PER_MIN = 10;
 
 const PACKAGES = [
   { minutes: 100, label: '100 min', price: 999 },
-  { minutes: 200, label: '200 min', price: 1799 },
+  { minutes: 200, label: '200 min', price: 1999 },
 ];
 
 function calcPrice(minutes: number): number {
