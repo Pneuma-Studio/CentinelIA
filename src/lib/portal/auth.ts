@@ -49,25 +49,25 @@ async function hmacKey(use: 'sign' | 'verify') {
   return crypto.subtle.importKey('raw', new TextEncoder().encode(secret()), { name: 'HMAC', hash: 'SHA-256' }, false, [use]);
 }
 
-export async function createSession(agentId: string, portalToken: string): Promise<string> {
+export async function createSession(portalEmail: string): Promise<string> {
   const exp  = Date.now() + SESSION_TTL_MS;
-  const data = `${agentId}|${portalToken}|${exp}`;
+  const data = `${portalEmail}|${exp}`;
   const key  = await hmacKey('sign');
   const sig  = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data)));
   return `${data}.${u8ToB64url(sig)}`;
 }
 
-export async function verifySession(cookie: string): Promise<{ agentId: string; portalToken: string } | null> {
+export async function verifySession(cookie: string): Promise<{ portalEmail: string } | null> {
   try {
-    const dot     = cookie.lastIndexOf('.');
-    const data    = cookie.slice(0, dot);
-    const sig     = b64urlToU8(cookie.slice(dot + 1));
-    const key     = await hmacKey('verify');
-    const valid   = await crypto.subtle.verify('HMAC', key, sig as unknown as ArrayBuffer, new TextEncoder().encode(data));
+    const dot   = cookie.lastIndexOf('.');
+    const data  = cookie.slice(0, dot);
+    const sig   = b64urlToU8(cookie.slice(dot + 1));
+    const key   = await hmacKey('verify');
+    const valid = await crypto.subtle.verify('HMAC', key, sig as unknown as ArrayBuffer, new TextEncoder().encode(data));
     if (!valid) return null;
-    const [agentId, portalToken, expStr] = data.split('|');
+    const [portalEmail, expStr] = data.split('|');
     if (parseInt(expStr) < Date.now()) return null;
-    return { agentId, portalToken };
+    return { portalEmail };
   } catch {
     return null;
   }

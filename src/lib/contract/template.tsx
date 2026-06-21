@@ -103,6 +103,11 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
           No se realizan reembolsos de períodos parciales.
           CentinelIA se reserva el derecho de dar de baja el servicio con previo aviso de 15 días naturales.
         </p>
+        <p style={{ marginTop: '0.5rem' }}>
+          Si el agente permanece pausado por un período continuo superior a 3 meses consecutivos sin que el Cliente
+          regularice el servicio, CentinelIA se reserva el derecho de reasignar el número telefónico asignado a otro
+          cliente. Esta reasignación se notificará al Cliente con al menos 15 días naturales de anticipación.
+        </p>
       </Clause>
 
       <Clause title={`${excluded.length > 0 ? '7' : '6'}. LIMITACIONES DE RESPONSABILIDAD`}>

@@ -3,15 +3,19 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Phone, CheckCircle, XCircle, CreditCard, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, AlertTriangle } from 'lucide-react';
+import { Phone, CheckCircle, XCircle, CreditCard, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, AlertTriangle, ChevronRight } from 'lucide-react';
 import type { VoiceCall } from '@/types/agent';
 import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { MinutesPlan } from '@/lib/billing/plans';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
+import { cookies } from 'next/headers';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
+import { redirect } from 'next/navigation';
 
 import PortalLogout            from './PortalLogout';
+import PauseResumeButton       from './PauseResumeButton';
 import PortalLeadsSection      from './PortalLeadsSection';
 import PortalOrdersSection     from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
@@ -39,10 +43,32 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const tab: Tab           = (tabParam as Tab) ?? 'resumen';
   const days               = period ? parseInt(period) : undefined;
 
+  // ── Auth: verify session owns this portal ─────────────────────────────────
+  const cookieStore    = await cookies();
+  const sessionCookie  = cookieStore.get(PORTAL_COOKIE)?.value ?? '';
+  const session        = await verifySession(sessionCookie);
+
   const supabase = createAdminClient();
   const { data: agent } = await supabase
     .from('voice_agents').select('*').eq('portal_token', token).single();
   if (!agent) notFound();
+
+  // Security: verify this agent belongs to the logged-in client
+  if (session?.portalEmail && agent.portal_email && agent.portal_email !== session.portalEmail) {
+    redirect('/portal/login');
+  }
+
+  // Multi-agent: find all agents for this client (same portal_email)
+  const { data: clientAgents } = session?.portalEmail
+    ? await supabase
+        .from('voice_agents')
+        .select('id, business_name, portal_token, active, client_paused, plan')
+        .eq('portal_email', session.portalEmail)
+    : { data: [] };
+  const otherAgents = (clientAgents ?? []).filter((a: any) => a.portal_token !== token);
+
+  const clientPaused  = (agent as any).client_paused ?? false;
+  const billingPaused = !agent.active && agent.billing_status === 'pago_fallido';
 
   const features   = agent.features ?? {};
   const showLeads  = !!features.lead_qualification;
@@ -172,11 +198,22 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         {/* Alerts */}
         {(!agent.active || minutesPct > 80) && (
           <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-4 flex flex-col gap-2">
-            {!agent.active && (
+            {billingPaused && (
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
                 style={{ background: '#FEF2F2', border: '1px solid rgba(239,68,68,0.25)' }}>
                 <AlertTriangle size={15} color="#ef4444" className="flex-shrink-0" />
-                <p className="text-sm" style={{ color: '#dc2626' }}>Tu agente está pausado. Contacta a tu asesor de CentinelIA.</p>
+                <p className="text-sm" style={{ color: '#dc2626' }}>
+                  Tu agente está pausado por falta de pago. Actualiza tu método de pago o contacta a CentinelIA.
+                </p>
+              </div>
+            )}
+            {clientPaused && !billingPaused && (
+              <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
+                style={{ background: '#FFF7ED', border: '1px solid rgba(245,158,11,0.3)' }}>
+                <AlertTriangle size={15} color="#f59e0b" className="flex-shrink-0" />
+                <p className="text-sm" style={{ color: '#92400e' }}>
+                  Tu agente está pausado voluntariamente. Puedes reanudarlo cuando quieras desde la pestaña Resumen.
+                </p>
               </div>
             )}
             {minutesPct > 80 && agent.active && (
@@ -218,6 +255,49 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 {showOrders && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" />}
                 {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" />}
               </div>
+
+              {/* Pause/resume control — only if not billing-paused */}
+              {!billingPaused && (
+                <div className="flex items-center justify-between p-4 rounded-xl"
+                  style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <div>
+                    <p className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                      {clientPaused ? 'Agente pausado por ti' : 'Agente activo'}
+                    </p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>
+                      {clientPaused
+                        ? 'No está atendiendo llamadas. Reanúdalo cuando estés listo.'
+                        : 'Está atendiendo llamadas. Puedes pausarlo temporalmente.'}
+                    </p>
+                  </div>
+                  <PauseResumeButton agentId={agent.id} clientPaused={clientPaused} />
+                </div>
+              )}
+
+              {/* Other agents (multi-agent clients) */}
+              {otherAgents.length > 0 && (
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <h2 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
+                    Mis otros agentes
+                  </h2>
+                  <div className="flex flex-col gap-2">
+                    {otherAgents.map((a: any) => (
+                      <Link key={a.id} href={`/portal/${a.portal_token}`}
+                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]"
+                        style={{ border: '1px solid var(--c-border)' }}>
+                        <div className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: a.active ? '#22c55e' : '#ef4444' }} />
+                        <span className="text-sm font-medium flex-1" style={{ color: 'var(--c-text)' }}>{a.business_name}</span>
+                        <span className="text-xs px-2 py-0.5 rounded-full"
+                          style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-3)' }}>
+                          {PLAN_LABELS[a.plan] ?? a.plan}
+                        </span>
+                        <ChevronRight size={14} style={{ color: 'var(--c-text-4)' }} />
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+              )}
 
               {/* Period filter */}
               <div className="flex items-center gap-2">

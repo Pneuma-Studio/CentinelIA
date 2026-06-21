@@ -7,12 +7,14 @@ export async function POST(req: NextRequest) {
   if (!email || !password) return NextResponse.json({ error: 'Credenciales requeridas' }, { status: 400 });
 
   const supabase = createAdminClient();
-  const { data: agent } = await supabase
+  const normalizedEmail = email.toLowerCase().trim();
+  const { data: agents } = await supabase
     .from('voice_agents')
-    .select('id, portal_token, portal_password_hash, active')
-    .eq('portal_email', email.toLowerCase().trim())
-    .single();
+    .select('id, portal_token, portal_password_hash')
+    .eq('portal_email', normalizedEmail)
+    .limit(1);
 
+  const agent = agents?.[0];
   if (!agent?.portal_password_hash) {
     return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 });
   }
@@ -20,7 +22,7 @@ export async function POST(req: NextRequest) {
   const ok = await verifyPassword(password, agent.portal_password_hash);
   if (!ok) return NextResponse.json({ error: 'Credenciales incorrectas' }, { status: 401 });
 
-  const session = await createSession(agent.id, agent.portal_token);
+  const session = await createSession(normalizedEmail);
   const res = NextResponse.json({ token: agent.portal_token });
   res.cookies.set(PORTAL_COOKIE, session, {
     httpOnly: true,

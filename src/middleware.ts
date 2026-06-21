@@ -29,7 +29,6 @@ export async function middleware(req: NextRequest) {
 
     if (!session) {
       const urlToken = pathname.split('/')[2];
-      // If URL has a token, redirect to setup (setup page will redirect to login if already registered)
       if (urlToken && urlToken !== 'login') {
         const url = req.nextUrl.clone();
         url.pathname = `/portal/${urlToken}/setup`;
@@ -38,14 +37,6 @@ export async function middleware(req: NextRequest) {
       const url = req.nextUrl.clone();
       url.pathname = '/portal/login';
       url.searchParams.set('from', pathname);
-      return NextResponse.redirect(url);
-    }
-
-    // Verify the session token matches the URL token
-    const urlToken = pathname.split('/')[2];
-    if (urlToken && urlToken !== session.portalToken) {
-      const url = req.nextUrl.clone();
-      url.pathname = `/portal/${session.portalToken}`;
       return NextResponse.redirect(url);
     }
 

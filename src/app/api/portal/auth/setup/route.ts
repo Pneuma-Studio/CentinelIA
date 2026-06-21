@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   if (error)
     return NextResponse.json({ error: error.message }, { status: 500 });
 
-  const sessionValue = await createSession(agent.id, token);
+  const sessionValue = await createSession(email.toLowerCase().trim());
   const res = NextResponse.json({ ok: true, token });
   res.cookies.set(PORTAL_COOKIE, sessionValue, {
     httpOnly: true,
