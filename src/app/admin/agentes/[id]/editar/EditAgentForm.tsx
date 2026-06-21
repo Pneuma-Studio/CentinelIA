@@ -243,14 +243,22 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
 
                       {s.open ? (
                         <div className="flex items-center gap-2">
-                          <input type="time" value={s.from ?? '09:00'}
-                            onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, from: e.target.value } }))}
-                            className="rounded px-2 py-1 text-xs outline-none"
+                          <input type="text" value={s.from ?? '09:00'} maxLength={5} placeholder="09:00"
+                            onChange={e => {
+                              let v = e.target.value.replace(/\D/g, '');
+                              if (v.length >= 3) v = v.slice(0, 2) + ':' + v.slice(2, 4);
+                              setBusinessHours(h => ({ ...h, [key]: { ...s, from: v } }));
+                            }}
+                            className="rounded px-2 py-1 text-xs outline-none w-14 text-center"
                             style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
                           <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>–</span>
-                          <input type="time" value={s.to ?? '18:00'}
-                            onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, to: e.target.value } }))}
-                            className="rounded px-2 py-1 text-xs outline-none"
+                          <input type="text" value={s.to ?? '18:00'} maxLength={5} placeholder="18:00"
+                            onChange={e => {
+                              let v = e.target.value.replace(/\D/g, '');
+                              if (v.length >= 3) v = v.slice(0, 2) + ':' + v.slice(2, 4);
+                              setBusinessHours(h => ({ ...h, [key]: { ...s, to: v } }));
+                            }}
+                            className="rounded px-2 py-1 text-xs outline-none w-14 text-center"
                             style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
                         </div>
                       ) : (

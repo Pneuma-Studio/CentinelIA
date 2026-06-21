@@ -13,6 +13,7 @@ import CollapsibleSection from './CollapsibleSection';
 import BusinessHoursEditor from './BusinessHoursEditor';
 import KnowledgeBaseEditor from './KnowledgeBaseEditor';
 import CallCard from './CallCard';
+import DownloadCallsCSV from './DownloadCallsCSV';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
@@ -343,7 +344,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               )}
 
               {/* Calls */}
-              <Section title={`Llamadas recientes${calls.length > 0 ? ` (${calls.length})` : ''}`} icon={<PhoneCall size={14} />}>
+              <Section
+                title={`Llamadas recientes${calls.length > 0 ? ` (${calls.length})` : ''}`}
+                icon={<PhoneCall size={14} />}
+                action={<DownloadCallsCSV calls={calls} filename={`llamadas-${agentData.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />}
+              >
                 {calls.length === 0 ? (
                   <div className="text-center py-8 text-sm" style={{ color: 'var(--c-text-3)' }}>
                     Sin llamadas en este período
@@ -411,13 +416,16 @@ function buildKpiCards({ showOrders, showLeads, showAppts, calls, leads, orders,
 
 // ── Sub-components ────────────────────────────────────────────────────────
 
-function Section({ title, icon, children }: { title: string; icon?: React.ReactNode; children: React.ReactNode }) {
+function Section({ title, icon, action, children }: { title: string; icon?: React.ReactNode; action?: React.ReactNode; children: React.ReactNode }) {
   return (
     <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-      <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase flex items-center gap-1.5"
-        style={{ color: 'var(--c-text-3)' }}>
-        {icon}{title}
-      </h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-xs font-semibold tracking-widest uppercase flex items-center gap-1.5"
+          style={{ color: 'var(--c-text-3)' }}>
+          {icon}{title}
+        </h2>
+        {action}
+      </div>
       {children}
     </div>
   );

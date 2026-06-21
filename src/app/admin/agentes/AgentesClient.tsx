@@ -6,21 +6,30 @@ import { Plus, PhoneCall, CheckCircle, XCircle, Search } from 'lucide-react';
 import type { VoiceAgent } from '@/types/agent';
 import { PLAN_LABELS } from '@/types/agent';
 
+type StatusFilter = 'todos' | 'activos' | 'pausados';
+
 export default function AgentesClient({ list }: { list: VoiceAgent[] }) {
   const [search, setSearch] = useState('');
+  const [status, setStatus] = useState<StatusFilter>('todos');
 
   const filtered = useMemo(() => {
-    if (!search.trim()) return list;
+    let result = list;
+    if (status === 'activos')  result = result.filter(a => a.active);
+    if (status === 'pausados') result = result.filter(a => !a.active);
+    if (!search.trim()) return result;
     const q = search.toLowerCase();
-    return list.filter(a =>
+    return result.filter(a =>
       a.business_name.toLowerCase().includes(q) ||
       a.client_name.toLowerCase().includes(q) ||
       (a.phone_number ?? '').includes(q)
     );
-  }, [list, search]);
+  }, [list, search, status]);
+
+  const activeCount = list.filter(a => a.active).length;
+  const pausedCount = list.filter(a => !a.active).length;
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-8">
       <div className="flex items-center justify-between mb-6">
         <div>
           <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Agentes de Voz</h1>
@@ -46,22 +55,43 @@ export default function AgentesClient({ list }: { list: VoiceAgent[] }) {
         </div>
       ) : (
         <>
-          {/* Search */}
-          <div className="relative mb-5">
-            <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-text-3)' }} />
-            <input
-              type="text"
-              placeholder="Buscar por nombre, cliente o número…"
-              value={search}
-              onChange={e => setSearch(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-              style={{
-                background: 'var(--c-input-bg)',
-                border: '1px solid var(--c-input-border)',
-                color: 'var(--c-text)',
-                maxWidth: 360,
-              }}
-            />
+          {/* Status filter + Search */}
+          <div className="flex flex-col sm:flex-row gap-3 mb-5">
+            <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              {([
+                { key: 'todos',    label: `Todos (${list.length})` },
+                { key: 'activos',  label: `Activos (${activeCount})` },
+                { key: 'pausados', label: `Pausados (${pausedCount})` },
+              ] as { key: StatusFilter; label: string }[]).map(({ key, label }) => (
+                <button
+                  key={key}
+                  onClick={() => setStatus(key)}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                  style={{
+                    background: status === key ? '#6C3BFF' : 'transparent',
+                    color: status === key ? '#fff' : 'var(--c-text-3)',
+                  }}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
+            <div className="relative">
+              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-text-3)' }} />
+              <input
+                type="text"
+                placeholder="Buscar por nombre, cliente o número…"
+                value={search}
+                onChange={e => setSearch(e.target.value)}
+                className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
+                style={{
+                  background: 'var(--c-input-bg)',
+                  border: '1px solid var(--c-input-border)',
+                  color: 'var(--c-text)',
+                  minWidth: 280,
+                }}
+              />
+            </div>
           </div>
 
           {filtered.length === 0 ? (

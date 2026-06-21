@@ -1,7 +1,14 @@
 export const dynamic = 'force-dynamic';
 
 import { createAdminClient } from '@/lib/supabase/admin';
-import { Phone, Clock, TrendingUp, Users } from 'lucide-react';
+import { Phone, Clock, TrendingUp, Users, DollarSign } from 'lucide-react';
+import Link from 'next/link';
+import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
+import type { MinutesPlan } from '@/lib/billing/plans';
+
+interface Props {
+  searchParams: Promise<{ period?: string }>;
+}
 
 const OUTCOME_LABELS: Record<string, { label: string; color: string }> = {
   lead_created:       { label: 'Leads',      color: '#22c55e' },
@@ -13,7 +20,18 @@ const OUTCOME_LABELS: Record<string, { label: string; color: string }> = {
   other:              { label: 'Otro',        color: '#4b5563' },
 };
 
-export default async function AnalyticsPage() {
+const PERIOD_OPTIONS = [
+  { label: '7 días',  param: '7' },
+  { label: '30 días', param: '30' },
+  { label: '90 días', param: '90' },
+  { label: 'Todo',    param: '' },
+];
+
+export default async function AnalyticsPage({ searchParams }: Props) {
+  const { period } = await searchParams;
+  const days  = period ? parseInt(period) : undefined;
+  const since = days ? new Date(Date.now() - days * 86400000).toISOString() : undefined;
+
   const supabase = createAdminClient();
 
   const [
@@ -21,20 +39,29 @@ export default async function AnalyticsPage() {
     { data: agents },
     { data: leads },
   ] = await Promise.all([
-    supabase.from('voice_calls').select('*').order('created_at', { ascending: false }),
-    supabase.from('voice_agents').select('id, business_name, minutes_used, plan, active').order('created_at'),
-    supabase.from('leads_voice').select('id, created_at, agent_id'),
+    since
+      ? supabase.from('voice_calls').select('*').gte('created_at', since).order('created_at', { ascending: false })
+      : supabase.from('voice_calls').select('*').order('created_at', { ascending: false }),
+    supabase.from('voice_agents').select('id, business_name, minutes_used, minutes_plan, plan, active').order('created_at'),
+    since
+      ? supabase.from('leads_voice').select('id, created_at, agent_id').gte('created_at', since)
+      : supabase.from('leads_voice').select('id, created_at, agent_id'),
   ]);
 
-  const allCalls = calls ?? [];
+  const allCalls  = calls  ?? [];
   const allAgents = agents ?? [];
-  const allLeads = leads ?? [];
+  const allLeads  = leads  ?? [];
 
-  const totalCalls = allCalls.length;
+  const totalCalls    = allCalls.length;
   const totalDuration = allCalls.reduce((s, c) => s + (c.duration_seconds ?? 0), 0);
-  const avgDuration = totalCalls > 0 ? Math.round(totalDuration / totalCalls) : 0;
-  const totalLeads = allLeads.length;
+  const avgDuration   = totalCalls > 0 ? Math.round(totalDuration / totalCalls) : 0;
+  const totalLeads    = allLeads.length;
   const conversionRate = totalCalls > 0 ? ((totalLeads / totalCalls) * 100).toFixed(1) : '0';
+
+  const mrr = allAgents
+    .filter(a => a.active && a.minutes_plan)
+    .reduce((sum, a) => sum + (MINUTES_PLAN_CONFIG[a.minutes_plan as MinutesPlan]?.mxn ?? 0), 0);
+  const activeAgentsCount = allAgents.filter(a => a.active).length;
 
   const outcomeCounts: Record<string, number> = {};
   for (const call of allCalls) {
@@ -46,12 +73,13 @@ export default async function AnalyticsPage() {
     const h = new Date(call.created_at).getHours();
     hourCounts[h]++;
   }
-  const peakHour = hourCounts.indexOf(Math.max(...hourCounts));
+  const peakHour    = hourCounts.indexOf(Math.max(...hourCounts));
   const maxHourCount = Math.max(...hourCounts, 1);
 
+  const chartDays = days ? Math.min(days, 30) : 14;
   const dayCounts: Record<string, number> = {};
   const today = new Date();
-  for (let i = 13; i >= 0; i--) {
+  for (let i = chartDays - 1; i >= 0; i--) {
     const d = new Date(today);
     d.setDate(d.getDate() - i);
     dayCounts[d.toISOString().slice(0, 10)] = 0;
@@ -60,7 +88,7 @@ export default async function AnalyticsPage() {
     const day = call.created_at.slice(0, 10);
     if (day in dayCounts) dayCounts[day]++;
   }
-  const dayEntries = Object.entries(dayCounts);
+  const dayEntries  = Object.entries(dayCounts);
   const maxDayCount = Math.max(...Object.values(dayCounts), 1);
 
   const agentCallMap: Record<string, { calls: number; leads: number; duration: number }> = {};
@@ -76,24 +104,51 @@ export default async function AnalyticsPage() {
 
   return (
     <div className="p-4 md:p-8 max-w-5xl">
-      <div className="mb-8">
-        <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Analytics</h1>
-        <p className="text-sm mt-1" style={{ color: 'var(--c-text-2)' }}>Todos los agentes · datos en tiempo real</p>
+      {/* Header */}
+      <div className="flex items-start justify-between gap-4 mb-6">
+        <div>
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Analytics</h1>
+          <div className="flex items-center gap-2 mt-2">
+            {PERIOD_OPTIONS.map(({ label, param }) => {
+              const active = (period ?? '') === param;
+              return (
+                <Link
+                  key={param}
+                  href={param ? `/admin/analytics?period=${param}` : '/admin/analytics'}
+                  className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                  style={{
+                    background: active ? '#6C3BFF' : 'var(--c-surface)',
+                    color: active ? '#fff' : 'var(--c-text-3)',
+                    border: `1px solid ${active ? '#6C3BFF' : 'var(--c-border)'}`,
+                  }}
+                >
+                  {label}
+                </Link>
+              );
+            })}
+          </div>
+        </div>
+        <div className="text-right shrink-0">
+          <div className="text-2xl font-bold" style={{ color: '#22c55e' }}>
+            ${mrr.toLocaleString('es-MX')} <span className="text-base font-normal" style={{ color: 'var(--c-text-3)' }}>MXN</span>
+          </div>
+          <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>MRR estimado · {activeAgentsCount} activos</div>
+        </div>
       </div>
 
       {/* KPI cards */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
-        <KpiCard icon={<Phone size={18} />} label="Total llamadas" value={totalCalls.toString()} color="#6C3BFF" />
-        <KpiCard icon={<Clock size={18} />} label="Duración promedio" value={`${Math.floor(avgDuration / 60)}m ${avgDuration % 60}s`} color="#a855f7" />
-        <KpiCard icon={<Users size={18} />} label="Leads generados" value={totalLeads.toString()} color="#22c55e" />
-        <KpiCard icon={<TrendingUp size={18} />} label="Tasa de conversión" value={`${conversionRate}%`} color="#f59e0b" />
+        <KpiCard icon={<Phone size={18} />}      label="Total llamadas"      value={totalCalls.toString()} color="#6C3BFF" />
+        <KpiCard icon={<Clock size={18} />}       label="Duración promedio"   value={`${Math.floor(avgDuration / 60)}m ${avgDuration % 60}s`} color="#a855f7" />
+        <KpiCard icon={<Users size={18} />}       label="Leads generados"     value={totalLeads.toString()} color="#22c55e" />
+        <KpiCard icon={<TrendingUp size={18} />}  label="Tasa de conversión"  value={`${conversionRate}%`} color="#f59e0b" />
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
         {/* Calls per day */}
         <div className="p-5 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
           <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-            Llamadas — últimos 14 días
+            Llamadas — últimos {chartDays} días
           </h2>
           <div className="flex items-end gap-1 h-24">
             {dayEntries.map(([day, count]) => (
@@ -156,7 +211,7 @@ export default async function AnalyticsPage() {
                 .sort((a, b) => b[1] - a[1])
                 .map(([outcome, count]) => {
                   const info = OUTCOME_LABELS[outcome] ?? OUTCOME_LABELS.other;
-                  const pct = Math.round((count / totalCalls) * 100);
+                  const pct  = Math.round((count / totalCalls) * 100);
                   return (
                     <div key={outcome}>
                       <div className="flex justify-between mb-1">
@@ -183,27 +238,32 @@ export default async function AnalyticsPage() {
           ) : (
             <div className="flex flex-col gap-2">
               {allAgents.map(agent => {
-                const stats = agentCallMap[agent.id] ?? { calls: 0, leads: 0, duration: 0 };
+                const stats  = agentCallMap[agent.id] ?? { calls: 0, leads: 0, duration: 0 };
                 const avgMin = stats.calls > 0 ? Math.round(stats.duration / stats.calls / 60) : 0;
+                const mxn    = agent.minutes_plan ? (MINUTES_PLAN_CONFIG[agent.minutes_plan as MinutesPlan]?.mxn ?? 0) : 0;
                 return (
-                  <div key={agent.id} className="px-3 py-2.5 rounded-lg"
-                    style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+                  <Link
+                    key={agent.id}
+                    href={`/admin/agentes/${agent.id}`}
+                    className="px-3 py-2.5 rounded-lg transition-all hover:opacity-80"
+                    style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', display: 'block' }}
+                  >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
                         <div className="w-1.5 h-1.5 rounded-full" style={{ background: agent.active ? '#22c55e' : '#4b5563' }} />
                         <span className="text-sm" style={{ color: 'var(--c-text)' }}>{agent.business_name}</span>
                       </div>
-                      <span className="text-xs px-1.5 py-0.5 rounded" style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)' }}>
-                        {agent.plan}
+                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                        {mxn > 0 ? `$${mxn.toLocaleString('es-MX')} MXN` : agent.plan}
                       </span>
                     </div>
                     <div className="flex gap-4 mt-1.5">
                       <Stat label="Llamadas" value={stats.calls} />
-                      <Stat label="Leads" value={stats.leads} color="#22c55e" />
-                      <Stat label="Prom." value={`${avgMin}m`} />
-                      <Stat label="Minutos" value={agent.minutes_used} />
+                      <Stat label="Leads"    value={stats.leads} color="#22c55e" />
+                      <Stat label="Prom."    value={`${avgMin}m`} />
+                      <Stat label="Min. usados" value={agent.minutes_used} />
                     </div>
-                  </div>
+                  </Link>
                 );
               })}
             </div>
