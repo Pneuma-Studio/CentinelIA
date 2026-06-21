@@ -1,12 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter, useSearchParams } from 'next/navigation';
+import { useSearchParams } from 'next/navigation';
 import { Lock, Loader2 } from 'lucide-react';
 import { Suspense } from 'react';
 
 function LoginForm() {
-  const router = useRouter();
   const params = useSearchParams();
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -22,8 +21,7 @@ function LoginForm() {
       body: JSON.stringify({ password }),
     });
     if (res.ok) {
-      router.push(params.get('from') ?? '/admin/dashboard');
-      router.refresh();
+      window.location.href = params.get('from') ?? '/admin/dashboard';
     } else {
       setError('Contraseña incorrecta');
       setLoading(false);
