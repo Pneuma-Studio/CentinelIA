@@ -166,7 +166,7 @@ export default function BillingClient({ agents }: { agents: Agent[] }) {
   const noplanCount  = agents.filter(a => !a.plan).length;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-4 md:p-6 space-y-6">
       <div>
         <h1 className="text-xl font-semibold" style={{ color: 'var(--c-text)' }}>Facturación</h1>
         <p className="text-sm mt-0.5" style={{ color: 'var(--c-text-2)' }}>

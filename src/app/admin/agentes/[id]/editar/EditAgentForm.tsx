@@ -88,7 +88,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   };
 
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
         <Link href={`/admin/agentes/${agent.id}`} className="p-2 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors" style={{ color: 'var(--c-text-2)' }}>
           <ArrowLeft size={18} />

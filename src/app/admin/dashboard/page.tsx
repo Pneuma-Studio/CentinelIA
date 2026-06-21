@@ -59,7 +59,7 @@ export default async function DashboardPage() {
   const inactiveAgents = agentList.filter(a => !a.active);
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-4 md:p-8 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Dashboard</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--c-text-3)' }}>

@@ -95,7 +95,7 @@ export default function NuevoAgentePage() {
   // Step 1: template selection
   if (!template) {
     return (
-      <div className="p-8 max-w-3xl">
+      <div className="p-4 md:p-8 max-w-3xl">
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--c-text)' }}>Nuevo agente</h1>
         <p className="text-sm mb-8" style={{ color: 'var(--c-text-2)' }}>
           Elige el tipo de negocio para pre-configurar las funcionalidades correctas.
@@ -131,7 +131,7 @@ export default function NuevoAgentePage() {
 
   // Step 2: full form
   return (
-    <div className="p-8 max-w-2xl">
+    <div className="p-4 md:p-8 max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
         <button onClick={() => setTemplate(null)} className="text-xs px-3 py-1.5 rounded-lg transition-colors"
           style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)' }}>

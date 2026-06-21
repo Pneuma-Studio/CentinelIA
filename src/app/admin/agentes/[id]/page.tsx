@@ -36,7 +36,7 @@ export default async function AgentDetailPage({ params }: Props) {
   const planColor = planColors[agent.plan] ?? '#6b7280';
 
   return (
-    <div className="p-8 max-w-4xl">
+    <div className="p-4 md:p-8 max-w-4xl">
       {/* Header */}
       <div className="flex items-center gap-4 mb-8">
         <Link href="/admin/agentes" className="p-2 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors" style={{ color: 'var(--c-text-3)' }}>

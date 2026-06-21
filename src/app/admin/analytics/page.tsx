@@ -75,7 +75,7 @@ export default async function AnalyticsPage() {
   }
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-4 md:p-8 max-w-5xl">
       <div className="mb-8">
         <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Analytics</h1>
         <p className="text-sm mt-1" style={{ color: 'var(--c-text-2)' }}>Todos los agentes · datos en tiempo real</p>
