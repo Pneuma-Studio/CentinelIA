@@ -255,7 +255,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 {/* Minutes ledger */}
                 <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--c-divider)' }}>
                   <div className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</div>
-                  <MinutesLedgerSection agentId={agentData.id} />
+                  <MinutesLedgerSection
+                    agentId={agentData.id}
+                    minutesIncluded={minutesIncluded}
+                    minutesUsed={minutesUsed}
+                  />
                 </div>
 
                 {/* Usage averages */}
