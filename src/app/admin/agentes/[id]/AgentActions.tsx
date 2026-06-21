@@ -27,11 +27,14 @@ export default function AgentActions({ agentId, active }: { agentId: string; act
     }
   };
 
+  const label = done ? 'Actualizado' : active ? 'Desactivar' : 'Activar';
+
   return (
     <button
       onClick={toggle}
       disabled={loading || done}
-      className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-all"
+      title={label}
+      className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold transition-all shrink-0"
       style={{
         background: done ? 'rgba(34,197,94,0.12)' : active ? 'rgba(239,68,68,0.1)' : 'rgba(34,197,94,0.1)',
         color: done ? '#22c55e' : active ? '#ef4444' : '#22c55e',
@@ -40,7 +43,7 @@ export default function AgentActions({ agentId, active }: { agentId: string; act
       }}
     >
       {done ? <Check size={13} /> : <Power size={13} />}
-      {done ? 'Actualizado' : active ? 'Desactivar' : 'Activar'}
+      <span className="hidden sm:inline">{label}</span>
     </button>
   );
 }

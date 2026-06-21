@@ -44,7 +44,7 @@ export default async function AgentDetailPage({ params }: Props) {
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
+            <h1 className="text-lg sm:text-2xl font-bold truncate" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
             <span className="px-2.5 py-0.5 rounded-full text-xs font-semibold" style={{ background: `${planColor}22`, color: planColor, border: `1px solid ${planColor}44` }}>
               {PLAN_LABELS[agent.plan]}
             </span>
@@ -55,10 +55,11 @@ export default async function AgentDetailPage({ params }: Props) {
           <p className="text-sm mt-0.5" style={{ color: 'var(--c-text-2)' }}>{agent.client_name}</p>
         </div>
         <Link href={`/admin/agentes/${agent.id}/editar`}
-          className="flex items-center gap-2 px-3 py-2 rounded-lg text-xs font-semibold transition-opacity"
+          title="Editar agente"
+          className="flex items-center gap-1.5 p-2 sm:px-3 sm:py-2 rounded-lg text-xs font-semibold transition-opacity shrink-0"
           style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
           <Pencil size={13} />
-          Editar
+          <span className="hidden sm:inline">Editar</span>
         </Link>
         <AgentActions agentId={agent.id} active={agent.active} />
       </div>
