@@ -1,8 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { toast } from 'sonner';
-import { Copy, Check, ExternalLink, CreditCard, Clock, AlertCircle, CheckCircle2, XCircle } from 'lucide-react';
+import { Copy, Check, ExternalLink, CreditCard, Clock, AlertCircle, CheckCircle2, XCircle, ChevronDown } from 'lucide-react';
 import { FEATURE_PLAN_CONFIG, MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { Plan } from '@/types/agent';
 import type { MinutesPlan } from '@/lib/billing/plans';
@@ -29,7 +29,7 @@ const STATUS_STYLES: Record<string, { label: string; color: string; bg: string; 
 };
 
 function StatusBadge({ status }: { status: string }) {
-  const s = STATUS_STYLES[status] ?? STATUS_STYLES.sin_plan;
+  const s    = STATUS_STYLES[status] ?? STATUS_STYLES.sin_plan;
   const Icon = s.icon;
   return (
     <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium"
@@ -39,6 +39,76 @@ function StatusBadge({ status }: { status: string }) {
     </span>
   );
 }
+
+// ── Custom select — avoids native dropdown styling issues in dark mode ─────────
+
+interface SelectOption<T extends string> {
+  value: T;
+  label: string;
+  sub?: string;
+}
+
+function SelectMenu<T extends string>({
+  value, onChange, options,
+}: {
+  value: T;
+  onChange: (v: T) => void;
+  options: SelectOption<T>[];
+}) {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    }
+    document.addEventListener('mousedown', onDown);
+    return () => document.removeEventListener('mousedown', onDown);
+  }, []);
+
+  const selected = options.find(o => o.value === value);
+
+  return (
+    <div ref={ref} className="relative">
+      <button
+        type="button"
+        onClick={() => setOpen(o => !o)}
+        className="w-full flex items-center justify-between gap-2 rounded-lg px-2.5 py-1.5 text-xs outline-none text-left"
+        style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
+      >
+        <span className="truncate">{selected?.label}</span>
+        <ChevronDown size={10} className="flex-shrink-0 transition-transform" style={{ color: 'var(--c-text-3)', transform: open ? 'rotate(180deg)' : undefined }} />
+      </button>
+
+      {open && (
+        <div
+          className="absolute z-50 top-full mt-1 left-0 right-0 rounded-lg overflow-hidden shadow-xl"
+          style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)', minWidth: '160px' }}
+        >
+          {options.map(o => (
+            <button
+              key={o.value}
+              type="button"
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className="w-full flex flex-col gap-0.5 px-3 py-2 text-left text-xs transition-colors"
+              style={{
+                color:      'var(--c-text)',
+                background: o.value === value ? 'rgba(108,59,255,0.1)' : 'transparent',
+              }}
+              onMouseEnter={e => { if (o.value !== value) (e.currentTarget as HTMLElement).style.background = 'var(--c-surface-2)'; }}
+              onMouseLeave={e => { if (o.value !== value) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
+            >
+              <span className="font-medium">{o.label}</span>
+              {o.sub && <span style={{ color: 'var(--c-text-3)' }}>{o.sub}</span>}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ── Generate link section ──────────────────────────────────────────────────────
 
 function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName: string }) {
   const [featurePlan, setFeaturePlan] = useState<Plan>('basico');
@@ -51,11 +121,23 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
   const minutesCfg = MINUTES_PLAN_CONFIG[minutesPlan];
   const totalFirst  = featureCfg.setupFee + minutesCfg.mxn;
 
+  const featureOptions = (Object.entries(FEATURE_PLAN_CONFIG) as [Plan, typeof featureCfg][]).map(([key, cfg]) => ({
+    value: key,
+    label: cfg.label,
+    sub:   `$${cfg.setupFee.toLocaleString('es-MX')} instalación`,
+  }));
+
+  const minutesOptions = (Object.entries(MINUTES_PLAN_CONFIG) as [MinutesPlan, typeof minutesCfg][]).map(([key, cfg]) => ({
+    value: key,
+    label: cfg.label,
+    sub:   `${cfg.minutes} min · $${cfg.mxn.toLocaleString('es-MX')}/mes`,
+  }));
+
   const handleGenerate = async () => {
     setLoading(true);
     setUrl(null);
     try {
-      const res = await fetch('/api/billing/create-checkout', {
+      const res  = await fetch('/api/billing/create-checkout', {
         method:  'POST',
         headers: { 'Content-Type': 'application/json' },
         body:    JSON.stringify({ agentId, featurePlan, minutesPlan }),
@@ -84,34 +166,19 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
       <div className="grid grid-cols-2 gap-2">
         <div>
           <div className="text-xs mb-1" style={{ color: 'var(--c-text-3)' }}>Plan (funcionalidades)</div>
-          <select
+          <SelectMenu
             value={featurePlan}
-            onChange={e => { setFeaturePlan(e.target.value as Plan); setUrl(null); }}
-            className="w-full rounded-lg px-2 py-1.5 text-xs outline-none"
-            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)', colorScheme: 'dark' }}
-          >
-            {(Object.entries(FEATURE_PLAN_CONFIG) as [Plan, typeof featureCfg][]).map(([key, cfg]) => (
-              <option key={key} value={key}>
-                {cfg.label} — ${cfg.setupFee.toLocaleString('es-MX')} inst.
-              </option>
-            ))}
-          </select>
+            onChange={v => { setFeaturePlan(v); setUrl(null); }}
+            options={featureOptions}
+          />
         </div>
-
         <div>
           <div className="text-xs mb-1" style={{ color: 'var(--c-text-3)' }}>Minutos (mensualidad)</div>
-          <select
+          <SelectMenu
             value={minutesPlan}
-            onChange={e => { setMinutesPlan(e.target.value as MinutesPlan); setUrl(null); }}
-            className="w-full rounded-lg px-2 py-1.5 text-xs outline-none"
-            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)', colorScheme: 'dark' }}
-          >
-            {(Object.entries(MINUTES_PLAN_CONFIG) as [MinutesPlan, typeof minutesCfg][]).map(([key, cfg]) => (
-              <option key={key} value={key}>
-                {cfg.label} · {cfg.minutes} min — ${cfg.mxn.toLocaleString('es-MX')}/mes
-              </option>
-            ))}
-          </select>
+            onChange={v => { setMinutesPlan(v); setUrl(null); }}
+            options={minutesOptions}
+          />
         </div>
       </div>
 
@@ -156,14 +223,16 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
   );
 }
 
+// ── Main component ─────────────────────────────────────────────────────────────
+
 export default function BillingClient({ agents }: { agents: Agent[] }) {
-  const totalMRR = agents.reduce((sum, a) => {
+  const totalMRR    = agents.reduce((sum, a) => {
     if (!a.minutes_plan || a.billing_status !== 'activo') return sum;
     return sum + (MINUTES_PLAN_CONFIG[a.minutes_plan]?.mxn ?? 0);
   }, 0);
-  const activeCount  = agents.filter(a => a.billing_status === 'activo').length;
-  const failedCount  = agents.filter(a => a.billing_status === 'pago_fallido').length;
-  const noplanCount  = agents.filter(a => !a.plan).length;
+  const activeCount = agents.filter(a => a.billing_status === 'activo').length;
+  const failedCount = agents.filter(a => a.billing_status === 'pago_fallido').length;
+  const noplanCount = agents.filter(a => !a.plan).length;
 
   return (
     <div className="p-4 md:p-6 space-y-6">
@@ -196,8 +265,8 @@ export default function BillingClient({ agents }: { agents: Agent[] }) {
           const billingStatus = agent.plan ? (agent.billing_status ?? 'activo') : 'sin_plan';
           const pct      = agent.minutes_included > 0 ? Math.min((agent.minutes_used / agent.minutes_included) * 100, 100) : 0;
           const barColor = pct >= 90 ? '#f87171' : pct >= 70 ? '#facc15' : '#6C3BFF';
-          const fCfg     = agent.plan          ? FEATURE_PLAN_CONFIG[agent.plan]             : null;
-          const mCfg     = agent.minutes_plan  ? MINUTES_PLAN_CONFIG[agent.minutes_plan]     : null;
+          const fCfg     = agent.plan         ? FEATURE_PLAN_CONFIG[agent.plan]         : null;
+          const mCfg     = agent.minutes_plan ? MINUTES_PLAN_CONFIG[agent.minutes_plan] : null;
 
           return (
             <div key={agent.id} className="rounded-xl p-4 space-y-3"

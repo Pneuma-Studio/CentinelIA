@@ -7,15 +7,22 @@ import type { VoiceAgent } from '@/types/agent';
 import { PLAN_LABELS } from '@/types/agent';
 
 type StatusFilter = 'todos' | 'activos' | 'pausados';
+type PlanFilter   = 'todos' | 'basico' | 'estandar' | 'pro';
+
+const PLAN_COLORS: Record<string, string> = {
+  basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7',
+};
 
 export default function AgentesClient({ list }: { list: VoiceAgent[] }) {
   const [search, setSearch] = useState('');
   const [status, setStatus] = useState<StatusFilter>('todos');
+  const [plan,   setPlan]   = useState<PlanFilter>('todos');
 
   const filtered = useMemo(() => {
     let result = list;
     if (status === 'activos')  result = result.filter(a => a.active);
     if (status === 'pausados') result = result.filter(a => !a.active);
+    if (plan !== 'todos')      result = result.filter(a => a.plan === plan);
     if (!search.trim()) return result;
     const q = search.toLowerCase();
     return result.filter(a =>
@@ -23,10 +30,15 @@ export default function AgentesClient({ list }: { list: VoiceAgent[] }) {
       a.client_name.toLowerCase().includes(q) ||
       (a.phone_number ?? '').includes(q)
     );
-  }, [list, search, status]);
+  }, [list, search, status, plan]);
 
   const activeCount = list.filter(a => a.active).length;
   const pausedCount = list.filter(a => !a.active).length;
+  const planCounts  = {
+    basico:   list.filter(a => a.plan === 'basico').length,
+    estandar: list.filter(a => a.plan === 'estandar').length,
+    pro:      list.filter(a => a.plan === 'pro').length,
+  };
 
   return (
     <div className="p-4 md:p-8">
@@ -55,42 +67,71 @@ export default function AgentesClient({ list }: { list: VoiceAgent[] }) {
         </div>
       ) : (
         <>
-          {/* Status filter + Search */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-5">
-            <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-              {([
-                { key: 'todos',    label: `Todos (${list.length})` },
-                { key: 'activos',  label: `Activos (${activeCount})` },
-                { key: 'pausados', label: `Pausados (${pausedCount})` },
-              ] as { key: StatusFilter; label: string }[]).map(({ key, label }) => (
-                <button
-                  key={key}
-                  onClick={() => setStatus(key)}
-                  className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+          {/* Filters + Search */}
+          <div className="flex flex-col gap-2 mb-5">
+            <div className="flex flex-col sm:flex-row gap-2">
+              {/* Status */}
+              <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                {([
+                  { key: 'todos',    label: `Todos (${list.length})` },
+                  { key: 'activos',  label: `Activos (${activeCount})` },
+                  { key: 'pausados', label: `Pausados (${pausedCount})` },
+                ] as { key: StatusFilter; label: string }[]).map(({ key, label }) => (
+                  <button
+                    key={key}
+                    onClick={() => setStatus(key)}
+                    className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                    style={{
+                      background: status === key ? '#6C3BFF' : 'transparent',
+                      color: status === key ? '#fff' : 'var(--c-text-3)',
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+
+              {/* Plan */}
+              <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                {([
+                  { key: 'todos',    label: 'Todos',                          color: undefined },
+                  { key: 'basico',   label: `Básico (${planCounts.basico})`,   color: PLAN_COLORS.basico },
+                  { key: 'estandar', label: `Estándar (${planCounts.estandar})`, color: PLAN_COLORS.estandar },
+                  { key: 'pro',      label: `Pro (${planCounts.pro})`,         color: PLAN_COLORS.pro },
+                ] as { key: PlanFilter; label: string; color?: string }[]).map(({ key, label, color }) => {
+                  const active = plan === key;
+                  return (
+                    <button
+                      key={key}
+                      onClick={() => setPlan(key)}
+                      className="px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+                      style={{
+                        background: active ? (color ?? '#6C3BFF') : 'transparent',
+                        color:      active ? '#fff' : (color ?? 'var(--c-text-3)'),
+                      }}
+                    >
+                      {label}
+                    </button>
+                  );
+                })}
+              </div>
+
+              {/* Search */}
+              <div className="relative flex-1">
+                <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-text-3)' }} />
+                <input
+                  type="text"
+                  placeholder="Buscar por nombre, cliente o número…"
+                  value={search}
+                  onChange={e => setSearch(e.target.value)}
+                  className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
                   style={{
-                    background: status === key ? '#6C3BFF' : 'transparent',
-                    color: status === key ? '#fff' : 'var(--c-text-3)',
+                    background: 'var(--c-input-bg)',
+                    border: '1px solid var(--c-input-border)',
+                    color: 'var(--c-text)',
                   }}
-                >
-                  {label}
-                </button>
-              ))}
-            </div>
-            <div className="relative">
-              <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-text-3)' }} />
-              <input
-                type="text"
-                placeholder="Buscar por nombre, cliente o número…"
-                value={search}
-                onChange={e => setSearch(e.target.value)}
-                className="w-full pl-9 pr-4 py-2.5 rounded-xl text-sm outline-none"
-                style={{
-                  background: 'var(--c-input-bg)',
-                  border: '1px solid var(--c-input-border)',
-                  color: 'var(--c-text)',
-                  minWidth: 280,
-                }}
-              />
+                />
+              </div>
             </div>
           </div>
 
