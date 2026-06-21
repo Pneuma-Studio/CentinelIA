@@ -20,7 +20,7 @@ interface Lead {
 }
 
 const STATUSES = [
-  { value: 'nuevo',      label: 'Nuevo',      color: '#00e5ff' },
+  { value: 'nuevo',      label: 'Nuevo',      color: '#9B6DFF' },
   { value: 'contactado', label: 'Contactado', color: '#3b82f6' },
   { value: 'cerrado',    label: 'Cerrado',    color: '#22c55e' },
   { value: 'perdido',    label: 'Perdido',    color: '#6b7280' },
@@ -62,13 +62,13 @@ export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] })
 
   return (
     <>
-      <div className="p-5 rounded-xl" style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
-        <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.3)' }}>
+      <div className="p-5 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+        <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
           Leads recientes ({leads.length})
         </h2>
 
         {leads.length === 0 ? (
-          <p className="text-xs py-6 text-center leading-relaxed" style={{ color: 'rgba(255,255,255,0.25)' }}>
+          <p className="text-xs py-6 text-center leading-relaxed" style={{ color: 'var(--c-text-4)' }}>
             Sin leads — se registran automáticamente al terminar una llamada
           </p>
         ) : (
@@ -78,12 +78,11 @@ export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] })
               const statusInfo = STATUSES.find(s => s.value === status) ?? STATUSES[0];
               return (
                 <div key={lead.id} className="px-3 py-2.5 rounded-lg group"
-                  style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
+                  style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
                   <div className="flex items-start justify-between gap-2">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="text-sm text-white font-medium">{lead.nombre ?? 'Sin nombre'}</span>
-                        {/* Status pill — clickable to cycle */}
+                        <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>{lead.nombre ?? 'Sin nombre'}</span>
                         <button
                           onClick={() => {
                             const idx = STATUSES.findIndex(s => s.value === status);
@@ -95,34 +94,34 @@ export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] })
                         >
                           {statusInfo.label}
                         </button>
-                        <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                        <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
                           {new Date(lead.created_at).toLocaleDateString('es-MX')}
                         </span>
                       </div>
                       {lead.negocio && (
-                        <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>
                           {lead.negocio}{lead.giro ? ` · ${lead.giro}` : ''}
                         </div>
                       )}
                       {lead.servicio && (
-                        <div className="text-xs mt-0.5" style={{ color: '#00e5ff' }}>{lead.servicio}</div>
+                        <div className="text-xs mt-0.5" style={{ color: '#9B6DFF' }}>{lead.servicio}</div>
                       )}
                       <div className="flex gap-3 mt-1 flex-wrap">
-                        {lead.presupuesto && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>💰 {lead.presupuesto}</span>}
-                        {lead.timeline    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📅 {lead.timeline}</span>}
-                        {lead.whatsapp    && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📱 {lead.whatsapp}</span>}
-                        {lead.email       && <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>📧 {lead.email}</span>}
+                        {lead.presupuesto && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>💰 {lead.presupuesto}</span>}
+                        {lead.timeline    && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>📅 {lead.timeline}</span>}
+                        {lead.whatsapp    && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>📱 {lead.whatsapp}</span>}
+                        {lead.email       && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>📧 {lead.email}</span>}
                       </div>
                     </div>
                     <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
                       <button onClick={() => setEditing(lead)}
-                        className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-                        style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
+                        style={{ color: 'var(--c-text-2)' }}>
                         <Pencil size={13} />
                       </button>
                       <button onClick={() => handleDelete(lead.id)}
                         className="p-1.5 rounded-lg hover:bg-red-500/20 transition-colors"
-                        style={{ color: 'rgba(255,255,255,0.4)' }}>
+                        style={{ color: 'var(--c-text-2)' }}>
                         <Trash2 size={13} />
                       </button>
                     </div>

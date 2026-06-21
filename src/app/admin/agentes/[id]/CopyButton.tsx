@@ -15,8 +15,8 @@ export default function CopyButton({ text }: { text: string }) {
   return (
     <button
       onClick={handle}
-      className="p-1 rounded hover:bg-white/10 transition-colors flex-shrink-0"
-      style={{ color: copied ? '#22c55e' : 'rgba(255,255,255,0.3)' }}
+      className="p-1 rounded hover:bg-[var(--c-surface-2)] transition-colors flex-shrink-0"
+      style={{ color: copied ? '#22c55e' : 'var(--c-text-3)' }}
       title="Copiar"
     >
       {copied ? <Check size={12} /> : <Copy size={12} />}

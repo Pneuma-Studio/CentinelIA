@@ -1,26 +1,72 @@
 @import "tailwindcss";
 
+/* ── Accent (unchanged in both themes) ─────────────────────────────────── */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --accent:     #6C3BFF;
+  --accent-alt: #9B6DFF;
+  --font-sans:  var(--font-geist-sans);
+  --font-mono:  var(--font-geist-mono);
 }
 
+/* ── Dark theme (default) ───────────────────────────────────────────────── */
+:root {
+  --c-bg:           #120726;
+  --c-surface:      rgba(255,255,255,0.035);
+  --c-surface-2:    rgba(255,255,255,0.06);
+  --c-border:       rgba(255,255,255,0.08);
+  --c-border-2:     rgba(255,255,255,0.13);
+  --c-text:         #e2e8f0;
+  --c-text-2:       rgba(255,255,255,0.47);
+  --c-text-3:       rgba(255,255,255,0.28);
+  --c-text-4:       rgba(255,255,255,0.15);
+  --c-input-bg:     rgba(255,255,255,0.05);
+  --c-input-border: rgba(255,255,255,0.1);
+  --c-divider:      rgba(255,255,255,0.05);
+  --c-hover:        rgba(255,255,255,0.04);
+  --c-code-bg:      rgba(0,0,0,0.25);
+  --c-modal:        #1D0B3E;
+}
+
+/* ── Light theme ────────────────────────────────────────────────────────── */
+[data-theme="light"] {
+  --c-bg:           #F2EEFF;
+  --c-surface:      #ffffff;
+  --c-surface-2:    rgba(108,59,255,0.045);
+  --c-border:       rgba(108,59,255,0.11);
+  --c-border-2:     rgba(108,59,255,0.19);
+  --c-text:         #1A0A3B;
+  --c-text-2:       rgba(26,10,59,0.52);
+  --c-text-3:       rgba(26,10,59,0.36);
+  --c-text-4:       rgba(26,10,59,0.2);
+  --c-input-bg:     rgba(108,59,255,0.05);
+  --c-input-border: rgba(108,59,255,0.16);
+  --c-divider:      rgba(108,59,255,0.07);
+  --c-hover:        rgba(108,59,255,0.04);
+  --c-code-bg:      rgba(108,59,255,0.06);
+  --c-modal:        #ffffff;
+}
+
+/* ── Base ───────────────────────────────────────────────────────────────── */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+body {
+  background: var(--c-bg);
+  color: var(--c-text);
+  font-family: var(--font-geist-sans), Arial, Helvetica, sans-serif;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ── Tailwind text-white override for light mode ────────────────────────── */
+/* Sidebar stays white always; only main content area flips */
+[data-theme="light"] .themed-text-white {
+  color: var(--c-text) !important;
 }
+
+/* ── Scrollbar ───────────────────────────────────────────────────────────── */
+::-webkit-scrollbar       { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(108,59,255,0.3); border-radius: 2px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(108,59,255,0.5); }

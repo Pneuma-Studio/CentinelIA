@@ -56,11 +56,11 @@ export default function EditLeadModal({ lead, onClose, onSaved }: Props) {
       style={{ background: 'rgba(0,0,0,0.7)' }}
       onClick={e => e.target === e.currentTarget && onClose()}>
       <div className="w-full max-w-md rounded-2xl p-6 flex flex-col gap-4"
-        style={{ background: '#0d1426', border: '1px solid rgba(255,255,255,0.1)' }}>
+        style={{ background: 'var(--c-modal)', border: '1px solid var(--c-border-2)' }}>
         <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-white">Editar lead</h2>
-          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
-            style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <h2 className="text-base font-semibold" style={{ color: 'var(--c-text)' }}>Editar lead</h2>
+          <button onClick={onClose} className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
+            style={{ color: 'var(--c-text-2)' }}>
             <X size={16} />
           </button>
         </div>
@@ -82,12 +82,12 @@ export default function EditLeadModal({ lead, onClose, onSaved }: Props) {
 
         <div className="flex gap-3 mt-1">
           <button onClick={onClose} className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-colors"
-            style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.6)' }}>
+            style={{ background: 'var(--c-input-bg)', color: 'var(--c-text-2)' }}>
             Cancelar
           </button>
           <button onClick={handleSave} disabled={saving}
             className="flex-1 py-2.5 rounded-xl text-sm font-semibold transition-opacity"
-            style={{ background: '#00e5ff', color: '#080d1a', opacity: saving ? 0.6 : 1 }}>
+            style={{ background: '#6C3BFF', color: '#FAFBFF', opacity: saving ? 0.6 : 1 }}>
             {saving ? 'Guardando…' : 'Guardar'}
           </button>
         </div>
@@ -99,12 +99,12 @@ export default function EditLeadModal({ lead, onClose, onSaved }: Props) {
 function Field({ label, value, onChange }: { label: string; value: string; onChange: (v: string) => void }) {
   return (
     <div>
-      <label className="block text-xs mb-1" style={{ color: 'rgba(255,255,255,0.4)' }}>{label}</label>
+      <label className="block text-xs mb-1" style={{ color: 'var(--c-text-2)' }}>{label}</label>
       <input
         value={value}
         onChange={e => onChange(e.target.value)}
-        className="w-full rounded-lg px-3 py-2 text-sm text-white outline-none"
-        style={{ background: 'rgba(255,255,255,0.06)', border: '1px solid rgba(255,255,255,0.1)' }}
+        className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+        style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
       />
     </div>
   );

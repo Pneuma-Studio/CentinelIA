@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
+import { pauseVapiAgent } from '@/lib/vapi/control';
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
@@ -27,7 +28,7 @@ export async function POST(req: NextRequest) {
       const recordingUrl = call?.recordingUrl ?? null;
       const callerNumber = call?.customer?.number ?? '';
 
-      // 1. Log call to Supabase
+      // 1. Log call
       await supabase.from('voice_calls').insert({
         agent_id:            agentId,
         vapi_call_id:        call?.id ?? null,
@@ -44,7 +45,7 @@ export async function POST(req: NextRequest) {
         cost_usd:            call?.cost ?? null,
       });
 
-      // 2. Save lead / appointment / order from structured data
+      // 2. Save lead from structured data
       if (structured?.nombre && structured?.tipo_contacto !== 'informacion') {
         if (['lead', 'cita', 'pedido'].includes(structured.tipo_contacto ?? '') ||
             structured.servicio || structured.pedido_items) {
@@ -63,17 +64,45 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 3. Update agent minutes
+      // 3. Update minutes
       const minutes = Math.ceil(durationSeconds / 60) || 1;
       await supabase.rpc('increment_minutes_used', { agent_id: agentId, minutes });
 
-      // 4. Send WhatsApp summary to business owner
+      // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, transfer_whatsapp')
+        .select('business_name, transfer_whatsapp, minutes_used, minutes_included, active, phone_number, vapi_agent_id')
         .eq('id', agentId)
         .single();
 
+      const used     = agent?.minutes_used     ?? 0;
+      const included = agent?.minutes_included ?? 0;
+      const pct      = included > 0 ? (used / included) * 100 : 0;
+
+      // 5. Auto-pause at 100%
+      if (agent?.active && used >= included) {
+        await supabase.from('voice_agents').update({ active: false }).eq('id', agentId);
+        if (agent.phone_number) await pauseVapiAgent(agent.phone_number);
+        if (agent.transfer_whatsapp) {
+          await sendWhatsApp(
+            agent.transfer_whatsapp,
+            `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de CentinelIA para reactivar el servicio o adquirir minutos adicionales.`
+          );
+        }
+        break;
+      }
+
+      // 6. Warning at 80%
+      if (agent?.active && pct >= 80 && (pct - (minutes / included) * 100) < 80) {
+        if (agent.transfer_whatsapp) {
+          await sendWhatsApp(
+            agent.transfer_whatsapp,
+            `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de CentinelIA si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`
+          );
+        }
+      }
+
+      // 7. WhatsApp call summary
       if (agent?.transfer_whatsapp) {
         const outcomeLabels: Record<string, string> = {
           lead_created:       '🎯 Nuevo lead',
@@ -84,7 +113,6 @@ export async function POST(req: NextRequest) {
           escalated_whatsapp: '💬 Escalada a WhatsApp',
           other:              '📱 Llamada terminada',
         };
-
         const mins = Math.ceil(durationSeconds / 60);
         const msg = [
           `${outcomeLabels[outcome] ?? '📱 Llamada'} — *${agent.business_name}*`,
@@ -92,7 +120,6 @@ export async function POST(req: NextRequest) {
           `⏱ ${mins} min`,
           summary ? `\n📝 ${summary}` : null,
         ].filter(Boolean).join('\n');
-
         await sendWhatsApp(agent.transfer_whatsapp, msg);
       }
 
@@ -115,7 +142,6 @@ function detectOutcome(message: any, structured: any): string {
   if (toolCalls.includes('notificar_transferencia'))     return 'transferred';
   if (toolCalls.includes('enviar_whatsapp_escalacion'))  return 'escalated_whatsapp';
 
-  // Fallback: detect from structured data
   if (structured) {
     const tipo = structured.tipo_contacto ?? '';
     if (tipo === 'lead'         || (structured.nombre && structured.servicio)) return 'lead_created';

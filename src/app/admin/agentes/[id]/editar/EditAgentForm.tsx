@@ -5,11 +5,31 @@ import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { ArrowLeft } from 'lucide-react';
 import { PLAN_FEATURES, PLAN_LABELS, PLAN_MINUTES, FEATURE_LABELS } from '@/types/agent';
-import type { Plan, AgentFeatures, VoiceAgent } from '@/types/agent';
+import type { Plan, AgentFeatures, VoiceAgent, BusinessHours, DaySchedule } from '@/types/agent';
 
 const PLANS: Plan[] = ['basico', 'estandar', 'pro'];
 const PLAN_COLORS: Record<Plan, string> = {
   basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7',
+};
+
+const DAYS: { key: keyof BusinessHours; label: string }[] = [
+  { key: 'monday',    label: 'Lunes' },
+  { key: 'tuesday',   label: 'Martes' },
+  { key: 'wednesday', label: 'Miércoles' },
+  { key: 'thursday',  label: 'Jueves' },
+  { key: 'friday',    label: 'Viernes' },
+  { key: 'saturday',  label: 'Sábado' },
+  { key: 'sunday',    label: 'Domingo' },
+];
+
+const DEFAULT_HOURS: BusinessHours = {
+  monday:    { open: true,  from: '09:00', to: '18:00' },
+  tuesday:   { open: true,  from: '09:00', to: '18:00' },
+  wednesday: { open: true,  from: '09:00', to: '18:00' },
+  thursday:  { open: true,  from: '09:00', to: '18:00' },
+  friday:    { open: true,  from: '09:00', to: '18:00' },
+  saturday:  { open: false },
+  sunday:    { open: false },
 };
 
 export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
@@ -17,6 +37,8 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   const [saving, setSaving] = useState(false);
   const [plan, setPlan] = useState<Plan>(agent.plan);
   const [features, setFeatures] = useState<AgentFeatures>(agent.features);
+  const [businessHours, setBusinessHours] = useState<BusinessHours>(agent.business_hours ?? DEFAULT_HOURS);
+  const [hoursEnabled, setHoursEnabled] = useState<boolean>(!!agent.business_hours);
 
   const handlePlanChange = (p: Plan) => {
     setPlan(p);
@@ -46,6 +68,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
       agent_name:             plan === 'pro' ? fd.get('agent_name') : null,
       plan,
       features,
+      business_hours: hoursEnabled ? businessHours : null,
       minutes_included: PLAN_MINUTES[plan],
     };
 
@@ -67,12 +90,12 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   return (
     <div className="p-8 max-w-2xl">
       <div className="flex items-center gap-3 mb-6">
-        <Link href={`/admin/agentes/${agent.id}`} className="p-2 rounded-lg hover:bg-white/5 transition-colors" style={{ color: 'rgba(255,255,255,0.4)' }}>
+        <Link href={`/admin/agentes/${agent.id}`} className="p-2 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors" style={{ color: 'var(--c-text-2)' }}>
           <ArrowLeft size={18} />
         </Link>
         <div>
-          <h1 className="text-2xl font-bold text-white">Editar agente</h1>
-          <p className="text-sm mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{agent.business_name}</p>
+          <h1 className="text-2xl font-bold" style={{ color: 'var(--c-text)' }}>Editar agente</h1>
+          <p className="text-sm mt-0.5" style={{ color: 'var(--c-text-2)' }}>{agent.business_name}</p>
         </div>
       </div>
 
@@ -84,11 +107,11 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
               <button key={p} type="button" onClick={() => handlePlanChange(p)}
                 className="p-3 rounded-xl border text-left transition-all"
                 style={{
-                  borderColor: plan === p ? PLAN_COLORS[p] : 'rgba(255,255,255,0.08)',
-                  background:  plan === p ? `${PLAN_COLORS[p]}18` : 'rgba(255,255,255,0.03)',
+                  borderColor: plan === p ? PLAN_COLORS[p] : 'var(--c-border)',
+                  background:  plan === p ? `${PLAN_COLORS[p]}18` : 'var(--c-surface)',
                 }}>
-                <div className="font-semibold text-white text-sm">{PLAN_LABELS[p]}</div>
-                <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.4)' }}>{PLAN_MINUTES[p]} min/mes</div>
+                <div className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{PLAN_LABELS[p]}</div>
+                <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>{PLAN_MINUTES[p]} min/mes</div>
               </button>
             ))}
           </div>
@@ -111,8 +134,8 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
         {/* Agent name */}
         <Section title="Identidad del agente">
           <div className="p-3 rounded-lg mb-1" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
-            <p className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
-              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'rgba(255,255,255,0.7)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
+            <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
+              <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
             </p>
           </div>
           <Field label="Nombre del agente" name="agent_name"
@@ -123,7 +146,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
 
         {/* Knowledge base */}
         <Section title="Base de conocimiento">
-          <p className="text-xs mb-3" style={{ color: 'rgba(255,255,255,0.4)' }}>
+          <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>
             Catálogo de productos, precios, servicios y preguntas frecuentes del negocio.
           </p>
           <Field label="Catálogo / precios / FAQs" name="knowledge_base" textarea rows={8}
@@ -136,13 +159,13 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
           <div className="flex flex-col gap-2">
             {(Object.keys(features) as (keyof AgentFeatures)[]).map(key => (
               <label key={key} className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
-                style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.06)' }}>
-                <span className="text-sm" style={{ color: features[key] ? '#e2e8f0' : 'rgba(255,255,255,0.35)' }}>
+                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <span className="text-sm" style={{ color: features[key] ? 'var(--c-text)' : 'var(--c-text-3)' }}>
                   {FEATURE_LABELS[key]}
                 </span>
                 <button type="button" onClick={() => toggleFeature(key)}
                   className="w-10 h-5 rounded-full transition-colors relative"
-                  style={{ background: features[key] ? '#00e5ff' : 'rgba(255,255,255,0.15)' }}>
+                  style={{ background: features[key] ? '#6C3BFF' : 'var(--c-border-2)' }}>
                   <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
                     style={{ left: features[key] ? '1.25rem' : '0.125rem' }} />
                 </button>
@@ -151,9 +174,67 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
           </div>
         </Section>
 
+        {/* Business hours */}
+        <Section title="Horario de atención">
+          <label className="flex items-center justify-between p-3 rounded-lg cursor-pointer"
+            style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+            <div>
+              <div className="text-sm" style={{ color: 'var(--c-text)' }}>Restringir horario</div>
+              <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-2)' }}>
+                El agente solo contesta en el horario configurado
+              </div>
+            </div>
+            <button type="button" onClick={() => setHoursEnabled(v => !v)}
+              className="w-10 h-5 rounded-full transition-colors relative flex-shrink-0"
+              style={{ background: hoursEnabled ? '#6C3BFF' : 'var(--c-border-2)' }}>
+              <span className="absolute top-0.5 w-4 h-4 rounded-full bg-white transition-all"
+                style={{ left: hoursEnabled ? '1.25rem' : '0.125rem' }} />
+            </button>
+          </label>
+
+          {hoursEnabled && (
+            <div className="flex flex-col gap-1 mt-1">
+              {DAYS.map(({ key, label }) => {
+                const s: DaySchedule = businessHours[key] ?? { open: false };
+                return (
+                  <div key={key} className="grid grid-cols-[80px_1fr] items-center gap-3 px-3 py-2 rounded-lg"
+                    style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                    <label className="flex items-center gap-2 cursor-pointer">
+                      <button type="button"
+                        onClick={() => setBusinessHours(h => ({ ...h, [key]: { ...s, open: !s.open } }))}
+                        className="w-8 h-4 rounded-full transition-colors relative flex-shrink-0"
+                        style={{ background: s.open ? '#6C3BFF' : 'var(--c-border-2)' }}>
+                        <span className="absolute top-0.5 w-3 h-3 rounded-full bg-white transition-all"
+                          style={{ left: s.open ? '1rem' : '0.125rem' }} />
+                      </button>
+                      <span className="text-xs" style={{ color: s.open ? 'var(--c-text)' : 'var(--c-text-3)' }}>{label}</span>
+                    </label>
+
+                    {s.open ? (
+                      <div className="flex items-center gap-2">
+                        <input type="time" value={s.from ?? '09:00'}
+                          onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, from: e.target.value } }))}
+                          className="rounded px-2 py-1 text-xs outline-none"
+                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+                        <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>–</span>
+                        <input type="time" value={s.to ?? '18:00'}
+                          onChange={e => setBusinessHours(h => ({ ...h, [key]: { ...s, to: e.target.value } }))}
+                          className="rounded px-2 py-1 text-xs outline-none"
+                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+                      </div>
+                    ) : (
+                      <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>Cerrado</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+        </Section>
+
         <button type="submit" disabled={saving}
           className="py-3 rounded-xl font-semibold text-sm transition-opacity"
-          style={{ background: '#00e5ff', color: '#080d1a', opacity: saving ? 0.6 : 1 }}>
+          style={{ background: '#6C3BFF', color: '#FAFBFF', opacity: saving ? 0.6 : 1 }}>
           {saving ? 'Guardando…' : 'Guardar cambios'}
         </button>
       </form>
@@ -164,7 +245,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div>
-      <h2 className="text-sm font-semibold mb-3 tracking-widest uppercase" style={{ color: 'rgba(255,255,255,0.3)' }}>{title}</h2>
+      <h2 className="text-sm font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>{title}</h2>
       <div className="flex flex-col gap-3">{children}</div>
     </div>
   );
@@ -175,14 +256,14 @@ function Field({ label, name, required, placeholder, textarea, rows, defaultValu
   textarea?: boolean; rows?: number; defaultValue?: string; disabled?: boolean;
 }) {
   const base = {
-    background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)',
-    borderRadius: 8, padding: '8px 12px', color: '#e2e8f0',
+    background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)',
+    borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)',
     fontSize: 14, width: '100%', outline: 'none',
   };
   return (
     <div>
-      <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>
-        {label}{required && <span style={{ color: '#00e5ff' }}> *</span>}
+      <label className="block text-xs mb-1.5" style={{ color: 'var(--c-text-2)' }}>
+        {label}{required && <span style={{ color: '#9B6DFF' }}> *</span>}
       </label>
       {textarea
         ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} defaultValue={defaultValue} disabled={disabled} style={{ ...base, resize: 'vertical', opacity: disabled ? 0.4 : 1 }} />

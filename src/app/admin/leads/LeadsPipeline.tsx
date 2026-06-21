@@ -27,14 +27,14 @@ interface Props {
 }
 
 const STATUSES = [
-  { value: 'nuevo',      label: 'Nuevo',      color: '#00e5ff' },
+  { value: 'nuevo',      label: 'Nuevo',      color: '#9B6DFF' },
   { value: 'contactado', label: 'Contactado', color: '#3b82f6' },
   { value: 'cerrado',    label: 'Cerrado',    color: '#22c55e' },
   { value: 'perdido',    label: 'Perdido',    color: '#6b7280' },
 ];
 
 function statusColor(s?: string) {
-  return STATUSES.find(x => x.value === (s ?? 'nuevo'))?.color ?? '#00e5ff';
+  return STATUSES.find(x => x.value === (s ?? 'nuevo'))?.color ?? '#6C3BFF';
 }
 
 export default function LeadsPipeline({ leads: initialLeads, agentMap }: Props) {
@@ -103,7 +103,7 @@ export default function LeadsPipeline({ leads: initialLeads, agentMap }: Props) 
     <>
       {/* Tabs + search */}
       <div className="flex flex-wrap items-center gap-3 mb-6">
-        <div className="flex gap-1 p-1 rounded-lg" style={{ background: 'rgba(255,255,255,0.04)' }}>
+        <div className="flex gap-1 p-1 rounded-lg" style={{ background: 'var(--c-surface)' }}>
           <TabBtn value="todos" current={tab} count={counts.todos} onClick={setTab}>Todos</TabBtn>
           {STATUSES.map(s => (
             <TabBtn key={s.value} value={s.value} current={tab} count={counts[s.value] ?? 0} color={s.color} onClick={setTab}>
@@ -113,20 +113,20 @@ export default function LeadsPipeline({ leads: initialLeads, agentMap }: Props) 
         </div>
 
         <div className="relative flex-1 min-w-48">
-          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'rgba(255,255,255,0.3)' }} />
+          <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2" style={{ color: 'var(--c-text-3)' }} />
           <input
             type="text"
             placeholder="Buscar nombre, negocio, servicio..."
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-8 pr-3 py-2 rounded-lg text-sm outline-none"
-            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', color: '#e2e8f0' }}
+            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
           />
         </div>
       </div>
 
       {filtered.length === 0 ? (
-        <div className="py-20 text-center" style={{ color: 'rgba(255,255,255,0.25)' }}>
+        <div className="py-20 text-center" style={{ color: 'var(--c-text-4)' }}>
           <p className="text-sm">Sin leads{tab !== 'todos' ? ` en estado "${STATUSES.find(s=>s.value===tab)?.label}"` : ''}</p>
         </div>
       ) : (
@@ -167,28 +167,28 @@ function LeadCard({ lead, agentName, onStatusChange, onEdit, onDelete }: {
 
   return (
     <div className="group p-4 rounded-xl flex flex-col gap-3"
-      style={{ background: 'rgba(255,255,255,0.03)', border: '1px solid rgba(255,255,255,0.08)' }}>
+      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
       {/* Header */}
       <div className="flex items-start justify-between gap-2">
         <div className="min-w-0 flex-1">
-          <div className="font-medium text-white text-sm truncate">{lead.nombre ?? 'Sin nombre'}</div>
+          <div className="font-medium text-sm truncate" style={{ color: 'var(--c-text)' }}>{lead.nombre ?? 'Sin nombre'}</div>
           {agentName && (
             <Link href={`/admin/agentes/${lead.agent_id}`}
               className="text-xs hover:underline truncate block mt-0.5"
-              style={{ color: 'rgba(255,255,255,0.35)' }}>
+              style={{ color: 'var(--c-text-3)' }}>
               {agentName}
             </Link>
           )}
         </div>
         <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity flex-shrink-0">
           <button onClick={() => onEdit(lead)}
-            className="p-1.5 rounded hover:bg-white/10 transition-colors"
-            style={{ color: 'rgba(255,255,255,0.4)' }}>
+            className="p-1.5 rounded hover:bg-[var(--c-surface-2)] transition-colors"
+            style={{ color: 'var(--c-text-2)' }}>
             <Pencil size={12} />
           </button>
           <button onClick={() => onDelete(lead)}
             className="p-1.5 rounded hover:bg-red-500/20 transition-colors"
-            style={{ color: 'rgba(255,255,255,0.4)' }}>
+            style={{ color: 'var(--c-text-2)' }}>
             <Trash2 size={12} />
           </button>
         </div>
@@ -196,12 +196,12 @@ function LeadCard({ lead, agentName, onStatusChange, onEdit, onDelete }: {
 
       {/* Details */}
       {lead.negocio && (
-        <div className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+        <div className="text-xs" style={{ color: 'var(--c-text-2)' }}>
           {lead.negocio}{lead.giro ? ` · ${lead.giro}` : ''}
         </div>
       )}
       {lead.servicio && (
-        <div className="text-xs font-medium" style={{ color: '#00e5ff' }}>{lead.servicio}</div>
+        <div className="text-xs font-medium" style={{ color: '#9B6DFF' }}>{lead.servicio}</div>
       )}
 
       <div className="flex flex-wrap gap-2">
@@ -220,14 +220,14 @@ function LeadCard({ lead, agentName, onStatusChange, onEdit, onDelete }: {
         {lead.email && (
           <a href={`mailto:${lead.email}`}
             className="flex items-center gap-1.5 text-xs hover:underline"
-            style={{ color: 'rgba(255,255,255,0.4)' }}>
+            style={{ color: 'var(--c-text-2)' }}>
             <Mail size={11} /> {lead.email}
           </a>
         )}
       </div>
 
       {/* Status selector */}
-      <div className="flex gap-1 mt-auto pt-2" style={{ borderTop: '1px solid rgba(255,255,255,0.06)' }}>
+      <div className="flex gap-1 mt-auto pt-2" style={{ borderTop: '1px solid var(--c-divider)' }}>
         {STATUSES.map(s => (
           <button
             key={s.value}
@@ -235,7 +235,7 @@ function LeadCard({ lead, agentName, onStatusChange, onEdit, onDelete }: {
             className="flex-1 py-1 rounded text-xs font-medium transition-all"
             style={{
               background: status === s.value ? `${s.color}22` : 'transparent',
-              color: status === s.value ? s.color : 'rgba(255,255,255,0.25)',
+              color: status === s.value ? s.color : 'var(--c-text-4)',
               border: `1px solid ${status === s.value ? s.color + '44' : 'transparent'}`,
             }}
           >
@@ -244,7 +244,7 @@ function LeadCard({ lead, agentName, onStatusChange, onEdit, onDelete }: {
         ))}
       </div>
 
-      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+      <div className="text-xs" style={{ color: 'var(--c-text-4)' }}>
         {new Date(lead.created_at).toLocaleDateString('es-MX', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
       </div>
     </div>
@@ -255,19 +255,19 @@ function TabBtn({ value, current, count, color, children, onClick }: {
   value: string; current: string; count: number; color?: string; children: React.ReactNode; onClick: (v: string) => void;
 }) {
   const active = value === current;
-  const c = color ?? 'rgba(255,255,255,0.7)';
+  const c = color ?? 'var(--c-text)';
   return (
     <button
       onClick={() => onClick(value)}
       className="flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-all"
       style={{
-        background: active ? (color ? `${color}18` : 'rgba(255,255,255,0.08)') : 'transparent',
-        color: active ? (color ?? '#e2e8f0') : 'rgba(255,255,255,0.4)',
+        background: active ? (color ? `${color}18` : 'var(--c-surface-2)') : 'transparent',
+        color: active ? (color ?? 'var(--c-text)') : 'var(--c-text-2)',
       }}
     >
       {children}
       <span className="text-xs rounded-full px-1.5 py-0.5"
-        style={{ background: 'rgba(255,255,255,0.08)', color: active ? c : 'rgba(255,255,255,0.3)' }}>
+        style={{ background: 'var(--c-surface-2)', color: active ? c : 'var(--c-text-3)' }}>
         {count ?? 0}
       </span>
     </button>
@@ -276,7 +276,7 @@ function TabBtn({ value, current, count, color, children, onClick }: {
 
 function Chip({ children }: { children: React.ReactNode }) {
   return (
-    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'rgba(255,255,255,0.06)', color: 'rgba(255,255,255,0.45)' }}>
+    <span className="text-xs px-2 py-0.5 rounded-full" style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)' }}>
       {children}
     </span>
   );

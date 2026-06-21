@@ -1,6 +1,7 @@
 // ─── Plans ────────────────────────────────────────────────────────────────────
 
 export type Plan = 'basico' | 'estandar' | 'pro';
+export type MinutesPlan = 'starter' | 'growth' | 'scale' | 'enterprise';
 
 // ─── Feature flags ────────────────────────────────────────────────────────────
 
@@ -63,6 +64,7 @@ export interface VoiceAgent {
   agent_name?: string;            // nombre propio del agente (solo Pro, default: CentinelIA)
   giro_template?: string;         // template de industria: restaurante, consultorio, estetica, agencia, retail, general
   portal_token?: string;          // UUID único para el portal del cliente
+  minutes_plan?: MinutesPlan;
   minutes_included: number;
   minutes_used: number;
   minutes_reset_date: string;     // ISO date del próximo reset

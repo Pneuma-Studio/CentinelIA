@@ -10,17 +10,54 @@ export async function POST(req: NextRequest) {
   const { accion, nombre, servicio, fecha, hora, telefono } =
     body.toolCallList?.[0]?.function?.arguments ?? body;
 
-  if (!agent_id) {
-    return NextResponse.json({ error: 'agent_id requerido' }, { status: 400 });
-  }
+  if (!agent_id) return NextResponse.json({ error: 'agent_id requerido' }, { status: 400 });
 
   const supabase = createAdminClient();
-
   const { data: agent } = await supabase
     .from('voice_agents')
     .select('business_name, calendar_url, transfer_whatsapp, timezone')
     .eq('id', agent_id)
     .single();
+
+  // Save or update appointment in database
+  if (accion === 'agendar') {
+    await supabase.from('appointments_voice').insert({
+      agent_id,
+      nombre:   nombre   ?? null,
+      telefono: telefono ?? null,
+      servicio: servicio ?? null,
+      fecha:    fecha    ?? null,
+      hora:     hora     ?? null,
+      status:   'confirmada',
+    });
+  } else if (accion === 'cancelar' && telefono) {
+    // Mark most recent matching appointment as cancelled
+    await supabase
+      .from('appointments_voice')
+      .update({ status: 'cancelada' })
+      .eq('agent_id', agent_id)
+      .eq('telefono', telefono)
+      .eq('status', 'confirmada');
+  } else if (accion === 'modificar') {
+    // Cancel old + create new
+    if (telefono) {
+      await supabase
+        .from('appointments_voice')
+        .update({ status: 'cancelada' })
+        .eq('agent_id', agent_id)
+        .eq('telefono', telefono)
+        .eq('status', 'confirmada');
+    }
+    await supabase.from('appointments_voice').insert({
+      agent_id,
+      nombre:   nombre   ?? null,
+      telefono: telefono ?? null,
+      servicio: servicio ?? null,
+      fecha:    fecha    ?? null,
+      hora:     hora     ?? null,
+      status:   'confirmada',
+    });
+  }
 
   // Notify owner via WhatsApp
   if (agent?.transfer_whatsapp) {
@@ -47,5 +84,4 @@ export async function POST(req: NextRequest) {
     result: responses[accion as string] ?? 'Solicitud de cita procesada.',
     calendar_url: agent?.calendar_url ?? null,
   });
-
 }

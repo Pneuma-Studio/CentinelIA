@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { buildSystemPrompt } from '@/lib/voice/prompt-builder';
+import { isWithinBusinessHours, nextOpenTime } from '@/lib/voice/business-hours';
 import type { VoiceAgent } from '@/types/agent';
 
 // Vapi calls this endpoint when a call comes in on an assigned phone number.
@@ -31,6 +32,32 @@ export async function POST(req: NextRequest) {
   }
 
   const typedAgent = agent as VoiceAgent;
+
+  // Check business hours — respond with closed message if outside schedule
+  if (!isWithinBusinessHours(typedAgent.business_hours, typedAgent.timezone)) {
+    const next = typedAgent.business_hours ? nextOpenTime(typedAgent.business_hours, typedAgent.timezone) : null;
+    const closedMsg = next
+      ? `Gracias por llamar a ${typedAgent.business_name}. En este momento estamos cerrados. Puedes llamarnos de nuevo ${next}. ¡Hasta luego!`
+      : `Gracias por llamar a ${typedAgent.business_name}. En este momento estamos fuera de horario. Por favor intenta más tarde.`;
+
+    return NextResponse.json({
+      assistant: {
+        name: 'Closed',
+        model: {
+          provider: 'anthropic',
+          model: 'claude-haiku-4-5-20251001',
+          messages: [{ role: 'system', content: 'Eres una recepcionista. Di únicamente el mensaje de cierre y despídete.' }],
+        },
+        voice: {
+          provider: '11labs',
+          voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
+        },
+        firstMessage: closedMsg,
+        endCallAfterSilenceSeconds: 5,
+      },
+    });
+  }
+
   const systemPrompt = buildSystemPrompt(typedAgent);
   const tools = buildTools(typedAgent);
 

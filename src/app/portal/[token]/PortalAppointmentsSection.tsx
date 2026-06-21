@@ -1,0 +1,234 @@
+'use client';
+
+import { useState, useMemo } from 'react';
+import { CalendarDays, Filter, Pencil, X, Check, Loader2 } from 'lucide-react';
+
+type ApptStatus = 'confirmada' | 'completada' | 'cancelada' | 'no_asistio';
+
+const STATUS_CONFIG: Record<ApptStatus, { label: string; color: string; bg: string }> = {
+  confirmada:  { label: 'Confirmada',  color: '#3b82f6', bg: 'rgba(59,130,246,0.12)' },
+  completada:  { label: 'Completada',  color: '#22c55e', bg: 'rgba(34,197,94,0.12)' },
+  cancelada:   { label: 'Cancelada',   color: '#6b7280', bg: 'rgba(107,114,128,0.12)' },
+  no_asistio:  { label: 'No asistió',  color: '#f87171', bg: 'rgba(248,113,113,0.12)' },
+};
+
+const QUICK_FILTERS = [
+  { label: 'Todos',          value: 'all' },
+  { label: 'Hoy',           value: 'today' },
+  { label: 'Últimos 7 días', value: 'week' },
+  { label: 'Este mes',       value: 'month' },
+  { label: 'Rango',          value: 'custom' },
+] as const;
+type QuickFilter = typeof QUICK_FILTERS[number]['value'];
+
+function filterByDate(items: Appointment[], qf: QuickFilter, from: string, to: string): Appointment[] {
+  if (qf === 'all') return items;
+  const now = new Date();
+  let start: Date, end: Date = now;
+  if (qf === 'custom') {
+    if (!from && !to) return items;
+    start = from ? new Date(from + 'T00:00:00') : new Date(0);
+    end   = to   ? new Date(to   + 'T23:59:59') : now;
+  } else {
+    start = new Date(now);
+    if (qf === 'today') { start.setHours(0, 0, 0, 0); }
+    else if (qf === 'week')  { start.setDate(now.getDate() - 7); start.setHours(0,0,0,0); }
+    else { start = new Date(now.getFullYear(), now.getMonth(), 1); }
+  }
+  return items.filter(a => { const d = new Date(a.created_at); return d >= start && d <= end; });
+}
+
+interface Appointment {
+  id: string;
+  nombre?: string;
+  telefono?: string;
+  servicio?: string;
+  fecha?: string;
+  hora?: string;
+  status?: string;
+  created_at: string;
+}
+
+const EDIT_FIELDS: { key: keyof Appointment; label: string; type?: string; placeholder?: string }[] = [
+  { key: 'nombre',   label: 'Nombre del cliente', placeholder: 'Ej: María López' },
+  { key: 'telefono', label: 'Teléfono',            placeholder: 'Ej: +52 81 1234 5678' },
+  { key: 'servicio', label: 'Servicio / motivo',   placeholder: 'Ej: Consulta general' },
+  { key: 'fecha',    label: 'Fecha',               type: 'date' },
+  { key: 'hora',     label: 'Hora',                type: 'time' },
+];
+
+export default function PortalAppointmentsSection({ initialAppointments, token, label = 'cita' }: {
+  initialAppointments: Appointment[];
+  token: string;
+  label?: string;
+}) {
+  const [appts, setAppts]               = useState<Appointment[]>(initialAppointments);
+  const [editing, setEditing]           = useState<Appointment | null>(null);
+  const [editForm, setEditForm]         = useState<Partial<Appointment>>({});
+  const [saving, setSaving]             = useState(false);
+  const [updatingStatus, setUpdating]   = useState<string | null>(null);
+  const [quickFilter, setQuickFilter]   = useState<QuickFilter>('all');
+  const [customFrom, setCustomFrom]     = useState('');
+  const [customTo, setCustomTo]         = useState('');
+
+  const filtered = useMemo(() => filterByDate(appts, quickFilter, customFrom, customTo), [appts, quickFilter, customFrom, customTo]);
+
+  const updateStatus = async (id: string, status: ApptStatus) => {
+    setUpdating(id);
+    setAppts(prev => prev.map(a => a.id === id ? { ...a, status } : a));
+    await fetch(`/api/portal/${token}/appointments/${id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ status }),
+    });
+    setUpdating(null);
+  };
+
+  const saveEdit = async () => {
+    if (!editing) return;
+    setSaving(true);
+    const res = await fetch(`/api/portal/${token}/appointments/${editing.id}`, {
+      method: 'PATCH', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(editForm),
+    });
+    if (res.ok) {
+      const updated = await res.json();
+      setAppts(prev => prev.map(a => a.id === editing.id ? updated : a));
+      setEditing(null);
+    }
+    setSaving(false);
+  };
+
+  if (appts.length === 0) {
+    return (
+      <div className="text-center py-10" style={{ color: 'var(--c-text-3)' }}>
+        <CalendarDays size={28} className="mx-auto mb-2 opacity-30" />
+        <p className="text-sm">Sin {label}s registradas</p>
+      </div>
+    );
+  }
+
+  const labelCap = label.charAt(0).toUpperCase() + label.slice(1);
+
+  return (
+    <>
+      <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-2">
+          <div className="flex items-center gap-1.5 flex-wrap">
+            <Filter size={12} style={{ color: 'var(--c-text-3)' }} />
+            {QUICK_FILTERS.map(({ label: l, value }) => (
+              <button key={value} onClick={() => setQuickFilter(value)}
+                className="px-2.5 py-1 rounded-full text-xs font-medium transition-all"
+                style={{ background: quickFilter === value ? '#6C3BFF' : 'var(--c-input-bg)', color: quickFilter === value ? '#fff' : 'var(--c-text-2)' }}>
+                {l}
+              </button>
+            ))}
+          </div>
+          {quickFilter === 'custom' && (
+            <div className="flex items-center gap-2 flex-wrap">
+              <input type="date" value={customFrom} onChange={e => setCustomFrom(e.target.value)}
+                className="rounded-lg px-3 py-1.5 text-xs outline-none"
+                style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>–</span>
+              <input type="date" value={customTo} onChange={e => setCustomTo(e.target.value)}
+                className="rounded-lg px-3 py-1.5 text-xs outline-none"
+                style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+            </div>
+          )}
+        </div>
+
+        <p className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+          {filtered.length} de {appts.length} {label}{appts.length !== 1 ? 's' : ''}{quickFilter !== 'all' ? ' (filtrado)' : ''}
+        </p>
+
+        {filtered.length === 0 ? (
+          <div className="text-center py-8 text-sm" style={{ color: 'var(--c-text-3)' }}>Sin {label}s en este período</div>
+        ) : (
+          filtered.map(appt => {
+            const status = (appt.status ?? 'confirmada') as ApptStatus;
+            const sc = STATUS_CONFIG[status] ?? STATUS_CONFIG.confirmada;
+            return (
+              <div key={appt.id} className="rounded-xl p-4"
+                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                        {appt.nombre ?? 'Sin nombre'}
+                      </span>
+                      {appt.telefono && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>· {appt.telefono}</span>}
+                    </div>
+                    {appt.servicio && <p className="text-xs mt-1 font-medium" style={{ color: '#6C3BFF' }}>{appt.servicio}</p>}
+                    {(appt.fecha || appt.hora) && (
+                      <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                        <CalendarDays size={11} />
+                        {appt.fecha ?? ''}{appt.hora ? ` · ${appt.hora}` : ''}
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
+                    <div className="flex items-center gap-1.5">
+                      <button onClick={() => { setEditing(appt); setEditForm({ ...appt }); }}
+                        className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
+                        style={{ color: 'var(--c-text-3)' }}>
+                        <Pencil size={13} />
+                      </button>
+                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                        {new Date(appt.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                      </span>
+                    </div>
+                    <select value={status} disabled={updatingStatus === appt.id}
+                      onChange={e => updateStatus(appt.id, e.target.value as ApptStatus)}
+                      className="text-xs font-semibold rounded-full px-2.5 py-1 outline-none cursor-pointer border-0 appearance-none"
+                      style={{ background: sc.bg, color: sc.color, opacity: updatingStatus === appt.id ? 0.5 : 1 }}>
+                      {(Object.entries(STATUS_CONFIG) as [ApptStatus, typeof sc][]).map(([val, cfg]) => (
+                        <option key={val} value={val}>{cfg.label}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+              </div>
+            );
+          })
+        )}
+      </div>
+
+      {editing && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4"
+          style={{ background: 'rgba(0,0,0,0.5)' }}
+          onClick={e => { if (e.target === e.currentTarget) setEditing(null); }}>
+          <div className="w-full max-w-md rounded-2xl shadow-xl overflow-hidden" style={{ background: 'var(--c-modal)' }}>
+            <div className="flex items-center justify-between px-5 py-4" style={{ borderBottom: '1px solid var(--c-border)' }}>
+              <h3 className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>Editar {label}</h3>
+              <button onClick={() => setEditing(null)} className="p-1 rounded-lg hover:bg-[var(--c-surface-2)]" style={{ color: 'var(--c-text-2)' }}>
+                <X size={16} />
+              </button>
+            </div>
+            <div className="p-5 flex flex-col gap-3 max-h-[60vh] overflow-y-auto">
+              {EDIT_FIELDS.map(({ key, label: fl, type, placeholder }) => (
+                <div key={key}>
+                  <label className="block text-xs font-medium mb-1" style={{ color: 'var(--c-text-2)' }}>{fl}</label>
+                  <input type={type ?? 'text'} value={(editForm[key] as string) ?? ''} placeholder={placeholder}
+                    onChange={e => setEditForm(f => ({ ...f, [key]: e.target.value }))}
+                    className="w-full rounded-lg px-3 py-2 text-sm outline-none"
+                    style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }} />
+                </div>
+              ))}
+            </div>
+            <div className="flex gap-2 px-5 py-4" style={{ borderTop: '1px solid var(--c-border)' }}>
+              <button onClick={() => setEditing(null)} disabled={saving}
+                className="flex-1 py-2 rounded-lg text-sm font-medium"
+                style={{ background: 'var(--c-input-bg)', color: 'var(--c-text-2)' }}>Cancelar</button>
+              <button onClick={saveEdit} disabled={saving}
+                className="flex-1 py-2 rounded-lg text-sm font-semibold flex items-center justify-center gap-2 hover:opacity-80"
+                style={{ background: '#6C3BFF', color: '#fff', opacity: saving ? 0.7 : 1 }}>
+                {saving ? <Loader2 size={14} className="animate-spin" /> : <Check size={14} />}
+                {saving ? 'Guardando…' : 'Guardar'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+    </>
+  );
+}

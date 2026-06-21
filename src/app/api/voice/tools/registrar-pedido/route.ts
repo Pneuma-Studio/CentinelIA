@@ -10,18 +10,28 @@ export async function POST(req: NextRequest) {
   const { nombre, telefono, items, tipo, direccion, notas } =
     body.toolCallList?.[0]?.function?.arguments ?? body;
 
-  if (!agent_id) {
-    return NextResponse.json({ error: 'agent_id requerido' }, { status: 400 });
-  }
+  if (!agent_id) return NextResponse.json({ error: 'agent_id requerido' }, { status: 400 });
 
   const supabase = createAdminClient();
-
   const { data: agent } = await supabase
     .from('voice_agents')
     .select('business_name, transfer_whatsapp')
     .eq('id', agent_id)
     .single();
 
+  // Save order to database
+  await supabase.from('orders_voice').insert({
+    agent_id,
+    nombre:    nombre    ?? null,
+    telefono:  telefono  ?? null,
+    items:     items     ?? '',
+    tipo:      tipo      ?? 'recoger',
+    direccion: direccion ?? null,
+    notas:     notas     ?? null,
+    status:    'nuevo',
+  });
+
+  // Notify owner via WhatsApp
   if (agent?.transfer_whatsapp) {
     const msg = [
       `🛒 *Nuevo pedido — ${agent.business_name}*`,
@@ -39,5 +49,4 @@ export async function POST(req: NextRequest) {
   return NextResponse.json({
     result: `Su pedido ha sido registrado para ${tipoLabel}. Le confirmamos los detalles por teléfono pronto.`,
   });
-
 }

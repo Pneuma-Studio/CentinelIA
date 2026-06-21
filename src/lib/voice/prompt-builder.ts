@@ -9,7 +9,13 @@ export function buildSystemPrompt(agent: VoiceAgent): string {
   const orderLabel      = tpl?.orderLabel      ?? 'producto';
   const appointmentLabel = tpl?.appointmentLabel ?? 'cita';
 
-  const hoursText = formatBusinessHours(business_hours);
+  const hoursText = business_hours ? formatBusinessHours(business_hours) : 'Abierto 24/7';
+
+  const now = new Date().toLocaleString('es-MX', {
+    timeZone: timezone,
+    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric',
+    hour: '2-digit', minute: '2-digit', hour12: true,
+  });
 
   const blocks: string[] = [];
 
@@ -22,6 +28,9 @@ Zona horaria: ${timezone}.
 Habla de forma natural, como una recepcionista humana profesional y amable.
 Sé conciso — las respuestas en llamadas deben ser breves y claras.
 Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."`);
+
+  // ── Date/time context ─────────────────────────────────────────────────────
+  blocks.push(`FECHA Y HORA ACTUAL: ${now}`);
 
   // ── Business hours ─────────────────────────────────────────────────────────
   blocks.push(`HORARIO DE ATENCIÓN:
@@ -135,8 +144,8 @@ Si algo no está en esta lista, dilo honestamente y ofrece tomar sus datos para 
   return blocks.join('\n\n');
 }
 
-function formatBusinessHours(hours: VoiceAgent['business_hours']): string {
-  const days: Array<[keyof VoiceAgent['business_hours'], string]> = [
+function formatBusinessHours(hours: NonNullable<VoiceAgent['business_hours']>): string {
+  const days: Array<[keyof NonNullable<VoiceAgent['business_hours']>, string]> = [
     ['monday', 'Lunes'],
     ['tuesday', 'Martes'],
     ['wednesday', 'Miércoles'],
