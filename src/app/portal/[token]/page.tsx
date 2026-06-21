@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Phone, CheckCircle, XCircle, AlertTriangle, CreditCard, Zap, Clock, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail } from 'lucide-react';
+import { Phone, CheckCircle, XCircle, AlertTriangle, CreditCard, Clock, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail } from 'lucide-react';
 import type { VoiceCall } from '@/types/agent';
 import PortalLeadsSection from './PortalLeadsSection';
 import PortalOrdersSection from './PortalOrdersSection';
@@ -11,6 +11,8 @@ import PortalAppointmentsSection from './PortalAppointmentsSection';
 import BuyMinutesSection from './BuyMinutesSection';
 import CollapsibleSection from './CollapsibleSection';
 import BusinessHoursEditor from './BusinessHoursEditor';
+import KnowledgeBaseEditor from './KnowledgeBaseEditor';
+import CallCard from './CallCard';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
@@ -22,15 +24,6 @@ interface Props {
 
 const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
 
-const OUTCOME_LABELS: Record<string, { label: string; color: string; bg: string }> = {
-  lead_created:       { label: 'Lead',        color: '#6C3BFF', bg: '#F0ECFF' },
-  appointment_booked: { label: 'Cita',         color: '#3b82f6', bg: '#EFF6FF' },
-  order_taken:        { label: 'Pedido',       color: '#f59e0b', bg: '#FFFBEB' },
-  transferred:        { label: 'Transferido',  color: '#a855f7', bg: '#FAF5FF' },
-  info_provided:      { label: 'Información',  color: '#6b7280', bg: '#F9FAFB' },
-  escalated_whatsapp: { label: 'WhatsApp',     color: '#16a34a', bg: '#F0FDF4' },
-  other:              { label: 'Otro',         color: '#9ca3af', bg: '#F3F4F6' },
-};
 
 const GIRO_LABELS: Record<string, { appointment?: string }> = {
   consultorio: { appointment: 'cita' },
@@ -201,8 +194,8 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {/* Grid: sidebar first on mobile (order-first), right on desktop */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
 
-            {/* RIGHT sidebar — shown first on mobile */}
-            <div className="flex flex-col gap-4 order-first lg:order-last">
+            {/* RIGHT sidebar */}
+            <div className="flex flex-col gap-4 order-last lg:order-last">
 
               {/* Minutes */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
@@ -269,6 +262,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 </div>
               )}
 
+              {/* Knowledge base editor */}
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <h3 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Base de conocimiento</h3>
+                <KnowledgeBaseEditor token={token} initialValue={agentData.knowledge_base ?? ''} />
+              </div>
+
               {/* Business hours editor */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h3 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h3>
@@ -298,7 +297,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             </div>
 
             {/* LEFT: main content */}
-            <div className="lg:col-span-2 flex flex-col gap-5 order-last lg:order-first">
+            <div className="lg:col-span-2 flex flex-col gap-5 order-first lg:order-first">
 
               {/* KPI grid */}
               <div className="grid grid-cols-2 gap-3">
@@ -355,26 +354,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   </div>
                 ) : (
                   <div className="flex flex-col gap-2">
-                    {calls.slice(0, 30).map(call => {
-                      const outcome = OUTCOME_LABELS[call.outcome] ?? OUTCOME_LABELS.other;
-                      return (
-                        <div key={call.id} className="px-4 py-3 rounded-xl"
-                          style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
-                          <div className="flex items-center justify-between gap-3 flex-wrap">
-                            <div className="flex items-center gap-2 min-w-0">
-                              <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>{call.caller_number || 'Número desconocido'}</span>
-                              <span className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-                                style={{ background: outcome.bg, color: outcome.color }}>{outcome.label}</span>
-                            </div>
-                            <div className="flex items-center gap-3 text-xs flex-shrink-0" style={{ color: 'var(--c-text-3)' }}>
-                              <span>{Math.ceil(call.duration_seconds / 60)} min</span>
-                              <span>{new Date(call.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}</span>
-                            </div>
-                          </div>
-                          {call.summary && <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--c-text-2)' }}>{call.summary}</p>}
-                        </div>
-                      );
-                    })}
+                    {calls.slice(0, 30).map(call => (
+                      <CallCard key={call.id} call={call as any} />
+                    ))}
                     {calls.length > 30 && (
                       <p className="text-xs text-center pt-1" style={{ color: 'var(--c-text-4)' }}>Mostrando 30 de {calls.length} llamadas</p>
                     )}

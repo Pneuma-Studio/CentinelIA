@@ -9,6 +9,7 @@ import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
 import CallsSection from './CallsSection';
 import CopyButton from './CopyButton';
+import MinutesAdjuster from './MinutesAdjuster';
 
 interface Props {
   params: Promise<{ id: string }>;
@@ -33,8 +34,6 @@ export default async function AgentDetailPage({ params }: Props) {
     basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7',
   };
   const planColor = planColors[agent.plan] ?? '#6b7280';
-  const minutesPct = Math.min((agent.minutes_used / agent.minutes_included) * 100, 100);
-  const minutesColor = minutesPct > 90 ? '#ef4444' : minutesPct > 70 ? '#f59e0b' : '#22c55e';
 
   return (
     <div className="p-8 max-w-4xl">
@@ -99,17 +98,11 @@ export default async function AgentDetailPage({ params }: Props) {
         {/* Right column */}
         <div className="flex flex-col gap-4">
           {/* Minutes */}
-          <div className="p-5 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <div className="text-xs mb-3 tracking-widest uppercase font-semibold" style={{ color: 'var(--c-text-3)' }}>Minutos</div>
-            <div className="text-2xl font-bold" style={{ color: minutesColor }}>{agent.minutes_used}</div>
-            <div className="text-xs mt-0.5 mb-3" style={{ color: 'var(--c-text-2)' }}>de {agent.minutes_included} incluidos</div>
-            <div className="w-full h-2 rounded-full" style={{ background: 'var(--c-border)' }}>
-              <div className="h-2 rounded-full transition-all" style={{ width: `${minutesPct}%`, background: minutesColor }} />
-            </div>
-            <div className="text-xs mt-2" style={{ color: 'var(--c-text-3)' }}>
-              Reset: {new Date(agent.minutes_reset_date + 'T00:00:00').toLocaleDateString('es-MX')}
-            </div>
-          </div>
+          <MinutesAdjuster
+            agentId={agent.id}
+            minutesUsed={agent.minutes_used}
+            minutesIncluded={agent.minutes_included}
+          />
 
           {/* Vapi config */}
           {agent.vapi_agent_id && (
