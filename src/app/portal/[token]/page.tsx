@@ -3,7 +3,7 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { Phone, CheckCircle, XCircle, AlertTriangle, CreditCard, Clock, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail } from 'lucide-react';
+import { Phone, CheckCircle, XCircle, AlertTriangle, CreditCard, Clock, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, RotateCcw } from 'lucide-react';
 import type { VoiceCall } from '@/types/agent';
 import PortalLeadsSection from './PortalLeadsSection';
 import PortalOrdersSection from './PortalOrdersSection';
@@ -16,6 +16,8 @@ import CallCard from './CallCard';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
+import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
+import type { MinutesPlan } from '@/lib/billing/plans';
 
 interface Props {
   params: Promise<{ token: string }>;
@@ -88,6 +90,8 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const minutesColor    = minutesPct > 90 ? '#ef4444' : minutesPct > 70 ? '#f59e0b' : '#22c55e';
   const minutesBarBg    = minutesPct > 90 ? '#FEF2F2' : minutesPct > 70 ? '#FFFBEB' : '#F0FDF4';
   const minutesRemain   = Math.max(0, minutesIncluded - minutesUsed);
+  const planBaseMinutes = agentData.minutes_plan ? (MINUTES_PLAN_CONFIG[agentData.minutes_plan as MinutesPlan]?.minutes ?? minutesIncluded) : minutesIncluded;
+  const rolloverMinutes = Math.max(0, minutesIncluded - planBaseMinutes);
   const agentName       = agentData.agent_name?.trim() || 'CentinelIA';
 
   const resetDate = agentData.minutes_reset_date
@@ -218,6 +222,13 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   <span>{Math.round(minutesPct)}% usado</span>
                   <span>Reset: {resetDate}</span>
                 </div>
+                {rolloverMinutes > 0 && (
+                  <div className="flex items-center gap-1 text-xs mt-2"
+                    style={{ color: '#6C3BFF' }}>
+                    <RotateCcw size={10} />
+                    <span>{planBaseMinutes} base + {rolloverMinutes} del mes anterior</span>
+                  </div>
+                )}
                 {hasStripe && (
                   <a href={`/api/billing/portal-session?token=${token}`}
                     className="mt-4 flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-semibold transition-opacity hover:opacity-80"

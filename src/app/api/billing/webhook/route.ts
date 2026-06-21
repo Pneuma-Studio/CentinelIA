@@ -93,9 +93,18 @@ export async function POST(req: NextRequest) {
 
       const minutesCfg = MINUTES_PLAN_CONFIG[minutesPlan];
 
+      // Rollover: carry unused minutes (capped at 1× the plan base)
+      const { data: prevAgent } = await supabase
+        .from('voice_agents')
+        .select('minutes_used, minutes_included')
+        .eq('id', agentId)
+        .single();
+      const unused   = prevAgent ? Math.max(0, prevAgent.minutes_included - prevAgent.minutes_used) : 0;
+      const rollover = Math.min(unused, minutesCfg.minutes);
+
       await supabase.from('voice_agents').update({
         minutes_plan:       minutesPlan,
-        minutes_included:   minutesCfg.minutes,
+        minutes_included:   minutesCfg.minutes + rollover,
         minutes_used:       0,
         minutes_reset_date: nextResetDate(),
         active:             true,
