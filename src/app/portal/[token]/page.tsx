@@ -131,9 +131,10 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {agentData.plan && (
-                <span className="hidden sm:inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium"
+                <span className="inline-flex items-center gap-1 text-xs px-2.5 py-1 rounded-full font-medium"
                   style={{ background: 'rgba(108,59,255,0.08)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.15)' }}>
-                  {PLAN_LABELS[agentData.plan]} · {minutesIncluded} min/mes
+                  {PLAN_LABELS[agentData.plan]}
+                  <span className="hidden sm:inline">· {minutesIncluded} min/mes</span>
                 </span>
               )}
               <ThemeToggle className="!text-[var(--c-text-2)] !bg-[var(--c-surface-2)]" />
