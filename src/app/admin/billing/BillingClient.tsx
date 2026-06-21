@@ -88,7 +88,7 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
             value={featurePlan}
             onChange={e => { setFeaturePlan(e.target.value as Plan); setUrl(null); }}
             className="w-full rounded-lg px-2 py-1.5 text-xs outline-none"
-            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
+            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)', colorScheme: 'dark' }}
           >
             {(Object.entries(FEATURE_PLAN_CONFIG) as [Plan, typeof featureCfg][]).map(([key, cfg]) => (
               <option key={key} value={key}>
@@ -104,7 +104,7 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
             value={minutesPlan}
             onChange={e => { setMinutesPlan(e.target.value as MinutesPlan); setUrl(null); }}
             className="w-full rounded-lg px-2 py-1.5 text-xs outline-none"
-            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
+            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)', colorScheme: 'dark' }}
           >
             {(Object.entries(MINUTES_PLAN_CONFIG) as [MinutesPlan, typeof minutesCfg][]).map(([key, cfg]) => (
               <option key={key} value={key}>
