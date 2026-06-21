@@ -64,6 +64,7 @@ export async function POST(req: NextRequest) {
         minutes_included:       minutesCfg.minutes,
         minutes_used:           0,
         minutes_reset_date:     nextResetDate(),
+        grace_period_ends_at:   null,
       }).eq('id', agentId);
 
       // Re-associate Vapi assistant when reactivating
@@ -104,12 +105,13 @@ export async function POST(req: NextRequest) {
       const rollover = Math.min(unused, minutesCfg.minutes);
 
       await supabase.from('voice_agents').update({
-        minutes_plan:       minutesPlan,
-        minutes_included:   minutesCfg.minutes + rollover,
-        minutes_used:       0,
-        minutes_reset_date: nextResetDate(),
-        active:             true,
-        billing_status:     'activo',
+        minutes_plan:         minutesPlan,
+        minutes_included:     minutesCfg.minutes + rollover,
+        minutes_used:         0,
+        minutes_reset_date:   nextResetDate(),
+        active:               true,
+        billing_status:       'activo',
+        grace_period_ends_at: null,
       }).eq('id', agentId);
 
       // Re-associate Vapi on renewal (in case it was paused for overage)
@@ -136,21 +138,22 @@ export async function POST(req: NextRequest) {
       const agentId = sub.metadata?.agent_id;
       if (!agentId) break;
 
-      await supabase.from('voice_agents').update({ billing_status: 'pago_fallido' }).eq('id', agentId);
+      const gracePeriodEndsAt = new Date(Date.now() + 3 * 24 * 60 * 60 * 1000).toISOString();
+      await supabase.from('voice_agents').update({
+        billing_status:        'pago_fallido',
+        grace_period_ends_at:  gracePeriodEndsAt,
+      }).eq('id', agentId);
 
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, client_email, transfer_whatsapp, phone_number')
+        .select('business_name, client_email, transfer_whatsapp')
         .eq('id', agentId)
         .single();
-
-      // Pause Vapi on payment failure
-      if (agent?.phone_number) await pauseVapiAgent(agent.phone_number);
 
       if (agent?.transfer_whatsapp) {
         await sendWhatsApp(
           agent.transfer_whatsapp,
-          `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción CentinelIA. El agente de voz ha sido pausado.\n\nActualiza tu método de pago para reactivar el servicio.`
+          `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción CentinelIA. Tienes *3 días* para regularizar el pago antes de que el agente sea pausado automáticamente.\n\nActualiza tu método de pago para continuar el servicio sin interrupciones.`
         );
       }
       if (agent?.client_email) {

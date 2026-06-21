@@ -58,8 +58,9 @@ export function paymentFailedHtml(businessName: string) {
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;border:1px solid #e5e7eb">
       <div style="color:#ef4444;font-size:18px;font-weight:700;margin-bottom:16px">💳 Pago fallido — ${businessName}</div>
       <p style="color:#374151;font-size:14px;line-height:1.6;margin:0">
-        No pudimos procesar el pago de tu suscripción CentinelIA. Tu agente de voz ha sido pausado.<br><br>
-        Actualiza tu método de pago para reactivar el servicio.
+        No pudimos procesar el pago de tu suscripción CentinelIA.<br><br>
+        Tienes <strong>3 días</strong> para actualizar tu método de pago antes de que el agente de voz sea pausado automáticamente.<br><br>
+        Actualiza tu método de pago en el portal del cliente o contáctanos para regularizar tu cuenta.
       </p>
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:12px">
         CentinelIA · Pneuma Studio

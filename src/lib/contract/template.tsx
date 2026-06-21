@@ -70,7 +70,7 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
         </ul>
         <p style={{ marginTop: '0.75rem', fontSize: '0.8rem', opacity: 0.7 }}>
           El agente también cuenta con {minutesIncluded} minutos mensuales de conversación incluidos.
-          Los minutos no utilizados se transfieren al mes siguiente (hasta un máximo de 1× la cuota mensual del plan).
+          Los minutos no utilizados se transfieren al mes siguiente, con un límite de acumulación equivalente a un mes adicional de tu plan.
         </p>
       </Clause>
 
@@ -90,15 +90,17 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
           El cobro se realizará de forma automática a través de Stripe en la fecha de renovación mensual.
         </p>
         <p style={{ marginTop: '0.5rem' }}>
-          En caso de fallo en el pago, el agente será pausado automáticamente y el Cliente recibirá notificación por correo electrónico y/o WhatsApp.
+          En caso de fallo en el pago, el Cliente recibirá notificación por correo electrónico y/o WhatsApp y contará con un período de gracia de
+          3 días naturales para regularizar el pago antes de que el agente sea pausado automáticamente.
           El servicio se reanuda al actualizar el método de pago.
         </p>
       </Clause>
 
       <Clause title={`${excluded.length > 0 ? '6' : '5'}. DURACIÓN Y TERMINACIÓN`}>
         <p>
-          El contrato tiene vigencia mensual con renovación automática. El Cliente puede cancelar en cualquier momento desde
-          el portal de facturación. No se realizan reembolsos de períodos parciales.
+          El contrato tiene vigencia mensual con renovación automática. Para cancelar el servicio, el Cliente deberá
+          contactar al equipo de CentinelIA con al menos 5 días naturales de anticipación a la fecha de renovación.
+          No se realizan reembolsos de períodos parciales.
           CentinelIA se reserva el derecho de dar de baja el servicio con previo aviso de 15 días naturales.
         </p>
       </Clause>

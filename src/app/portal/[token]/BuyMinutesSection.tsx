@@ -1,66 +1,71 @@
 'use client';
 
 import { useState } from 'react';
-import { Zap, Loader2 } from 'lucide-react';
+import { Zap } from 'lucide-react';
 
-const PACKS = [
-  { minutes: 100, price: 1000,  label: '100 min',  desc: 'Para un mes con poca actividad extra' },
-  { minutes: 250, price: 2500,  label: '250 min',  desc: 'El más popular para temporadas altas' },
-  { minutes: 500, price: 5000,  label: '500 min',  desc: 'Para negocios con mucho volumen' },
+const PACKAGES = [
+  { minutes: 50,  label: '50 min',  sub: '$599 MXN' },
+  { minutes: 100, label: '100 min', sub: '$999 MXN' },
+  { minutes: 250, label: '250 min', sub: '$1,990 MXN' },
 ];
 
 export default function BuyMinutesSection({ token }: { token: string }) {
-  const [loading, setLoading] = useState<number | null>(null);
+  const [selected, setSelected] = useState<number | null>(null);
+  const [loading, setLoading]   = useState(false);
 
-  const buy = async (minutes: number) => {
-    setLoading(minutes);
-    try {
-      const res = await fetch(`/api/portal/${token}/buy-minutes`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ minutes }),
-      });
-      const data = await res.json();
-      if (data.url) window.location.href = data.url;
-    } finally {
-      setLoading(null);
+  const handleBuy = async () => {
+    if (selected === null || loading) return;
+    setLoading(true);
+    const res = await fetch('/api/portal/buy-minutes', {
+      method:  'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify({ token, minutes: selected }),
+    });
+    if (res.ok) {
+      const { url } = await res.json();
+      window.location.href = url;
+    } else {
+      setLoading(false);
     }
   };
 
   return (
     <div className="flex flex-col gap-2">
-      {PACKS.map(pack => (
-        <button
-          key={pack.minutes}
-          onClick={() => buy(pack.minutes)}
-          disabled={loading !== null}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-xl text-left transition-all hover:shadow-sm"
-          style={{
-            background: loading === pack.minutes ? 'var(--c-input-bg)' : 'var(--c-surface)',
-            border: '1px solid var(--c-input-border)',
-            opacity: loading !== null && loading !== pack.minutes ? 0.5 : 1,
-          }}
-        >
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold" style={{ color: 'var(--c-text)' }}>{pack.label}</span>
-              <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                style={{ background: 'var(--c-input-bg)', color: '#6C3BFF' }}>
-                ${pack.price.toLocaleString('es-MX')} MXN
-              </span>
-            </div>
-            <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{pack.desc}</p>
-          </div>
-          <div className="flex-shrink-0 ml-3">
-            {loading === pack.minutes
-              ? <Loader2 size={16} className="animate-spin" style={{ color: '#6C3BFF' }} />
-              : <Zap size={16} style={{ color: '#6C3BFF' }} />}
-          </div>
-        </button>
-      ))}
-      <p className="text-xs text-center mt-1" style={{ color: 'var(--c-text-3)' }}>
-        $10 MXN / min · Pago único · Se suman al saldo actual
-      </p>
+      <div className="grid grid-cols-3 gap-1.5">
+        {PACKAGES.map(pkg => {
+          const active = selected === pkg.minutes;
+          return (
+            <button
+              key={pkg.minutes}
+              onClick={() => setSelected(pkg.minutes)}
+              className="flex flex-col items-center py-2.5 px-1 rounded-lg text-center transition-all"
+              style={{
+                background: active ? 'rgba(108,59,255,0.12)' : 'var(--c-surface-2)',
+                border:     `1px solid ${active ? 'rgba(108,59,255,0.4)' : 'var(--c-border)'}`,
+                color:      active ? '#6C3BFF' : 'var(--c-text-2)',
+              }}
+            >
+              <span className="text-sm font-bold">{pkg.label}</span>
+              <span className="text-xs mt-0.5" style={{ opacity: 0.7 }}>{pkg.sub}</span>
+            </button>
+          );
+        })}
+      </div>
+
+      <button
+        onClick={handleBuy}
+        disabled={selected === null || loading}
+        className="flex items-center justify-center gap-2 w-full py-2.5 rounded-lg text-sm font-semibold transition-all"
+        style={{
+          background: selected !== null ? '#6C3BFF' : 'var(--c-surface-2)',
+          color:      selected !== null ? '#fff' : 'var(--c-text-3)',
+          cursor:     selected !== null ? 'pointer' : 'not-allowed',
+          opacity:    loading ? 0.6 : 1,
+        }}
+      >
+        <Zap size={14} />
+        {loading ? 'Redirigiendo…' : 'Comprar minutos'}
+      </button>
     </div>
   );
 }
