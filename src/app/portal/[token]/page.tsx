@@ -14,6 +14,7 @@ import BusinessHoursEditor from './BusinessHoursEditor';
 import KnowledgeBaseEditor from './KnowledgeBaseEditor';
 import CallCard from './CallCard';
 import DownloadCallsCSV from './DownloadCallsCSV';
+import ContractSection from './ContractSection';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
@@ -275,6 +276,14 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <h3 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h3>
                 <BusinessHoursEditor token={token} initialHours={(agentData.business_hours ?? null) as BusinessHours | null} />
               </div>
+
+              {/* Contract */}
+              <ContractSection
+                token={token}
+                businessName={agentData.business_name}
+                signedAt={agentData.contract_accepted_at ?? null}
+                contractPreviewUrl={`/portal/${token}/contrato`}
+              />
 
             </div>
 

@@ -2,13 +2,14 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Settings, BarChart3, Plus, CreditCard, LogOut } from 'lucide-react';
+import { LayoutDashboard, Settings, BarChart3, Plus, CreditCard, LogOut, FileText } from 'lucide-react';
 
 const links = [
-  { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
-  { href: '/admin/agentes',   icon: Settings,         label: 'Agentes' },
-  { href: '/admin/analytics', icon: BarChart3,        label: 'Analytics' },
-  { href: '/admin/billing',   icon: CreditCard,       label: 'Facturación' },
+  { href: '/admin/dashboard',  icon: LayoutDashboard, label: 'Dashboard' },
+  { href: '/admin/agentes',    icon: Settings,        label: 'Agentes' },
+  { href: '/admin/analytics',  icon: BarChart3,       label: 'Analytics' },
+  { href: '/admin/billing',    icon: CreditCard,      label: 'Facturación' },
+  { href: '/admin/contratos',  icon: FileText,        label: 'Contratos' },
 ];
 
 export default function AdminNav() {

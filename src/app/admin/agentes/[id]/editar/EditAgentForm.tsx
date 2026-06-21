@@ -1,9 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink } from 'lucide-react';
 import { PLAN_FEATURES, PLAN_LABELS, PLAN_MINUTES, FEATURE_LABELS } from '@/types/agent';
 import type { Plan, AgentFeatures, VoiceAgent, BusinessHours, DaySchedule } from '@/types/agent';
 
@@ -32,18 +32,21 @@ const DEFAULT_HOURS: BusinessHours = {
   sunday:    { open: false },
 };
 
-type Tab = 'info' | 'agente' | 'funciones' | 'horarios';
+type Tab = 'info' | 'agente' | 'funciones' | 'horarios' | 'contrato';
 const TABS: { id: Tab; label: string }[] = [
-  { id: 'info',     label: 'Información' },
-  { id: 'agente',   label: 'Agente' },
+  { id: 'info',      label: 'Información' },
+  { id: 'agente',    label: 'Agente' },
   { id: 'funciones', label: 'Funciones' },
-  { id: 'horarios', label: 'Horarios' },
+  { id: 'horarios',  label: 'Horarios' },
+  { id: 'contrato',  label: 'Contrato' },
 ];
 
 export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
-  const router = useRouter();
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+  const initialTab   = (searchParams.get('tab') as Tab | null) ?? 'info';
   const [saving, setSaving]               = useState(false);
-  const [tab, setTab]                     = useState<Tab>('info');
+  const [tab, setTab]                     = useState<Tab>(initialTab);
   const [plan, setPlan]                   = useState<Plan>(agent.plan);
   const [features, setFeatures]           = useState<AgentFeatures>(agent.features);
   const [businessHours, setBusinessHours] = useState<BusinessHours>(agent.business_hours ?? DEFAULT_HOURS);
@@ -78,8 +81,9 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
       agent_name:             plan === 'pro' ? fd.get('agent_name') : null,
       plan,
       features,
-      business_hours: hoursEnabled ? businessHours : null,
+      business_hours:  hoursEnabled ? businessHours : null,
       minutes_included: PLAN_MINUTES[plan],
+      contract_text:   (fd.get('contract_text') as string)?.trim() || null,
     };
 
     const res = await fetch(`/api/admin/agentes/${agent.id}`, {
@@ -267,6 +271,40 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
                     </div>
                   );
                 })}
+              </div>
+            )}
+          </Section>
+        </div>
+
+        {/* Tab: Contrato */}
+        <div className={tab !== 'contrato' ? 'hidden' : 'flex flex-col gap-6'}>
+          <Section title="Texto del contrato">
+            <div className="p-3 rounded-lg text-xs" style={{ background: 'rgba(108,59,255,0.06)', border: '1px solid rgba(108,59,255,0.15)', color: 'var(--c-text-2)' }}>
+              <strong style={{ color: '#9B6DFF' }}>Template automático activo.</strong> Si dejas este campo vacío, el contrato se genera automáticamente con los datos del agente (plan, funciones incluidas/excluidas, precio mensual, nombre del negocio). Solo escribe aquí si necesitas personalizar el texto para este cliente específico.
+            </div>
+            <Field
+              label="Texto personalizado (opcional)"
+              name="contract_text"
+              textarea
+              rows={16}
+              placeholder={"Escribe el contrato personalizado aquí...\n\nSi lo dejas vacío se usa el template automático de CentinelIA."}
+              defaultValue={(agent as any).contract_text ?? ''}
+            />
+            {agent.portal_token && (
+              <a
+                href={`/portal/${agent.portal_token}/contrato`}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-2 text-xs transition-opacity hover:opacity-80"
+                style={{ color: '#9B6DFF' }}
+              >
+                <ExternalLink size={12} />
+                Previsualizar contrato del cliente
+              </a>
+            )}
+            {(agent as any).contract_accepted_at && (
+              <div className="flex items-center gap-2 p-3 rounded-lg text-xs" style={{ background: 'rgba(34,197,94,0.06)', border: '1px solid rgba(34,197,94,0.15)', color: '#16a34a' }}>
+                ✓ Firmado por el cliente el {new Date((agent as any).contract_accepted_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'long', year: 'numeric' })}
               </div>
             )}
           </Section>
