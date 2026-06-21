@@ -1,10 +1,12 @@
 export const dynamic = 'force-dynamic';
 
 import { createAdminClient } from '@/lib/supabase/admin';
-import { Phone, Clock, TrendingUp, Users, DollarSign } from 'lucide-react';
+import { Phone, Clock, TrendingUp, Users } from 'lucide-react';
 import Link from 'next/link';
 import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { MinutesPlan } from '@/lib/billing/plans';
+import AnalyticsAgentsTable from './AnalyticsAgentsTable';
+import type { AgentRow } from './AnalyticsAgentsTable';
 
 interface Props {
   searchParams: Promise<{ period?: string }>;
@@ -101,6 +103,23 @@ export default async function AnalyticsPage({ searchParams }: Props) {
     if (!agentCallMap[lead.agent_id]) agentCallMap[lead.agent_id] = { calls: 0, leads: 0, duration: 0 };
     agentCallMap[lead.agent_id].leads++;
   }
+
+  const agentRows: AgentRow[] = allAgents.map(a => {
+    const stats  = agentCallMap[a.id] ?? { calls: 0, leads: 0, duration: 0 };
+    const avgMin = stats.calls > 0 ? Math.round(stats.duration / stats.calls / 60) : 0;
+    const mxn    = a.minutes_plan ? (MINUTES_PLAN_CONFIG[a.minutes_plan as MinutesPlan]?.mxn ?? 0) : 0;
+    return {
+      id:           a.id,
+      business_name: a.business_name,
+      plan:         a.plan,
+      active:       a.active,
+      mxn,
+      calls:        stats.calls,
+      leads:        stats.leads,
+      avgMin,
+      minutesUsed:  a.minutes_used,
+    };
+  });
 
   return (
     <div className="p-4 md:p-8 max-w-5xl">
@@ -233,41 +252,7 @@ export default async function AnalyticsPage({ searchParams }: Props) {
           <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
             Por agente
           </h2>
-          {allAgents.length === 0 ? (
-            <p className="text-sm py-4 text-center" style={{ color: 'var(--c-text-3)' }}>Sin agentes</p>
-          ) : (
-            <div className="flex flex-col gap-2">
-              {allAgents.map(agent => {
-                const stats  = agentCallMap[agent.id] ?? { calls: 0, leads: 0, duration: 0 };
-                const avgMin = stats.calls > 0 ? Math.round(stats.duration / stats.calls / 60) : 0;
-                const mxn    = agent.minutes_plan ? (MINUTES_PLAN_CONFIG[agent.minutes_plan as MinutesPlan]?.mxn ?? 0) : 0;
-                return (
-                  <Link
-                    key={agent.id}
-                    href={`/admin/agentes/${agent.id}`}
-                    className="px-3 py-2.5 rounded-lg transition-all hover:opacity-80"
-                    style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)', display: 'block' }}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-1.5 h-1.5 rounded-full" style={{ background: agent.active ? '#22c55e' : '#4b5563' }} />
-                        <span className="text-sm" style={{ color: 'var(--c-text)' }}>{agent.business_name}</span>
-                      </div>
-                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                        {mxn > 0 ? `$${mxn.toLocaleString('es-MX')} MXN` : agent.plan}
-                      </span>
-                    </div>
-                    <div className="flex gap-4 mt-1.5">
-                      <Stat label="Llamadas" value={stats.calls} />
-                      <Stat label="Leads"    value={stats.leads} color="#22c55e" />
-                      <Stat label="Prom."    value={`${avgMin}m`} />
-                      <Stat label="Min. usados" value={agent.minutes_used} />
-                    </div>
-                  </Link>
-                );
-              })}
-            </div>
-          )}
+          <AnalyticsAgentsTable rows={agentRows} />
         </div>
       </div>
     </div>
@@ -286,11 +271,3 @@ function KpiCard({ icon, label, value, color }: { icon: React.ReactNode; label: 
   );
 }
 
-function Stat({ label, value, color }: { label: string; value: string | number; color?: string }) {
-  return (
-    <div>
-      <div className="text-xs" style={{ color: color ?? 'var(--c-text)' }}>{value}</div>
-      <div style={{ color: 'var(--c-text-3)', fontSize: '10px' }}>{label}</div>
-    </div>
-  );
-}
