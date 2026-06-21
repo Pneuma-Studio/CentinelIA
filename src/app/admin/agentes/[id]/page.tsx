@@ -8,9 +8,6 @@ import type { VoiceAgent, VoiceCall } from '@/types/agent';
 import { PLAN_LABELS, FEATURE_LABELS } from '@/types/agent';
 import AgentActions from './AgentActions';
 import CallsSection from './CallsSection';
-import LeadsSection from './LeadsSection';
-import AdminOrdersSection from './AdminOrdersSection';
-import AdminAppointmentsSection from './AdminAppointmentsSection';
 import CopyButton from './CopyButton';
 
 interface Props {
@@ -27,24 +24,10 @@ export default async function AgentDetailPage({ params }: Props) {
   const agent = agentData as VoiceAgent;
   const features = agent.features ?? {};
 
-  const [{ data: callsData }, { data: leadsData }, { data: ordersData }, { data: apptsData }] = await Promise.all([
-    supabase.from('voice_calls').select('*').eq('agent_id', id).order('created_at', { ascending: false }).limit(50),
-    supabase.from('leads_voice').select('*').eq('agent_id', id).order('created_at', { ascending: false }).limit(50),
-    features.order_taking
-      ? supabase.from('orders_voice').select('*').eq('agent_id', id).order('created_at', { ascending: false }).limit(50)
-      : Promise.resolve({ data: [] }),
-    features.appointment_booking
-      ? supabase.from('appointments_voice').select('*').eq('agent_id', id).order('created_at', { ascending: false }).limit(50)
-      : Promise.resolve({ data: [] }),
-  ]);
+  const { data: callsData } = await supabase
+    .from('voice_calls').select('*').eq('agent_id', id).order('created_at', { ascending: false }).limit(50);
 
   const calls = (callsData ?? []) as VoiceCall[];
-  const leads = leadsData ?? [];
-  const orders = ordersData ?? [];
-  const appts = apptsData ?? [];
-
-  const giro = agent.giro_template ?? 'general';
-  const apptLabel = giro === 'restaurante' ? 'reservación' : 'cita';
 
   const planColors: Record<string, string> = {
     basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7',
@@ -108,25 +91,6 @@ export default async function AgentDetailPage({ params }: Props) {
               ))}
             </div>
           </Card>
-
-          {/* Orders */}
-          {features.order_taking && (
-            <Card title={`Pedidos (${orders.length})`}>
-              <AdminOrdersSection initialOrders={orders as any} token={agent.portal_token ?? ''} />
-            </Card>
-          )}
-
-          {/* Appointments */}
-          {features.appointment_booking && (
-            <Card title={`${apptLabel.charAt(0).toUpperCase() + apptLabel.slice(1)}s (${appts.length})`}>
-              <AdminAppointmentsSection initialAppointments={appts as any} token={agent.portal_token ?? ''} label={apptLabel} />
-            </Card>
-          )}
-
-          {/* Leads */}
-          {(features.lead_qualification || leads.length > 0) && (
-            <LeadsSection initialLeads={leads} />
-          )}
 
           {/* Recent calls */}
           <CallsSection calls={calls} timezone={agent.timezone ?? 'America/Monterrey'} />
