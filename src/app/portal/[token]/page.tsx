@@ -208,9 +208,10 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             {/* RIGHT sidebar */}
             <div className="flex flex-col gap-4 order-last lg:order-last">
 
-              {/* Minutes */}
+              {/* Minutes — merged card */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h3 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Minutos del mes</h3>
+
                 <div className="flex items-end gap-2 mb-1">
                   <span className="text-3xl font-bold" style={{ color: minutesColor }}>{minutesUsed}</span>
                   <span className="text-sm mb-1" style={{ color: 'var(--c-text-3)' }}>/ {minutesIncluded}</span>
@@ -223,8 +224,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   <span>Reset: {resetDate}</span>
                 </div>
                 {rolloverMinutes > 0 && (
-                  <div className="flex items-center gap-1 text-xs mt-2"
-                    style={{ color: '#6C3BFF' }}>
+                  <div className="flex items-center gap-1 text-xs mt-2" style={{ color: '#6C3BFF' }}>
                     <RotateCcw size={10} />
                     <span>{planBaseMinutes} base + {rolloverMinutes} del mes anterior</span>
                   </div>
@@ -241,27 +241,27 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                     {minutesPct > 70 ? 'Agregar minutos' : 'Gestionar plan'}
                   </a>
                 )}
-              </div>
 
-              {/* Buy extra minutes */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <h3 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Minutos extra</h3>
-                <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>Se suman al saldo actual al instante. No afectan tu plan mensual.</p>
-                <BuyMinutesSection token={token} />
-              </div>
-
-              {/* Usage averages */}
-              {allCalls.length > 0 && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                  <h3 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Consumo promedio</h3>
-                  <div className="flex flex-col gap-3">
-                    <UsageRow label="Por día"   value={`${avgMinPerDay} min`} />
-                    <UsageRow label="Por semana" value={`${avgMinPerWeek} min`} />
-                    <UsageRow label="Por mes"    value={`${avgMinPerMonth} min`} highlight={avgMinPerMonth > minutesIncluded * 0.9} />
-                  </div>
-                  <p className="text-xs mt-3" style={{ color: 'var(--c-text-4)' }}>Histórico · {allTimeTotalMin} min en {daysSinceFirst} días</p>
+                {/* Extra minutes */}
+                <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--c-divider)' }}>
+                  <div className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Minutos extra</div>
+                  <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>Se suman al saldo actual al instante. No afectan tu plan mensual.</p>
+                  <BuyMinutesSection token={token} />
                 </div>
-              )}
+
+                {/* Usage averages */}
+                {allCalls.length > 0 && (
+                  <div className="mt-4 pt-4" style={{ borderTop: '1px solid var(--c-divider)' }}>
+                    <div className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Consumo promedio</div>
+                    <div className="flex flex-col gap-2">
+                      <UsageRow label="Por día"    value={`${avgMinPerDay} min`} />
+                      <UsageRow label="Por semana"  value={`${avgMinPerWeek} min`} />
+                      <UsageRow label="Por mes"     value={`${avgMinPerMonth} min`} highlight={avgMinPerMonth > minutesIncluded * 0.9} />
+                    </div>
+                    <p className="text-xs mt-3" style={{ color: 'var(--c-text-4)' }}>Histórico · {allTimeTotalMin} min en {daysSinceFirst} días</p>
+                  </div>
+                )}
+              </div>
 
               {/* Knowledge base editor */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
@@ -275,33 +275,13 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <BusinessHoursEditor token={token} initialHours={(agentData.business_hours ?? null) as BusinessHours | null} />
               </div>
 
-              {/* Help / Support */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <h3 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>¿Necesitas ayuda?</h3>
-                <p className="text-xs mb-3" style={{ color: 'var(--c-text-2)' }}>Nuestro equipo te ayuda con cualquier duda sobre tu agente.</p>
-                <div className="flex flex-col gap-2">
-                  {supportWhatsApp && (
-                    <a href={`https://wa.me/${supportWhatsApp.replace(/\D/g, '')}`}
-                      target="_blank" rel="noopener noreferrer"
-                      className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
-                      style={{ background: '#22c55e', color: '#fff' }}>
-                      <MessageCircle size={14} /> WhatsApp
-                    </a>
-                  )}
-                  <a href={`mailto:${supportEmail}`}
-                    className="flex items-center gap-2 px-3 py-2 rounded-lg text-sm font-medium transition-opacity hover:opacity-80"
-                    style={{ background: 'var(--c-surface-2)', color: 'var(--c-text)', border: '1px solid var(--c-border)' }}>
-                    <Mail size={14} /> {supportEmail}
-                  </a>
-                </div>
-              </div>
             </div>
 
             {/* LEFT: main content */}
             <div className="lg:col-span-2 flex flex-col gap-5 order-first lg:order-first">
 
               {/* KPI grid */}
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
                 {kpiCards.map((card, i) => (
                   <KpiCard key={i} icon={card.icon} value={card.value} label={card.label} sub={card.sub} valueColor={card.color} />
                 ))}
@@ -369,10 +349,27 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           </div>
         </div>
 
-        <div className="mt-6 px-6 py-4 text-center" style={{ borderTop: '1px solid var(--c-border)' }}>
-          <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
-            Powered by <span style={{ color: '#6C3BFF' }}>CentinelIA</span> · Pneuma Studio
-          </span>
+        <div className="mt-6 px-4 sm:px-6 py-4" style={{ borderTop: '1px solid var(--c-border)' }}>
+          <div className="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+            <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
+              Powered by <span style={{ color: '#6C3BFF' }}>CentinelIA</span> · Pneuma Studio
+            </span>
+            <div className="flex items-center gap-2">
+              {supportWhatsApp && (
+                <a href={`https://wa.me/${supportWhatsApp.replace(/\D/g, '')}`}
+                  target="_blank" rel="noopener noreferrer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                  style={{ background: '#22c55e', color: '#fff' }}>
+                  <MessageCircle size={12} /> WhatsApp
+                </a>
+              )}
+              <a href={`mailto:${supportEmail}`}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                style={{ background: 'var(--c-surface)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
+                <Mail size={12} /> Soporte
+              </a>
+            </div>
+          </div>
         </div>
       </div>
     </ThemeProvider>

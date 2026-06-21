@@ -72,10 +72,12 @@ export default async function AgentDetailPage({ params }: Props) {
           <Card title="Información del negocio">
             <InfoRow label="Descripción" value={agent.business_description} />
             {agent.business_address && <InfoRow label="Dirección" value={agent.business_address} />}
-            {agent.business_phone_display && <InfoRow label="Teléfono" value={agent.business_phone_display} icon={<Phone size={13} />} copyable />}
-            {agent.phone_number && <InfoRow label="Número Vapi" value={agent.phone_number} icon={<Phone size={13} />} copyable />}
             {agent.calendar_url && <InfoRow label="Calendario" value={agent.calendar_url} icon={<Globe size={13} />} link />}
-            <InfoRow label="Zona horaria" value={agent.timezone} icon={<Calendar size={13} />} />
+            <div className="grid grid-cols-2 gap-x-3">
+              {agent.business_phone_display && <InfoRowCompact label="Teléfono" value={agent.business_phone_display} icon={<Phone size={12} />} copyable />}
+              {agent.phone_number && <InfoRowCompact label="Número Vapi" value={agent.phone_number} icon={<Phone size={12} />} copyable />}
+              <InfoRowCompact label="Zona horaria" value={agent.timezone} icon={<Calendar size={12} />} />
+            </div>
           </Card>
 
           {/* Features */}
@@ -105,34 +107,31 @@ export default async function AgentDetailPage({ params }: Props) {
             minutesIncluded={agent.minutes_included}
           />
 
-          {/* Vapi config */}
-          {agent.vapi_agent_id && (
+          {/* Portal + Vapi config */}
+          {(agent.portal_token || agent.vapi_agent_id) && (
             <div className="p-4 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-              <div className="text-xs mb-2 tracking-widest uppercase font-semibold" style={{ color: 'var(--c-text-3)' }}>Vapi Agent ID</div>
-              <div className="text-xs font-mono break-all" style={{ color: 'var(--c-text-2)' }}>{agent.vapi_agent_id}</div>
-            </div>
-          )}
-
-          {/* Portal link */}
-          {agent.portal_token && (
-            <div className="p-4 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-              <div className="text-xs mb-2 tracking-widest uppercase font-semibold" style={{ color: 'var(--c-text-3)' }}>Portal del cliente</div>
-              <div className="flex items-center gap-2">
-                <a
-                  href={`/portal/${agent.portal_token}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-1.5 text-xs hover:underline flex-1"
-                  style={{ color: '#9B6DFF' }}
-                >
-                  <ExternalLink size={11} />
-                  Ver portal
-                </a>
-                <CopyButton text={`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/portal/${agent.portal_token}`} />
-              </div>
-              <div className="text-xs mt-1.5 font-mono break-all" style={{ color: 'var(--c-text-4)' }}>
-                /portal/{agent.portal_token?.slice(0, 8)}…
-              </div>
+              {agent.portal_token && (
+                <>
+                  <div className="text-xs mb-2 tracking-widest uppercase font-semibold" style={{ color: 'var(--c-text-3)' }}>Portal del cliente</div>
+                  <div className="flex items-center gap-2">
+                    <a href={`/portal/${agent.portal_token}`} target="_blank" rel="noopener noreferrer"
+                      className="flex items-center gap-1.5 text-xs hover:underline flex-1" style={{ color: '#9B6DFF' }}>
+                      <ExternalLink size={11} /> Ver portal
+                    </a>
+                    <CopyButton text={`${process.env.NEXT_PUBLIC_APP_URL ?? ''}/portal/${agent.portal_token}`} />
+                  </div>
+                  <div className="text-xs mt-1.5 font-mono break-all" style={{ color: 'var(--c-text-4)' }}>
+                    /portal/{agent.portal_token?.slice(0, 8)}…
+                  </div>
+                </>
+              )}
+              {agent.vapi_agent_id && (
+                <div className={agent.portal_token ? 'mt-3 pt-3' : ''}
+                  style={agent.portal_token ? { borderTop: '1px solid var(--c-divider)' } : {}}>
+                  <div className="text-xs mb-1 tracking-widest uppercase font-semibold" style={{ color: 'var(--c-text-3)' }}>Vapi Agent ID</div>
+                  <div className="text-xs font-mono break-all" style={{ color: 'var(--c-text-2)' }}>{agent.vapi_agent_id}</div>
+                </div>
+              )}
             </div>
           )}
 
@@ -192,6 +191,20 @@ function InfoRow({ label, value, icon, link, copyable }: { label: string; value:
         <span className="truncate">
           {link ? <a href={value} target="_blank" rel="noopener noreferrer" className="text-cyan-400 hover:underline">{value}</a> : value}
         </span>
+        {copyable && <CopyButton text={value} />}
+      </span>
+    </div>
+  );
+}
+
+function InfoRowCompact({ label, value, icon, copyable }: { label: string; value: string; icon?: React.ReactNode; copyable?: boolean }) {
+  if (!value) return null;
+  return (
+    <div className="flex flex-col gap-0.5 py-2 border-b" style={{ borderColor: 'var(--c-divider)' }}>
+      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>{label}</span>
+      <span className="text-xs flex items-center gap-1 min-w-0" style={{ color: 'var(--c-text)' }}>
+        {icon}
+        <span className="truncate flex-1">{value}</span>
         {copyable && <CopyButton text={value} />}
       </span>
     </div>
