@@ -7,7 +7,7 @@ export default async function ClientesPage() {
   const supabase = createAdminClient();
   const { data: agents } = await supabase
     .from('voice_agents')
-    .select('id, client_name, client_email, business_name, plan, active, billing_status, minutes_used, minutes_included, portal_email, created_at')
+    .select('id, client_name, client_email, business_name, plan, active, billing_status, minutes_used, minutes_included, portal_email, portal_token, created_at')
     .order('created_at', { ascending: false });
 
   type ClientGroup = {
@@ -23,6 +23,8 @@ export default async function ClientesPage() {
       billing_status: string | null;
       minutes_used: number;
       minutes_included: number;
+      portal_email: string | null;
+      portal_token: string | null;
     }[];
   };
 
@@ -48,6 +50,8 @@ export default async function ClientesPage() {
       billing_status:   agent.billing_status ?? null,
       minutes_used:     agent.minutes_used,
       minutes_included: agent.minutes_included,
+      portal_email:     agent.portal_email ?? null,
+      portal_token:     (agent as any).portal_token ?? null,
     });
   }
 

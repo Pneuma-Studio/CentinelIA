@@ -32,14 +32,13 @@ const DEFAULT_HOURS: BusinessHours = {
   sunday:    { open: false },
 };
 
-type Tab = 'info' | 'agente' | 'funciones' | 'horarios' | 'contrato' | 'acceso';
+type Tab = 'info' | 'agente' | 'funciones' | 'horarios' | 'contrato';
 const TABS: { id: Tab; label: string }[] = [
   { id: 'info',      label: 'Información' },
   { id: 'agente',    label: 'Agente' },
   { id: 'funciones', label: 'Funciones' },
   { id: 'horarios',  label: 'Horarios' },
   { id: 'contrato',  label: 'Contrato' },
-  { id: 'acceso',    label: 'Acceso' },
 ];
 
 export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
@@ -48,37 +47,10 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   const initialTab   = (searchParams.get('tab') as Tab | null) ?? 'info';
   const [saving, setSaving]               = useState(false);
   const [tab, setTab]                     = useState<Tab>(initialTab);
-  const [portalEmail, setPortalEmail]     = useState((agent as any).portal_email ?? '');
-  const [portalPw, setPortalPw]           = useState('');
-  const [portalPwConfirm, setPortalPwConfirm] = useState('');
-  const [credSaving, setCredSaving]       = useState(false);
-  const [credMsg, setCredMsg]             = useState<{ ok: boolean; text: string } | null>(null);
   const [plan, setPlan]                   = useState<Plan>(agent.plan);
   const [features, setFeatures]           = useState<AgentFeatures>(agent.features);
   const [businessHours, setBusinessHours] = useState<BusinessHours>(agent.business_hours ?? DEFAULT_HOURS);
   const [hoursEnabled, setHoursEnabled]   = useState<boolean>(!!agent.business_hours);
-
-  const handleCredentials = async () => {
-    if (!portalEmail || !portalPw) return;
-    if (portalPw !== portalPwConfirm) { setCredMsg({ ok: false, text: 'Las contraseñas no coinciden' }); return; }
-    if (portalPw.length < 8) { setCredMsg({ ok: false, text: 'Mínimo 8 caracteres' }); return; }
-    setCredSaving(true);
-    setCredMsg(null);
-    const res = await fetch(`/api/admin/agentes/${agent.id}/portal-credentials`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ email: portalEmail, password: portalPw }),
-    });
-    if (res.ok) {
-      setCredMsg({ ok: true, text: 'Credenciales guardadas correctamente' });
-      setPortalPw('');
-      setPortalPwConfirm('');
-    } else {
-      const { error } = await res.json().catch(() => ({ error: 'Error al guardar' }));
-      setCredMsg({ ok: false, text: error });
-    }
-    setCredSaving(false);
-  };
 
   const handlePlanChange = (p: Plan) => {
     setPlan(p);
@@ -338,65 +310,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
           </Section>
         </div>
 
-        {/* Tab: Acceso */}
-        <div className={tab !== 'acceso' ? 'hidden' : 'flex flex-col gap-6'}>
-          <Section title="Credenciales del portal">
-            <div className="p-3 rounded-lg text-xs" style={{ background: 'rgba(108,59,255,0.06)', border: '1px solid rgba(108,59,255,0.15)', color: 'var(--c-text-2)' }}>
-              El cliente usará estas credenciales para entrar a su portal en <strong style={{ color: '#9B6DFF' }}>/portal/login</strong>.
-              Puedes cambiar la contraseña en cualquier momento sin afectar el acceso existente hasta que el cliente cierre sesión.
-            </div>
-            <div>
-              <label className="block text-xs mb-1.5" style={{ color: 'var(--c-text-2)' }}>Correo electrónico del cliente</label>
-              <input
-                type="email"
-                value={portalEmail}
-                onChange={e => setPortalEmail(e.target.value)}
-                placeholder="cliente@negocio.com"
-                style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)', fontSize: 14, width: '100%', outline: 'none' }}
-              />
-            </div>
-            <div>
-              <label className="block text-xs mb-1.5" style={{ color: 'var(--c-text-2)' }}>Nueva contraseña (mín. 8 caracteres)</label>
-              <input
-                type="password"
-                value={portalPw}
-                onChange={e => setPortalPw(e.target.value)}
-                placeholder="••••••••"
-                style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)', fontSize: 14, width: '100%', outline: 'none' }}
-              />
-            </div>
-            <div>
-              <label className="block text-xs mb-1.5" style={{ color: 'var(--c-text-2)' }}>Confirmar contraseña</label>
-              <input
-                type="password"
-                value={portalPwConfirm}
-                onChange={e => setPortalPwConfirm(e.target.value)}
-                placeholder="••••••••"
-                style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)', fontSize: 14, width: '100%', outline: 'none' }}
-              />
-            </div>
-            {credMsg && (
-              <div className="px-3 py-2 rounded-lg text-xs" style={{
-                background: credMsg.ok ? 'rgba(34,197,94,0.08)' : 'rgba(239,68,68,0.08)',
-                border: `1px solid ${credMsg.ok ? 'rgba(34,197,94,0.2)' : 'rgba(239,68,68,0.2)'}`,
-                color: credMsg.ok ? '#16a34a' : '#dc2626',
-              }}>
-                {credMsg.text}
-              </div>
-            )}
-            <button
-              type="button"
-              onClick={handleCredentials}
-              disabled={credSaving || !portalEmail || !portalPw}
-              className="py-2.5 px-4 rounded-xl text-sm font-semibold transition-opacity"
-              style={{ background: '#6C3BFF', color: '#FAFBFF', opacity: (credSaving || !portalEmail || !portalPw) ? 0.5 : 1 }}
-            >
-              {credSaving ? 'Guardando…' : 'Guardar credenciales'}
-            </button>
-          </Section>
-        </div>
-
-        <button type="submit" disabled={saving || tab === 'acceso'}
+        <button type="submit" disabled={saving}
           className="py-3 rounded-xl font-semibold text-sm transition-opacity"
           style={{ background: '#6C3BFF', color: '#FAFBFF', opacity: saving ? 0.6 : 1 }}>
           {saving ? 'Guardando…' : 'Guardar cambios'}
