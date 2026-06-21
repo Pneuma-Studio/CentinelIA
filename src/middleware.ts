@@ -22,11 +22,19 @@ export async function middleware(req: NextRequest) {
   // ── Portal routes ─────────────────────────────────────────────────────────
   if (pathname.startsWith('/portal')) {
     if (pathname === '/portal/login') return NextResponse.next();
+    if (/^\/portal\/[^/]+\/setup$/.test(pathname)) return NextResponse.next();
 
     const cookie  = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
     const session = cookie ? await verifySession(cookie) : null;
 
     if (!session) {
+      const urlToken = pathname.split('/')[2];
+      // If URL has a token, redirect to setup (setup page will redirect to login if already registered)
+      if (urlToken && urlToken !== 'login') {
+        const url = req.nextUrl.clone();
+        url.pathname = `/portal/${urlToken}/setup`;
+        return NextResponse.redirect(url);
+      }
       const url = req.nextUrl.clone();
       url.pathname = '/portal/login';
       url.searchParams.set('from', pathname);
