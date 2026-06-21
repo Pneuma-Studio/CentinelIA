@@ -83,7 +83,7 @@ function SelectMenu<T extends string>({
       {open && (
         <div
           className="absolute z-50 top-full mt-1 left-0 right-0 rounded-lg overflow-hidden shadow-xl"
-          style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)', minWidth: '160px' }}
+          style={{ background: 'var(--c-modal)', border: '1px solid var(--c-border-2)', minWidth: '160px' }}
         >
           {options.map(o => (
             <button
@@ -95,7 +95,7 @@ function SelectMenu<T extends string>({
                 color:      'var(--c-text)',
                 background: o.value === value ? 'rgba(108,59,255,0.1)' : 'transparent',
               }}
-              onMouseEnter={e => { if (o.value !== value) (e.currentTarget as HTMLElement).style.background = 'var(--c-surface-2)'; }}
+              onMouseEnter={e => { if (o.value !== value) (e.currentTarget as HTMLElement).style.background = 'rgba(255,255,255,0.07)'; }}
               onMouseLeave={e => { if (o.value !== value) (e.currentTarget as HTMLElement).style.background = 'transparent'; }}
             >
               <span className="font-medium">{o.label}</span>
@@ -123,14 +123,14 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
 
   const featureOptions = (Object.entries(FEATURE_PLAN_CONFIG) as [Plan, typeof featureCfg][]).map(([key, cfg]) => ({
     value: key,
-    label: cfg.label,
-    sub:   `$${cfg.setupFee.toLocaleString('es-MX')} instalación`,
+    label: `${cfg.label} — $${cfg.setupFee.toLocaleString('es-MX')} inst.`,
+    sub:   `Instalación única`,
   }));
 
   const minutesOptions = (Object.entries(MINUTES_PLAN_CONFIG) as [MinutesPlan, typeof minutesCfg][]).map(([key, cfg]) => ({
     value: key,
-    label: cfg.label,
-    sub:   `${cfg.minutes} min · $${cfg.mxn.toLocaleString('es-MX')}/mes`,
+    label: `${cfg.label} · ${cfg.minutes} min — $${cfg.mxn.toLocaleString('es-MX')}/mes`,
+    sub:   `Mensualidad recurrente`,
   }));
 
   const handleGenerate = async () => {
