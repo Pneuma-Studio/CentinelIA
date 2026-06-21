@@ -2,15 +2,12 @@
 
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, PhoneCall, Settings, BarChart3, Users, Plus, CreditCard, ShoppingBag, CalendarDays, LogOut } from 'lucide-react';
+import { LayoutDashboard, PhoneCall, Settings, BarChart3, Plus, CreditCard, LogOut } from 'lucide-react';
 
 const links = [
   { href: '/admin/dashboard', icon: LayoutDashboard, label: 'Dashboard' },
   { href: '/admin/agentes',   icon: Settings,         label: 'Agentes' },
   { href: '/admin/llamadas',  icon: PhoneCall,        label: 'Llamadas' },
-  { href: '/admin/leads',     icon: Users,            label: 'Leads' },
-  { href: '/admin/pedidos',   icon: ShoppingBag,      label: 'Pedidos' },
-  { href: '/admin/citas',     icon: CalendarDays,     label: 'Citas' },
   { href: '/admin/analytics', icon: BarChart3,        label: 'Analytics' },
   { href: '/admin/billing',   icon: CreditCard,       label: 'Facturación' },
 ];
