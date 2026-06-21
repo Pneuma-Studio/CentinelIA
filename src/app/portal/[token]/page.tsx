@@ -10,8 +10,10 @@ import PortalOrdersSection from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
 import BuyMinutesSection from './BuyMinutesSection';
 import CollapsibleSection from './CollapsibleSection';
+import BusinessHoursEditor from './BusinessHoursEditor';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
+import type { BusinessHours } from '@/types/agent';
 
 interface Props {
   params: Promise<{ token: string }>;
@@ -266,6 +268,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   )}
                 </div>
               )}
+
+              {/* Business hours editor */}
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <h3 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h3>
+                <BusinessHoursEditor token={token} initialHours={(agentData.business_hours ?? null) as BusinessHours | null} />
+              </div>
 
               {/* Help / Support */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
