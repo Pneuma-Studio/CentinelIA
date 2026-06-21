@@ -1,26 +1,52 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 const ADMIN_COOKIE = 'centinelia_admin';
 
-export function middleware(req: NextRequest) {
+export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  if (!pathname.startsWith('/admin')) return NextResponse.next();
-  if (pathname === '/admin/login') return NextResponse.next();
+  // ── Admin routes ──────────────────────────────────────────────────────────
+  if (pathname.startsWith('/admin')) {
+    if (pathname === '/admin/login') return NextResponse.next();
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (token !== process.env.ADMIN_SECRET) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/admin/login';
+      url.searchParams.set('from', pathname);
+      return NextResponse.redirect(url);
+    }
+    return NextResponse.next();
+  }
 
-  const token = req.cookies.get(ADMIN_COOKIE)?.value;
-  const valid = token === process.env.ADMIN_SECRET;
+  // ── Portal routes ─────────────────────────────────────────────────────────
+  if (pathname.startsWith('/portal')) {
+    if (pathname === '/portal/login') return NextResponse.next();
 
-  if (!valid) {
-    const url = req.nextUrl.clone();
-    url.pathname = '/admin/login';
-    url.searchParams.set('from', pathname);
-    return NextResponse.redirect(url);
+    const cookie  = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
+    const session = cookie ? await verifySession(cookie) : null;
+
+    if (!session) {
+      const url = req.nextUrl.clone();
+      url.pathname = '/portal/login';
+      url.searchParams.set('from', pathname);
+      return NextResponse.redirect(url);
+    }
+
+    // Verify the session token matches the URL token
+    const urlToken = pathname.split('/')[2];
+    if (urlToken && urlToken !== session.portalToken) {
+      const url = req.nextUrl.clone();
+      url.pathname = `/portal/${session.portalToken}`;
+      return NextResponse.redirect(url);
+    }
+
+    return NextResponse.next();
   }
 
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: ['/admin/:path*'],
+  matcher: ['/admin/:path*', '/portal/:path*'],
 };

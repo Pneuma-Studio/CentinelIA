@@ -1,0 +1,74 @@
+export const PORTAL_COOKIE = 'centinelia_portal';
+const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
+
+// ── Base64url helpers (Edge-compatible, no Buffer) ────────────────────────
+
+function u8ToB64url(bytes: Uint8Array): string {
+  let bin = '';
+  for (const b of bytes) bin += String.fromCharCode(b);
+  return btoa(bin).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+}
+
+function b64urlToU8(str: string): Uint8Array {
+  const pad    = str.replace(/-/g, '+').replace(/_/g, '/');
+  const padded = pad + '=='.slice(0, (4 - pad.length % 4) % 4);
+  const bin    = atob(padded);
+  return Uint8Array.from(bin, c => c.charCodeAt(0));
+}
+
+// ── Password hashing (PBKDF2 · 100k iterations · SHA-256) ────────────────
+
+export async function hashPassword(password: string): Promise<string> {
+  const salt   = crypto.getRandomValues(new Uint8Array(16));
+  const keyMat = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+  const bits   = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt as unknown as ArrayBuffer, iterations: 100_000, hash: 'SHA-256' }, keyMat, 256);
+  return `${u8ToB64url(salt)}.${u8ToB64url(new Uint8Array(bits))}`;
+}
+
+export async function verifyPassword(password: string, stored: string): Promise<boolean> {
+  try {
+    const [saltB64, hashB64] = stored.split('.');
+    const salt   = b64urlToU8(saltB64);
+    const keyMat = await crypto.subtle.importKey('raw', new TextEncoder().encode(password), 'PBKDF2', false, ['deriveBits']);
+    const bits   = await crypto.subtle.deriveBits({ name: 'PBKDF2', salt: salt as unknown as ArrayBuffer, iterations: 100_000, hash: 'SHA-256' }, keyMat, 256);
+    return u8ToB64url(new Uint8Array(bits)) === hashB64;
+  } catch {
+    return false;
+  }
+}
+
+// ── Session cookie (HMAC-SHA256 signed) ──────────────────────────────────
+
+function secret() {
+  const s = process.env.PORTAL_SESSION_SECRET;
+  if (!s) throw new Error('PORTAL_SESSION_SECRET not set');
+  return s;
+}
+
+async function hmacKey(use: 'sign' | 'verify') {
+  return crypto.subtle.importKey('raw', new TextEncoder().encode(secret()), { name: 'HMAC', hash: 'SHA-256' }, false, [use]);
+}
+
+export async function createSession(agentId: string, portalToken: string): Promise<string> {
+  const exp  = Date.now() + SESSION_TTL_MS;
+  const data = `${agentId}|${portalToken}|${exp}`;
+  const key  = await hmacKey('sign');
+  const sig  = new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(data)));
+  return `${data}.${u8ToB64url(sig)}`;
+}
+
+export async function verifySession(cookie: string): Promise<{ agentId: string; portalToken: string } | null> {
+  try {
+    const dot     = cookie.lastIndexOf('.');
+    const data    = cookie.slice(0, dot);
+    const sig     = b64urlToU8(cookie.slice(dot + 1));
+    const key     = await hmacKey('verify');
+    const valid   = await crypto.subtle.verify('HMAC', key, sig as unknown as ArrayBuffer, new TextEncoder().encode(data));
+    if (!valid) return null;
+    const [agentId, portalToken, expStr] = data.split('|');
+    if (parseInt(expStr) < Date.now()) return null;
+    return { agentId, portalToken };
+  } catch {
+    return null;
+  }
+}
