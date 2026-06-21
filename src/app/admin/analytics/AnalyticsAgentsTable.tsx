@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search } from 'lucide-react';
+import { Search, ChevronDown } from 'lucide-react';
 
 export interface AgentRow {
   id: string;
@@ -26,15 +26,17 @@ type TierFilter   = 'todos' | 'basico' | 'estandar' | 'pro';
 type StatusFilter = 'todos' | 'activos' | 'pausados';
 
 export default function AnalyticsAgentsTable({ rows }: { rows: AgentRow[] }) {
-  const [search, setSearch]   = useState('');
-  const [tier, setTier]       = useState<TierFilter>('todos');
-  const [status, setStatus]   = useState<StatusFilter>('todos');
+  const [search, setSearch]     = useState('');
+  const [tier, setTier]         = useState<TierFilter>('todos');
+  const [status, setStatus]     = useState<StatusFilter>('todos');
+  const [tierOpen, setTierOpen] = useState(false);
+  const [statOpen, setStatOpen] = useState(false);
 
   const filtered = useMemo(() => {
     let result = rows;
-    if (tier !== 'todos')            result = result.filter(r => r.plan === tier);
-    if (status === 'activos')        result = result.filter(r => r.active);
-    if (status === 'pausados')       result = result.filter(r => !r.active);
+    if (tier   !== 'todos')  result = result.filter(r => r.plan === tier);
+    if (status === 'activos') result = result.filter(r => r.active);
+    if (status === 'pausados') result = result.filter(r => !r.active);
     if (search.trim()) {
       const q = search.toLowerCase();
       result = result.filter(r => r.business_name.toLowerCase().includes(q));
@@ -49,6 +51,10 @@ export default function AnalyticsAgentsTable({ rows }: { rows: AgentRow[] }) {
     activos:  rows.filter(r => r.active).length,
     pausados: rows.filter(r => !r.active).length,
   };
+
+  const tierMeta   = tier   !== 'todos' ? PLAN_META[tier]   : null;
+  const statusDot  = status === 'activos' ? '#22c55e' : status === 'pausados' ? '#6b7280' : null;
+  const statusLbl  = status === 'activos' ? 'Activos' : status === 'pausados' ? 'Pausados' : 'Estado';
 
   if (rows.length === 0) {
     return <p className="text-sm py-4 text-center" style={{ color: 'var(--c-text-3)' }}>Sin agentes</p>;
@@ -67,54 +73,94 @@ export default function AnalyticsAgentsTable({ rows }: { rows: AgentRow[] }) {
             value={search}
             onChange={e => setSearch(e.target.value)}
             className="w-full pl-7 pr-3 py-1.5 rounded-lg text-xs outline-none"
-            style={{
-              background: 'var(--c-input-bg)',
-              border: '1px solid var(--c-input-border)',
-              color: 'var(--c-text)',
-            }}
+            style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', color: 'var(--c-text)' }}
           />
         </div>
 
-        {/* Tier + status filters */}
-        <div className="flex gap-2 flex-wrap">
-          <FilterGroup>
-            {([
-              { key: 'todos',    label: `Todos (${rows.length})`,          color: undefined },
-              { key: 'basico',   label: `Básico (${counts.basico})`,       color: '#6b7280' },
-              { key: 'estandar', label: `Estándar (${counts.estandar})`,   color: '#3b82f6' },
-              { key: 'pro',      label: `Pro (${counts.pro})`,             color: '#a855f7' },
-            ] as { key: TierFilter; label: string; color?: string }[]).map(({ key, label, color }) => (
-              <FilterBtn
-                key={key}
-                active={tier === key}
-                color={color}
-                onClick={() => setTier(key)}
-              >
-                {label}
-              </FilterBtn>
-            ))}
-          </FilterGroup>
+        {/* Collapsible filter buttons */}
+        <div className="flex gap-2">
 
-          <FilterGroup>
-            {([
-              { key: 'todos',    label: `Todos` },
-              { key: 'activos',  label: `Activos (${counts.activos})`,   dot: '#22c55e' },
-              { key: 'pausados', label: `Pausados (${counts.pausados})`, dot: '#6b7280' },
-            ] as { key: StatusFilter; label: string; dot?: string }[]).map(({ key, label, dot }) => (
-              <FilterBtn
-                key={key}
-                active={status === key}
-                onClick={() => setStatus(key)}
-              >
-                {dot && <span className="w-1.5 h-1.5 rounded-full inline-block mr-1" style={{ background: dot }} />}
-                {label}
-              </FilterBtn>
-            ))}
-          </FilterGroup>
+          {/* Tier dropdown */}
+          <div className="flex flex-col gap-1">
+            <button
+              onClick={() => { setTierOpen(o => !o); setStatOpen(false); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={{
+                background: tierMeta ? `${tierMeta.color}18` : 'var(--c-surface-2)',
+                color:      tierMeta ? tierMeta.color : 'var(--c-text-2)',
+                border: `1px solid ${tierMeta ? tierMeta.color + '40' : 'var(--c-border)'}`,
+              }}
+            >
+              {tierMeta ? tierMeta.label : 'Tier'}
+              <ChevronDown size={10} className="transition-transform" style={{ transform: tierOpen ? 'rotate(180deg)' : undefined }} />
+            </button>
+            {tierOpen && (
+              <div className="flex gap-1 flex-wrap p-1 rounded-lg" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+                {([
+                  { key: 'todos',    label: `Todos (${rows.length})`,          color: undefined },
+                  { key: 'basico',   label: `Básico (${counts.basico})`,       color: '#6b7280' },
+                  { key: 'estandar', label: `Estándar (${counts.estandar})`,   color: '#3b82f6' },
+                  { key: 'pro',      label: `Pro (${counts.pro})`,             color: '#a855f7' },
+                ] as { key: TierFilter; label: string; color?: string }[]).map(({ key, label, color }) => (
+                  <button
+                    key={key}
+                    onClick={() => { setTier(key); setTierOpen(false); }}
+                    className="flex items-center px-2.5 py-1 rounded-md text-xs font-medium transition-all"
+                    style={{
+                      background: tier === key ? (color ?? '#6C3BFF') : 'transparent',
+                      color:      tier === key ? '#fff' : (color ?? 'var(--c-text-3)'),
+                    }}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Status dropdown */}
+          <div className="flex flex-col gap-1">
+            <button
+              onClick={() => { setStatOpen(o => !o); setTierOpen(false); }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all"
+              style={{
+                background: statusDot ? `${statusDot}18` : 'var(--c-surface-2)',
+                color:      statusDot ? statusDot : 'var(--c-text-2)',
+                border: `1px solid ${statusDot ? statusDot + '40' : 'var(--c-border)'}`,
+              }}
+            >
+              {statusDot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusDot }} />}
+              {statusLbl}
+              <ChevronDown size={10} className="transition-transform" style={{ transform: statOpen ? 'rotate(180deg)' : undefined }} />
+            </button>
+            {statOpen && (
+              <div className="flex gap-1 flex-wrap p-1 rounded-lg" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+                {([
+                  { key: 'todos',    label: `Todos`,                          dot: undefined },
+                  { key: 'activos',  label: `Activos (${counts.activos})`,    dot: '#22c55e' },
+                  { key: 'pausados', label: `Pausados (${counts.pausados})`,  dot: '#6b7280' },
+                ] as { key: StatusFilter; label: string; dot?: string }[]).map(({ key, label, dot }) => (
+                  <button
+                    key={key}
+                    onClick={() => { setStatus(key); setStatOpen(false); }}
+                    className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all"
+                    style={{
+                      background: status === key ? (dot ?? '#6C3BFF') : 'transparent',
+                      color:      status === key ? '#fff' : 'var(--c-text-3)',
+                    }}
+                  >
+                    {dot && <span className="w-1.5 h-1.5 rounded-full" style={{ background: status === key ? '#fff' : dot }} />}
+                    {label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+
         </div>
       </div>
 
-      {/* Rows */}
+      {/* Agent rows */}
       {filtered.length === 0 ? (
         <p className="text-xs py-3 text-center" style={{ color: 'var(--c-text-3)' }}>Sin resultados</p>
       ) : (
@@ -142,11 +188,7 @@ export default function AnalyticsAgentsTable({ rows }: { rows: AgentRow[] }) {
                   <div className="flex items-center gap-2 flex-shrink-0">
                     <span
                       className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                      style={{
-                        background: `${meta.color}18`,
-                        color: meta.color,
-                        border: `1px solid ${meta.color}40`,
-                      }}
+                      style={{ background: `${meta.color}18`, color: meta.color, border: `1px solid ${meta.color}40` }}
                     >
                       {meta.label}
                     </span>
@@ -169,31 +211,6 @@ export default function AnalyticsAgentsTable({ rows }: { rows: AgentRow[] }) {
         </div>
       )}
     </div>
-  );
-}
-
-function FilterGroup({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="flex gap-1 p-0.5 rounded-lg" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
-      {children}
-    </div>
-  );
-}
-
-function FilterBtn({ active, color, onClick, children }: {
-  active: boolean; color?: string; onClick: () => void; children: React.ReactNode;
-}) {
-  return (
-    <button
-      onClick={onClick}
-      className="flex items-center px-2.5 py-1 rounded-md text-xs font-medium transition-all"
-      style={{
-        background: active ? (color ?? '#6C3BFF') : 'transparent',
-        color: active ? '#fff' : (color ?? 'var(--c-text-3)'),
-      }}
-    >
-      {children}
-    </button>
   );
 }
 

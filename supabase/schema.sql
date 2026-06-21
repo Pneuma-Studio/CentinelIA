@@ -120,6 +120,23 @@ begin
 end;
 $$;
 
+-- Monthly analytics snapshots ────────────────────────────────────────────────
+-- Stores aggregated per-agent stats for each month.
+-- Populated daily by /api/admin/analytics/snapshot (Vercel cron).
+create table if not exists agent_monthly_stats (
+  id               uuid primary key default gen_random_uuid(),
+  agent_id         uuid references voice_agents(id) on delete cascade not null,
+  period           text not null,              -- 'YYYY-MM'
+  calls            int  not null default 0,
+  leads            int  not null default 0,
+  duration_seconds int  not null default 0,
+  minutes_used     int  not null default 0,
+  updated_at       timestamptz not null default now(),
+  unique(agent_id, period)
+);
+create index if not exists agent_monthly_stats_agent_idx  on agent_monthly_stats(agent_id);
+create index if not exists agent_monthly_stats_period_idx on agent_monthly_stats(period desc);
+
 -- Monthly minutes reset (call via cron) ───────────────────────────────────────
 create or replace function reset_monthly_minutes()
 returns void language plpgsql as $$
