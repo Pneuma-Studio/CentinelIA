@@ -65,10 +65,23 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const { data: clientAgents } = session?.portalEmail
     ? await supabase
         .from('voice_agents')
-        .select('id, business_name, agent_name, portal_token, active, client_paused, billing_status, plan, phone_number')
+        .select('id, business_name, agent_name, portal_token, active, client_paused, billing_status, plan, phone_number, logo_url')
         .eq('portal_email', session.portalEmail)
     : { data: [] };
   const allClientAgents = clientAgents ?? [];
+
+  // Group agents by business
+  type BusinessGroup = { business_name: string; logo_url: string | null; first_token: string; agents: typeof allClientAgents };
+  const businessGroups: BusinessGroup[] = [];
+  const bySeen = new Map<string, BusinessGroup>();
+  for (const a of allClientAgents) {
+    if (!bySeen.has(a.business_name)) {
+      const g: BusinessGroup = { business_name: a.business_name, logo_url: (a as any).logo_url ?? null, first_token: a.portal_token, agents: [] };
+      bySeen.set(a.business_name, g);
+      businessGroups.push(g);
+    }
+    bySeen.get(a.business_name)!.agents.push(a);
+  }
 
   const clientPaused  = (agent as any).client_paused ?? false;
   const billingPaused = !agent.active && agent.billing_status === 'pago_fallido';
@@ -235,72 +248,98 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
           {/* ── AGENTES ──────────────────────────────────────────────────── */}
           {tab === 'agentes' && (
-            <div className="flex flex-col gap-3">
-              {allClientAgents.length === 0 && (
+            <div className="flex flex-col gap-5">
+              {businessGroups.length === 0 && (
                 <p className="text-sm text-center py-12" style={{ color: 'var(--c-text-3)' }}>Sin agentes asociados</p>
               )}
-              {allClientAgents.map((a: any) => {
-                const isBillingPaused = !a.active && a.billing_status === 'pago_fallido';
-                const isClientPaused  = !!(a.client_paused) && !isBillingPaused;
-                const isActive        = a.active;
-                const isCurrent       = a.portal_token === token;
+              {businessGroups.map(group => (
+                <div key={group.business_name} className="rounded-xl overflow-hidden"
+                  style={{ border: '1px solid var(--c-border)' }}>
 
-                let statusLabel = 'Activo';
-                let statusColor = '#16a34a';
-                let statusBg    = 'rgba(34,197,94,0.1)';
-                if (isBillingPaused) { statusLabel = 'Pausado — pago pendiente'; statusColor = '#dc2626'; statusBg = 'rgba(239,68,68,0.08)'; }
-                else if (isClientPaused) { statusLabel = 'Pausado por ti'; statusColor = '#f59e0b'; statusBg = 'rgba(245,158,11,0.1)'; }
-                else if (!isActive) { statusLabel = 'Inactivo'; statusColor = '#6b7280'; statusBg = 'rgba(107,114,128,0.1)'; }
-
-                return (
-                  <div key={a.id} className="rounded-xl p-5"
-                    style={{ background: 'var(--c-surface)', border: `1px solid ${isCurrent ? 'rgba(108,59,255,0.3)' : 'var(--c-border)'}` }}>
-                    <div className="flex items-start justify-between gap-4">
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
-                            {a.agent_name?.trim() || 'CentinelIA'}
+                  {/* Business header */}
+                  <div className="flex items-center gap-4 px-5 py-4"
+                    style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
+                    {/* Logo or initials */}
+                    <div className="w-10 h-10 rounded-lg flex items-center justify-center overflow-hidden flex-shrink-0"
+                      style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+                      {group.logo_url
+                        ? <img src={group.logo_url} alt={group.business_name} className="w-full h-full object-contain p-1" />
+                        : <span className="text-sm font-bold" style={{ color: 'var(--c-text-3)' }}>
+                            {group.business_name.slice(0, 2).toUpperCase()}
                           </span>
-                          {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
-                            <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-                              style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
-                              {PLAN_LABELS[a.plan] ?? a.plan}
-                            </span>
-                          ); })()}
-                        </div>
-                        <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{a.business_name}</p>
-                        {a.phone_number && (
-                          <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
-                            <Phone size={10} /> {a.phone_number}
-                          </p>
-                        )}
-                        <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium mt-2"
-                          style={{ background: statusBg, color: statusColor }}>
-                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
-                          {statusLabel}
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col gap-2 items-end flex-shrink-0">
-                        <Link
-                          href={isCurrent ? `?tab=configuracion` : `/portal/${a.portal_token}?tab=configuracion`}
-                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
-                          style={{ background: 'rgba(108,59,255,0.08)', color: '#9B6DFF', border: '1px solid rgba(108,59,255,0.2)' }}>
-                          <ChevronRight size={12} /> Configurar
-                        </Link>
-                        {!isBillingPaused && (
-                          <PauseResumeButton agentId={a.id} clientPaused={isClientPaused} />
-                        )}
-                        {isBillingPaused && (
-                          <p className="text-xs text-right" style={{ color: '#dc2626', maxWidth: 160 }}>
-                            Contacta a CentinelIA para regularizar el pago
-                          </p>
-                        )}
-                      </div>
+                      }
                     </div>
+                    <div className="flex-1 min-w-0">
+                      <p className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{group.business_name}</p>
+                      <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>
+                        {group.agents.length} {group.agents.length === 1 ? 'agente' : 'agentes'}
+                      </p>
+                    </div>
+                    {/* Logo upload at business level */}
+                    <LogoUploader token={group.first_token} currentUrl={group.logo_url} compact />
                   </div>
-                );
-              })}
+
+                  {/* Agents for this business */}
+                  {group.agents.map((a: any, i: number) => {
+                    const isBillingPaused = !a.active && a.billing_status === 'pago_fallido';
+                    const isClientPaused  = !!(a.client_paused) && !isBillingPaused;
+                    const isCurrent       = a.portal_token === token;
+
+                    let statusLabel = 'Activo';
+                    let statusColor = '#16a34a';
+                    let statusBg    = 'rgba(34,197,94,0.1)';
+                    if (isBillingPaused)    { statusLabel = 'Pago pendiente'; statusColor = '#dc2626'; statusBg = 'rgba(239,68,68,0.08)'; }
+                    else if (isClientPaused){ statusLabel = 'Pausado';        statusColor = '#f59e0b'; statusBg = 'rgba(245,158,11,0.1)'; }
+
+                    return (
+                      <div key={a.id} className="flex items-center gap-3 px-5 py-3"
+                        style={{
+                          background: 'var(--c-surface-2)',
+                          borderTop: i > 0 ? '1px solid var(--c-divider)' : undefined,
+                        }}>
+                        <div className="w-2 h-2 rounded-full flex-shrink-0"
+                          style={{ background: a.active ? '#22c55e' : '#ef4444' }} />
+
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                              {a.agent_name?.trim() || 'CentinelIA'}
+                            </span>
+                            {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
+                              <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                                style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
+                                {PLAN_LABELS[a.plan] ?? a.plan}
+                              </span>
+                            ); })()}
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                              style={{ background: statusBg, color: statusColor }}>
+                              {statusLabel}
+                            </span>
+                          </div>
+                          {a.phone_number && (
+                            <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                              <Phone size={10} /> {a.phone_number}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                          <Link
+                            href={isCurrent ? `?tab=configuracion` : `/portal/${a.portal_token}?tab=configuracion`}
+                            className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                            style={{ background: 'rgba(108,59,255,0.08)', color: '#9B6DFF', border: '1px solid rgba(108,59,255,0.2)' }}>
+                            Configurar
+                          </Link>
+                          {!isBillingPaused
+                            ? <PauseResumeButton agentId={a.id} clientPaused={isClientPaused} />
+                            : <span className="text-xs" style={{ color: '#dc2626' }}>Pago pendiente</span>
+                          }
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ))}
             </div>
           )}
 
@@ -452,10 +491,6 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <Link href="?tab=agentes" className="text-xs transition-opacity hover:opacity-70" style={{ color: 'var(--c-text-3)' }}>← Agentes</Link>
                 <span style={{ color: 'var(--c-text-4)' }}>/</span>
                 <span className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>{agentName}</span>
-              </div>
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Logo del negocio</h2>
-                <LogoUploader token={token} currentUrl={(agent as any).logo_url ?? null} />
               </div>
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h2>

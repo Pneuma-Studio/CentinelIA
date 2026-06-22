@@ -15,7 +15,7 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const { data: agent } = await supabase
     .from('voice_agents')
-    .select('id, portal_email')
+    .select('id, portal_email, business_name')
     .eq('portal_token', token)
     .eq('portal_email', session.portalEmail)
     .single();
@@ -41,10 +41,14 @@ export async function POST(req: NextRequest, { params }: Params) {
 
   const { data: { publicUrl } } = supabase.storage.from('logos').getPublicUrl(path);
 
-  // Append cache-busting timestamp so browser reloads the new logo
   const url = `${publicUrl}?t=${Date.now()}`;
 
-  await supabase.from('voice_agents').update({ logo_url: url }).eq('id', agent.id);
+  // Sync logo across all agents of the same business for this client
+  await supabase
+    .from('voice_agents')
+    .update({ logo_url: url })
+    .eq('business_name', agent.business_name)
+    .eq('portal_email', session.portalEmail);
 
   return NextResponse.json({ url });
 }
@@ -59,7 +63,7 @@ export async function DELETE(req: NextRequest, { params }: Params) {
   const supabase = createAdminClient();
   const { data: agent } = await supabase
     .from('voice_agents')
-    .select('id')
+    .select('id, business_name')
     .eq('portal_token', token)
     .eq('portal_email', session.portalEmail)
     .single();
@@ -70,7 +74,12 @@ export async function DELETE(req: NextRequest, { params }: Params) {
     `${agent.id}/logo.png`, `${agent.id}/logo.jpg`,
     `${agent.id}/logo.webp`, `${agent.id}/logo.svg`,
   ]);
-  await supabase.from('voice_agents').update({ logo_url: null }).eq('id', agent.id);
+  // Clear logo on all agents of this business
+  await supabase
+    .from('voice_agents')
+    .update({ logo_url: null })
+    .eq('business_name', agent.business_name)
+    .eq('portal_email', session.portalEmail);
 
   return NextResponse.json({ ok: true });
 }
