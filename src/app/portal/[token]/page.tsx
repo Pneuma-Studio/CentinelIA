@@ -65,7 +65,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const { data: clientAgents } = session?.portalEmail
     ? await supabase
         .from('voice_agents')
-        .select('id, business_name, portal_token, active, client_paused, billing_status, plan, phone_number')
+        .select('id, business_name, agent_name, portal_token, active, client_paused, billing_status, plan, phone_number')
         .eq('portal_email', session.portalEmail)
     : { data: [] };
   const allClientAgents = clientAgents ?? [];
@@ -258,18 +258,17 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                     <div className="flex items-start justify-between gap-4">
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{a.business_name}</span>
-                          {isCurrent && (
-                            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                              style={{ background: 'rgba(108,59,255,0.1)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.2)' }}>
-                              Este portal
-                            </span>
-                          )}
-                          <span className="text-xs px-2 py-0.5 rounded-full"
-                            style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-3)' }}>
-                            {PLAN_LABELS[a.plan] ?? a.plan}
+                          <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                            {a.agent_name?.trim() || 'CentinelIA'}
                           </span>
+                          {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
+                            <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                              style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
+                              {PLAN_LABELS[a.plan] ?? a.plan}
+                            </span>
+                          ); })()}
                         </div>
+                        <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{a.business_name}</p>
                         {a.phone_number && (
                           <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
                             <Phone size={10} /> {a.phone_number}
