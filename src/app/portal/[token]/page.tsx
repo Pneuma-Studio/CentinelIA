@@ -4,6 +4,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { Phone, CheckCircle, XCircle, CreditCard, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, AlertTriangle, ChevronRight } from 'lucide-react';
+// Phone, CheckCircle, XCircle still used in Agentes tab and alerts
 import type { VoiceCall } from '@/types/agent';
 import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { MinutesPlan } from '@/lib/billing/plans';
@@ -37,6 +38,7 @@ interface Props {
 }
 
 const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
+const PLAN_COLORS: Record<string, string> = { basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7' };
 
 export default async function ClientPortalPage({ params, searchParams }: Props) {
   const { token }          = await params;
@@ -147,25 +149,17 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 ? <img src={(agent as any).logo_url} alt={agent.business_name} className="h-8 w-auto object-contain max-w-[160px]" />
                 : <h1 className="text-base font-bold truncate" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
               }
-              <div className="flex items-center gap-2 mt-0.5 flex-wrap">
-                {agent.active
-                  ? <span className="flex items-center gap-1 text-xs font-medium" style={{ color: '#16a34a' }}><CheckCircle size={11} /> {agentName} activo</span>
-                  : <span className="flex items-center gap-1 text-xs font-medium" style={{ color: '#ef4444' }}><XCircle size={11} /> {agentName} pausado</span>
-                }
-                {agent.phone_number && (
-                  <span className="text-xs flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
-                    <Phone size={10} /> {agent.phone_number}
-                  </span>
-                )}
-              </div>
             </div>
             <div className="flex items-center gap-1.5 shrink-0">
-              {agent.plan && (
-                <span className="hidden sm:inline-flex items-center text-xs px-2 py-1 rounded-full font-medium"
-                  style={{ background: 'rgba(108,59,255,0.08)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.15)' }}>
-                  {PLAN_LABELS[agent.plan]}
-                </span>
-              )}
+              {agent.plan && (() => {
+                const pc = PLAN_COLORS[agent.plan] ?? '#6b7280';
+                return (
+                  <span className="hidden sm:inline-flex items-center text-xs px-2 py-1 rounded-full font-medium"
+                    style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
+                    {PLAN_LABELS[agent.plan]}
+                  </span>
+                );
+              })()}
               <ThemeToggle className="!text-[var(--c-text-2)] !bg-[var(--c-surface-2)]" />
               {hasStripe && (
                 <a href={`/api/billing/portal-session?token=${token}`}
