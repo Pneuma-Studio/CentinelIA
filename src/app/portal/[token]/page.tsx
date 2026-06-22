@@ -16,6 +16,7 @@ import { redirect } from 'next/navigation';
 
 import PortalLogout            from './PortalLogout';
 import PauseResumeButton       from './PauseResumeButton';
+import LogoUploader            from './LogoUploader';
 import PortalLeadsSection      from './PortalLeadsSection';
 import PortalOrdersSection     from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
@@ -142,7 +143,10 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         <div style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
             <div className="min-w-0">
-              <h1 className="text-base font-bold truncate" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
+              {(agent as any).logo_url
+                ? <img src={(agent as any).logo_url} alt={agent.business_name} className="h-8 w-auto object-contain max-w-[160px]" />
+                : <h1 className="text-base font-bold truncate" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
+              }
               <div className="flex items-center gap-2 mt-0.5 flex-wrap">
                 {agent.active
                   ? <span className="flex items-center gap-1 text-xs font-medium" style={{ color: '#16a34a' }}><CheckCircle size={11} /> {agentName} activo</span>
@@ -452,6 +456,10 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {/* ── CONFIGURACIÓN ────────────────────────────────────────────── */}
           {tab === 'configuracion' && (
             <div className="flex flex-col gap-5">
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Logo del negocio</h2>
+                <LogoUploader token={token} currentUrl={(agent as any).logo_url ?? null} />
+              </div>
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h2>
                 <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
