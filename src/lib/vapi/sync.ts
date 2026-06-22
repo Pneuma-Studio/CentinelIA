@@ -126,8 +126,6 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
 
 function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
   const agentName = agent.agent_name?.trim() || 'CentinelIA';
-  const voiceId = agent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID;
-  const hasElevenLabs = !!voiceId && voiceId.length > 0;
 
   return {
     name: `${agentName} — ${agent.business_name}`,
@@ -138,11 +136,10 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       temperature: 0.4,
       maxTokens: 300,
     },
-    voice: hasElevenLabs
-      ? { provider: '11labs', voiceId, stability: 0.5, similarityBoost: 0.75, useSpeakerBoost: true }
-      : { provider: 'vapi', voiceId: 'Mia' },
-    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}.`,
-    endCallMessage: '',
+    // Azure TTS while Vapi's ElevenLabs credential endpoint is broken (server-side bug)
+    voice: { provider: 'azure', voiceId: 'es-MX-DaliaNeural' },
+    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. En que le puedo ayudar?`,
+    endCallMessage: 'Hasta luego, que tenga un excelente día.',
     transcriber: {
       provider: 'deepgram',
       model: 'nova-2',

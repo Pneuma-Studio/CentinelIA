@@ -15,8 +15,29 @@ export async function POST(req: NextRequest) {
   switch (message.type) {
     case 'end-of-call-report': {
       const call = message.call;
-      const agentId: string = call?.metadata?.agent_id ?? '';
-      if (!agentId) break;
+
+      // agent_id can come from assistant metadata or call metadata depending on Vapi version
+      const agentId: string =
+        message.assistant?.metadata?.agent_id ??
+        call?.assistant?.metadata?.agent_id    ??
+        call?.metadata?.agent_id               ??
+        '';
+
+      // Fallback: resolve by Vapi assistant ID if metadata path was empty
+      let resolvedAgentId = agentId;
+      if (!resolvedAgentId && call?.assistantId) {
+        const { data: byVapi } = await supabase
+          .from('voice_agents')
+          .select('id')
+          .eq('vapi_agent_id', call.assistantId)
+          .single();
+        if (byVapi?.id) resolvedAgentId = byVapi.id;
+      }
+
+      if (!resolvedAgentId) {
+        console.error('webhook: no agent_id found for call', call?.id, 'assistantId:', call?.assistantId);
+        break;
+      }
 
       const startedAt = call?.startedAt ? new Date(call.startedAt).getTime() : 0;
       const endedAt   = call?.endedAt   ? new Date(call.endedAt).getTime()   : 0;
@@ -31,7 +52,7 @@ export async function POST(req: NextRequest) {
 
       // 1. Log call
       await supabase.from('voice_calls').insert({
-        agent_id:            agentId,
+        agent_id:            resolvedAgentId,
         vapi_call_id:        call?.id ?? null,
         caller_number:       callerNumber,
         duration_seconds:    durationSeconds,
@@ -67,13 +88,13 @@ export async function POST(req: NextRequest) {
 
       // 3. Update minutes
       const minutes = Math.ceil(durationSeconds / 60) || 1;
-      await supabase.rpc('increment_minutes_used', { agent_id: agentId, minutes });
+      await supabase.rpc('increment_minutes_used', { agent_id: resolvedAgentId, minutes });
 
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
         .select('business_name, client_email, transfer_whatsapp, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
-        .eq('id', agentId)
+        .eq('id', resolvedAgentId)
         .single();
 
       const used     = agent?.minutes_used     ?? 0;

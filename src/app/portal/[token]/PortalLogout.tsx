@@ -15,7 +15,7 @@ export default function PortalLogout() {
     <button
       onClick={handleLogout}
       className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs transition-opacity hover:opacity-80"
-      style={{ color: 'rgba(255,255,255,0.3)' }}
+      style={{ color: 'var(--c-text-4)' }}
       title="Cerrar sesión"
     >
       <LogOut size={13} />

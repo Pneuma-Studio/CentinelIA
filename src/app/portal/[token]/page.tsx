@@ -10,7 +10,6 @@ import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { MinutesPlan } from '@/lib/billing/plans';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
-import type { BusinessHours } from '@/types/agent';
 import { cookies } from 'next/headers';
 import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 import { redirect } from 'next/navigation';
@@ -24,14 +23,12 @@ import PortalOrdersSection     from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
 import BuyMinutesSection       from './BuyMinutesSection';
 import MinutesLedgerSection    from './MinutesLedgerSection';
-import BusinessHoursEditor     from './BusinessHoursEditor';
-import KnowledgeBaseEditor     from './KnowledgeBaseEditor';
 import CallCard                from './CallCard';
 import DownloadCallsCSV        from './DownloadCallsCSV';
 import ContractSection         from './ContractSection';
 import CollapsibleSection      from './CollapsibleSection';
 
-type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'configuracion' | 'contrato';
+type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato';
 
 interface Props {
   params:       Promise<{ token: string }>;
@@ -143,12 +140,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const avgMinPerMonth  = allCalls.length > 0 ? Math.round(allTimeTotalMin / (daysSinceFirst / 30)) : 0;
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: 'agentes',       label: 'Agentes' },
-    { id: 'resumen',       label: 'Resumen' },
-    { id: 'actividad',     label: 'Actividad' },
-    { id: 'minutos',       label: 'Minutos' },
-    { id: 'configuracion', label: 'Configuración' },
-    { id: 'contrato',      label: 'Contrato' },
+    { id: 'agentes',   label: 'Agentes' },
+    { id: 'resumen',   label: 'Resumen' },
+    { id: 'actividad', label: 'Actividad' },
+    { id: 'minutos',   label: 'Minutos' },
+    { id: 'contrato',  label: 'Contrato' },
   ];
 
   return (
@@ -333,7 +329,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
                         <div className="flex items-center gap-1.5 flex-shrink-0">
                           <Link
-                            href={isCurrent ? `?tab=configuracion` : `/portal/${a.portal_token}?tab=configuracion`}
+                            href={`/portal/${a.portal_token}/configurar`}
                             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
                             style={{ background: 'rgba(108,59,255,0.08)', color: '#9B6DFF', border: '1px solid rgba(108,59,255,0.2)' }}>
                             Configurar
@@ -488,25 +484,6 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</h2>
                 <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} />
-              </div>
-            </div>
-          )}
-
-          {/* ── CONFIGURACIÓN ────────────────────────────────────────────── */}
-          {tab === 'configuracion' && (
-            <div className="flex flex-col gap-5">
-              <div className="flex items-center gap-2 mb-1">
-                <Link href="?tab=agentes" className="text-xs transition-opacity hover:opacity-70" style={{ color: 'var(--c-text-3)' }}>← Agentes</Link>
-                <span style={{ color: 'var(--c-text-4)' }}>/</span>
-                <span className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>{agentName}</span>
-              </div>
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h2>
-                <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
-              </div>
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                <h2 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Base de conocimiento</h2>
-                <KnowledgeBaseEditor token={token} initialValue={agent.knowledge_base ?? ''} />
               </div>
             </div>
           )}
