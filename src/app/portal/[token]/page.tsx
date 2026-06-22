@@ -18,6 +18,7 @@ import { redirect } from 'next/navigation';
 import PortalLogout            from './PortalLogout';
 import PauseResumeButton       from './PauseResumeButton';
 import LogoUploader            from './LogoUploader';
+import BusinessSwitcher        from './BusinessSwitcher';
 import PortalLeadsSection      from './PortalLeadsSection';
 import PortalOrdersSection     from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
@@ -157,12 +158,19 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         {/* Header */}
         <div style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
-            <div className="min-w-0">
-              {(agent as any).logo_url
-                ? <img src={(agent as any).logo_url} alt={agent.business_name} className="h-8 w-auto object-contain max-w-[160px]" />
-                : <h1 className="text-base font-bold truncate" style={{ color: 'var(--c-text)' }}>{agent.business_name}</h1>
-              }
-            </div>
+            <BusinessSwitcher
+              current={{
+                business_name: agent.business_name,
+                logo_url:      (agent as any).logo_url ?? null,
+                first_token:   token,
+              }}
+              options={businessGroups.map(g => ({
+                business_name: g.business_name,
+                logo_url:      g.logo_url,
+                first_token:   g.first_token,
+              }))}
+              currentBusinessName={agent.business_name}
+            />
             <div className="flex items-center gap-1.5 shrink-0">
               {agent.plan && (() => {
                 const pc = PLAN_COLORS[agent.plan] ?? '#6b7280';
