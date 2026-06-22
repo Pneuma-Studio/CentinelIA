@@ -282,13 +282,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                       </div>
 
                       <div className="flex flex-col gap-2 items-end flex-shrink-0">
-                        {!isCurrent && (
-                          <Link href={`/portal/${a.portal_token}`}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
-                            style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
-                            <ChevronRight size={12} /> Ver portal
-                          </Link>
-                        )}
+                        <Link
+                          href={isCurrent ? `?tab=configuracion` : `/portal/${a.portal_token}?tab=configuracion`}
+                          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                          style={{ background: 'rgba(108,59,255,0.08)', color: '#9B6DFF', border: '1px solid rgba(108,59,255,0.2)' }}>
+                          <ChevronRight size={12} /> Configurar
+                        </Link>
                         {!isBillingPaused && (
                           <PauseResumeButton agentId={a.id} clientPaused={isClientPaused} />
                         )}
@@ -449,6 +448,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {/* ── CONFIGURACIÓN ────────────────────────────────────────────── */}
           {tab === 'configuracion' && (
             <div className="flex flex-col gap-5">
+              <div className="flex items-center gap-2 mb-1">
+                <Link href="?tab=agentes" className="text-xs transition-opacity hover:opacity-70" style={{ color: 'var(--c-text-3)' }}>← Agentes</Link>
+                <span style={{ color: 'var(--c-text-4)' }}>/</span>
+                <span className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>{agentName}</span>
+              </div>
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Logo del negocio</h2>
                 <LogoUploader token={token} currentUrl={(agent as any).logo_url ?? null} />
