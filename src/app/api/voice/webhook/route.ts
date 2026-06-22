@@ -72,7 +72,7 @@ export async function POST(req: NextRequest) {
         if (['lead', 'cita', 'pedido'].includes(structured.tipo_contacto ?? '') ||
             structured.servicio || structured.pedido_items) {
           await supabase.from('leads_voice').insert({
-            agent_id:    agentId,
+            agent_id:    resolvedAgentId,
             nombre:      structured.nombre      ?? null,
             negocio:     structured.negocio     ?? null,
             giro:        structured.giro        ?? null,
@@ -84,6 +84,25 @@ export async function POST(req: NextRequest) {
             source:      'llamada',
           });
         }
+      }
+
+      // 2b. Save appointment when tipo_contacto === 'cita'
+      if (structured?.tipo_contacto === 'cita' || structured?.cita_fecha) {
+        const telefono = structured.cita_telefono ?? structured.whatsapp ?? callerNumber ?? null;
+        // cita_fecha should be YYYY-MM-DD from structuredData; validate before storing
+        const fechaIso = structured.cita_fecha && /^\d{4}-\d{2}-\d{2}$/.test(structured.cita_fecha)
+          ? structured.cita_fecha
+          : null;
+        await supabase.from('appointments_voice').insert({
+          agent_id:   resolvedAgentId,
+          nombre:     structured.nombre    ?? null,
+          telefono,
+          servicio:   structured.servicio  ?? null,
+          fecha:      structured.cita_fecha ?? null,
+          hora:       structured.cita_hora  ?? null,
+          fecha_iso:  fechaIso,
+          status:     'confirmada',
+        });
       }
 
       // 3. Update minutes
@@ -134,7 +153,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 7. WhatsApp call summary
+      // 7. WhatsApp call summary to owner
       if (agent?.transfer_whatsapp) {
         const outcomeLabels: Record<string, string> = {
           lead_created:       '🎯 Nuevo lead',
@@ -153,6 +172,15 @@ export async function POST(req: NextRequest) {
           summary ? `\n📝 ${summary}` : null,
         ].filter(Boolean).join('\n');
         await sendWhatsApp(agent.transfer_whatsapp, msg);
+      }
+
+      // 8. Review request to caller (if agent has google_review_url and call was substantive)
+      const reviewUrl = (agent as any)?.google_review_url ?? null;
+      const callerWa  = structured?.whatsapp ?? callerNumber;
+      const goodCall  = ['info_provided', 'appointment_booked', 'lead_created', 'order_taken'].includes(outcome);
+      if (reviewUrl && callerWa && goodCall && durationSeconds >= 60) {
+        const reviewMsg = `¡Hola! Gracias por contactar a *${agent?.business_name}*. Si le atendimos bien, nos ayudaría mucho dejar una reseña en Google 🙏\n\n${reviewUrl}`;
+        await sendWhatsApp(callerWa, reviewMsg).catch(() => null);
       }
 
       break;
