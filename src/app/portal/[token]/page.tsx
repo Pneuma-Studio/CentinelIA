@@ -28,7 +28,7 @@ import DownloadCallsCSV        from './DownloadCallsCSV';
 import ContractSection         from './ContractSection';
 import CollapsibleSection      from './CollapsibleSection';
 
-type Tab = 'resumen' | 'actividad' | 'minutos' | 'configuracion' | 'contrato';
+type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'configuracion' | 'contrato';
 
 interface Props {
   params:       Promise<{ token: string }>;
@@ -40,7 +40,7 @@ const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Est�
 export default async function ClientPortalPage({ params, searchParams }: Props) {
   const { token }          = await params;
   const { tab: tabParam, period } = await searchParams;
-  const tab: Tab           = (tabParam as Tab) ?? 'resumen';
+  const tab: Tab           = (tabParam as Tab) ?? 'agentes';
   const days               = period ? parseInt(period) : undefined;
 
   // ── Auth: verify session owns this portal ─────────────────────────────────
@@ -58,14 +58,14 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
     redirect('/portal/login');
   }
 
-  // Multi-agent: find all agents for this client (same portal_email)
+  // All agents for this client (same portal_email)
   const { data: clientAgents } = session?.portalEmail
     ? await supabase
         .from('voice_agents')
-        .select('id, business_name, portal_token, active, client_paused, plan')
+        .select('id, business_name, portal_token, active, client_paused, billing_status, plan, phone_number')
         .eq('portal_email', session.portalEmail)
     : { data: [] };
-  const otherAgents = (clientAgents ?? []).filter((a: any) => a.portal_token !== token);
+  const allClientAgents = clientAgents ?? [];
 
   const clientPaused  = (agent as any).client_paused ?? false;
   const billingPaused = !agent.active && agent.billing_status === 'pago_fallido';
@@ -126,6 +126,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const avgMinPerMonth  = allCalls.length > 0 ? Math.round(allTimeTotalMin / (daysSinceFirst / 30)) : 0;
 
   const TABS: { id: Tab; label: string }[] = [
+    { id: 'agentes',       label: 'Agentes' },
     { id: 'resumen',       label: 'Resumen' },
     { id: 'actividad',     label: 'Actividad' },
     { id: 'minutos',       label: 'Minutos' },
@@ -234,6 +235,79 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         {/* Tab content */}
         <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
 
+          {/* ── AGENTES ──────────────────────────────────────────────────── */}
+          {tab === 'agentes' && (
+            <div className="flex flex-col gap-3">
+              {allClientAgents.length === 0 && (
+                <p className="text-sm text-center py-12" style={{ color: 'var(--c-text-3)' }}>Sin agentes asociados</p>
+              )}
+              {allClientAgents.map((a: any) => {
+                const isBillingPaused = !a.active && a.billing_status === 'pago_fallido';
+                const isClientPaused  = !!(a.client_paused) && !isBillingPaused;
+                const isActive        = a.active;
+                const isCurrent       = a.portal_token === token;
+
+                let statusLabel = 'Activo';
+                let statusColor = '#16a34a';
+                let statusBg    = 'rgba(34,197,94,0.1)';
+                if (isBillingPaused) { statusLabel = 'Pausado — pago pendiente'; statusColor = '#dc2626'; statusBg = 'rgba(239,68,68,0.08)'; }
+                else if (isClientPaused) { statusLabel = 'Pausado por ti'; statusColor = '#f59e0b'; statusBg = 'rgba(245,158,11,0.1)'; }
+                else if (!isActive) { statusLabel = 'Inactivo'; statusColor = '#6b7280'; statusBg = 'rgba(107,114,128,0.1)'; }
+
+                return (
+                  <div key={a.id} className="rounded-xl p-5"
+                    style={{ background: 'var(--c-surface)', border: `1px solid ${isCurrent ? 'rgba(108,59,255,0.3)' : 'var(--c-border)'}` }}>
+                    <div className="flex items-start justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>{a.business_name}</span>
+                          {isCurrent && (
+                            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                              style={{ background: 'rgba(108,59,255,0.1)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.2)' }}>
+                              Este portal
+                            </span>
+                          )}
+                          <span className="text-xs px-2 py-0.5 rounded-full"
+                            style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-3)' }}>
+                            {PLAN_LABELS[a.plan] ?? a.plan}
+                          </span>
+                        </div>
+                        {a.phone_number && (
+                          <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                            <Phone size={10} /> {a.phone_number}
+                          </p>
+                        )}
+                        <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full font-medium mt-2"
+                          style={{ background: statusBg, color: statusColor }}>
+                          <span className="w-1.5 h-1.5 rounded-full" style={{ background: statusColor }} />
+                          {statusLabel}
+                        </span>
+                      </div>
+
+                      <div className="flex flex-col gap-2 items-end flex-shrink-0">
+                        {!isCurrent && (
+                          <Link href={`/portal/${a.portal_token}`}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                            style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
+                            <ChevronRight size={12} /> Ver portal
+                          </Link>
+                        )}
+                        {!isBillingPaused && (
+                          <PauseResumeButton agentId={a.id} clientPaused={isClientPaused} />
+                        )}
+                        {isBillingPaused && (
+                          <p className="text-xs text-right" style={{ color: '#dc2626', maxWidth: 160 }}>
+                            Contacta a CentinelIA para regularizar el pago
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
           {/* ── RESUMEN ──────────────────────────────────────────────────── */}
           {tab === 'resumen' && (
             <div className="flex flex-col gap-5">
@@ -255,49 +329,6 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 {showOrders && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" />}
                 {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" />}
               </div>
-
-              {/* Pause/resume control — only if not billing-paused */}
-              {!billingPaused && (
-                <div className="flex items-center justify-between p-4 rounded-xl"
-                  style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                  <div>
-                    <p className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                      {clientPaused ? 'Agente pausado por ti' : 'Agente activo'}
-                    </p>
-                    <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>
-                      {clientPaused
-                        ? 'No está atendiendo llamadas. Reanúdalo cuando estés listo.'
-                        : 'Está atendiendo llamadas. Puedes pausarlo temporalmente.'}
-                    </p>
-                  </div>
-                  <PauseResumeButton agentId={agent.id} clientPaused={clientPaused} />
-                </div>
-              )}
-
-              {/* Other agents (multi-agent clients) */}
-              {otherAgents.length > 0 && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                  <h2 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-                    Mis otros agentes
-                  </h2>
-                  <div className="flex flex-col gap-2">
-                    {otherAgents.map((a: any) => (
-                      <Link key={a.id} href={`/portal/${a.portal_token}`}
-                        className="flex items-center gap-3 px-4 py-3 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]"
-                        style={{ border: '1px solid var(--c-border)' }}>
-                        <div className="w-2 h-2 rounded-full flex-shrink-0"
-                          style={{ background: a.active ? '#22c55e' : '#ef4444' }} />
-                        <span className="text-sm font-medium flex-1" style={{ color: 'var(--c-text)' }}>{a.business_name}</span>
-                        <span className="text-xs px-2 py-0.5 rounded-full"
-                          style={{ background: 'var(--c-surface-2)', color: 'var(--c-text-3)' }}>
-                          {PLAN_LABELS[a.plan] ?? a.plan}
-                        </span>
-                        <ChevronRight size={14} style={{ color: 'var(--c-text-4)' }} />
-                      </Link>
-                    ))}
-                  </div>
-                </div>
-              )}
 
               {/* Period filter */}
               <div className="flex items-center gap-2">
