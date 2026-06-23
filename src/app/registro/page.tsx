@@ -463,13 +463,17 @@ function RegistroInner() {
                         </div>
                       ) : (
                         <div className="ml-8 mb-3">
-                          <div className="flex items-baseline gap-2 flex-wrap">
+                          <div className="flex items-center gap-2 flex-wrap">
                             <span className="text-4xl font-extrabold tabular-nums" style={{ color: p.color }}>
                               {priceFmt(p.monthly)}
                             </span>
                             <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
                             <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
                               {priceFmt(p.origMonthly)}
+                            </span>
+                            <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
+                              style={{ background: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}>
+                              {p.minutes} min/mes
                             </span>
                           </div>
                           <div className="flex items-center gap-2 mt-1.5 flex-wrap">
@@ -482,13 +486,9 @@ function RegistroInner() {
                         </div>
                       )}
 
-                      {/* Row 3: Minutes badge + setup fee */}
+                      {/* Row 3: Setup fee */}
                       {!p.custom && (
-                        <div className="ml-8 flex flex-wrap items-center gap-2 mb-4">
-                          <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
-                            style={{ background: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}>
-                            {p.minutes} min/mes
-                          </span>
+                        <div className="ml-8 mb-4">
                           <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
                             + {priceFmt(p.price)}{' '}
                             <span className="line-through" style={{ color: 'rgba(255,255,255,0.18)' }}>{priceFmt(p.origPrice)}</span>
