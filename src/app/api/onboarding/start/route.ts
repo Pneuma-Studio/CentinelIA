@@ -8,7 +8,7 @@ import type { Plan } from '@/types/agent';
 const PLAN_MINUTES_COUNT: Record<Plan, number> = {
   basico:   200,
   estandar: 500,
-  pro:      1500,
+  pro:      1000,
 };
 
 const PLAN_MINUTES_PLAN: Record<Plan, string> = {

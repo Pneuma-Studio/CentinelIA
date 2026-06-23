@@ -119,7 +119,7 @@ export interface VoiceCall {
 export const PLAN_FEATURES: Record<Plan, AgentFeatures> = {
   basico: {
     receptionist:            true,
-    lead_qualification:      true,
+    lead_qualification:      false,
     appointment_booking:     true,
     existing_client_support: false,
     smart_transfer:          false,
@@ -133,11 +133,11 @@ export const PLAN_FEATURES: Record<Plan, AgentFeatures> = {
     lead_qualification:      true,
     appointment_booking:     true,
     existing_client_support: true,
-    smart_transfer:          true,
+    smart_transfer:          false,
     order_taking:            true,
     multilingual:            false,
     client_memory:           false,
-    whatsapp_escalation:     false,
+    whatsapp_escalation:     true,
   },
   pro: {
     receptionist:            true,
@@ -155,12 +155,12 @@ export const PLAN_FEATURES: Record<Plan, AgentFeatures> = {
 export const PLAN_MINUTES: Record<Plan, number> = {
   basico:   200,
   estandar: 500,
-  pro:      1500,
+  pro:      1000,
 };
 
 export const PLAN_LABELS: Record<Plan, string> = {
-  basico:   'Básico',
-  estandar: 'Estándar',
+  basico:   'Recepcionista',
+  estandar: 'Comercial',
   pro:      'Pro',
 };
 

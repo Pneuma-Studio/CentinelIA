@@ -62,31 +62,32 @@ type PlanDef = {
 
 const PLANS: PlanDef[] = [
   {
-    id: 'basico', label: 'Básico', price: 4990, monthly: 1990, minutes: 200, color: '#6b7280',
+    id: 'basico', label: 'Recepcionista', price: 4990, monthly: 1990, minutes: 200, color: '#6b7280',
     features: [
-      { label: 'Recepcionista 24/7',      desc: 'Atiende llamadas en cualquier horario, incluso fuera de tu horario laboral y fines de semana.' },
-      { label: 'Captura de leads',         desc: 'Registra nombre, teléfono y necesidad de cada prospecto directamente en tu portal.' },
-      { label: 'Agenda de citas',          desc: 'Confirma, modifica y cancela citas durante la llamada sin que tengas que intervenir.' },
-      { label: 'Resumen por WhatsApp',     desc: 'Recibes un resumen de cada conversación en tiempo real en tu WhatsApp.' },
+      { label: 'Recepcionista 24/7',          desc: 'Atiende llamadas en cualquier horario, incluso fuera de tu horario laboral y fines de semana.' },
+      { label: 'Agenda de citas',              desc: 'Confirma, modifica y cancela citas durante la llamada sin que tengas que intervenir.' },
+      { label: 'Resúmenes WhatsApp + Email',   desc: 'Recibes un resumen de cada conversación en tiempo real por WhatsApp y correo electrónico.' },
+      { label: 'Portal con horas pico',        desc: 'Visualiza en qué horas del día recibes más llamadas y monitorea toda tu actividad.' },
     ],
   },
   {
-    id: 'estandar', label: 'Estándar', price: 8990, monthly: 3990, minutes: 500, recommended: true, color: '#3b82f6',
+    id: 'estandar', label: 'Comercial', price: 7990, monthly: 3490, minutes: 500, recommended: true, color: '#3b82f6',
     features: [
-      { label: 'Todo lo de Básico',           desc: 'Recepcionista 24/7, captura de leads, agenda de citas y resúmenes por WhatsApp.' },
-      { label: 'Transferencia inteligente',    desc: 'Detecta cuándo una llamada necesita atención humana y transfiere automáticamente a tu número.' },
+      { label: 'Todo lo de Recepcionista',    desc: 'Recepcionista 24/7, agenda de citas, resúmenes y portal completo.' },
+      { label: 'Captura de leads',             desc: 'Registra nombre, teléfono, servicio y presupuesto de cada prospecto automáticamente.' },
       { label: 'Toma de pedidos',              desc: 'Registra pedidos completos con productos, cantidades y datos de entrega o recogida.' },
-      { label: 'Alertas de minutos',           desc: 'Recibe notificaciones cuando tus minutos incluidos estén llegando al límite mensual.' },
+      { label: 'Escalación a WhatsApp',        desc: 'Si el cliente lo prefiere, el agente continúa la conversación por WhatsApp automáticamente.' },
+      { label: 'Reporte semanal por email',    desc: 'Recibe cada lunes un resumen con llamadas, leads, citas y pedidos de la semana.' },
     ],
   },
   {
-    id: 'pro', label: 'Pro', price: 14990, monthly: 7990, minutes: 1500, color: '#a855f7',
+    id: 'pro', label: 'Pro', price: 12990, monthly: 6490, minutes: 1000, color: '#a855f7',
     features: [
-      { label: 'Todo lo de Estándar',          desc: 'Incluye todas las funciones del plan Estándar.' },
+      { label: 'Todo lo de Comercial',         desc: 'Incluye todas las funciones del plan Comercial.' },
+      { label: 'Transferencia inteligente',    desc: 'El agente detecta cuándo una llamada necesita atención humana y transfiere automáticamente a tu número.' },
       { label: 'Nombre + Voz personalizable',  desc: 'Elige el nombre de tu agente (Ana, Carlos, Sofía…) y la voz que mejor represente tu marca.' },
       { label: 'Multiidioma (ES + EN)',         desc: 'Tu agente detecta automáticamente el idioma del cliente y responde en español o inglés.' },
-      { label: 'Memoria de cliente',            desc: 'El agente recuerda información de llamadas anteriores para dar atención personalizada.' },
-      { label: 'Escalación a WhatsApp',         desc: 'Si el cliente lo solicita, el agente continúa la conversación por WhatsApp automáticamente.' },
+      { label: 'Grabaciones de llamadas',       desc: 'Accede y descarga grabaciones de tus llamadas desde el portal durante 7 días.' },
     ],
   },
   {
@@ -214,7 +215,7 @@ function RegistroInner() {
   const [submitted,    setSubmitted]    = useState(false);
 
   // Form state
-  const [plan,          setPlan]         = useState<FormPlan>('estandar');
+  const [plan,          setPlan]         = useState<FormPlan>('estandar'); // Comercial — default recommended
   const [businessName,  setBusinessName] = useState('');
   const [businessDesc,  setBusinessDesc] = useState('');
   const [businessPhone, setBusinessPhone]= useState('');

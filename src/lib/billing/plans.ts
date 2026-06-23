@@ -16,15 +16,15 @@ export interface MinutesPlanConfig {
 }
 
 export const FEATURE_PLAN_CONFIG: Record<Plan, FeaturePlanConfig> = {
-  basico:   { label: 'Básico',   setupFee: 4990,  setupPriceId: () => process.env.STRIPE_SETUP_BASICO! },
-  estandar: { label: 'Estándar', setupFee: 8990,  setupPriceId: () => process.env.STRIPE_SETUP_ESTANDAR! },
-  pro:      { label: 'Pro',      setupFee: 14990, setupPriceId: () => process.env.STRIPE_SETUP_PRO! },
+  basico:   { label: 'Recepcionista', setupFee: 4990,  setupPriceId: () => process.env.STRIPE_SETUP_BASICO! },
+  estandar: { label: 'Comercial',     setupFee: 7990,  setupPriceId: () => process.env.STRIPE_SETUP_ESTANDAR! },
+  pro:      { label: 'Pro',           setupFee: 12990, setupPriceId: () => process.env.STRIPE_SETUP_PRO! },
 };
 
 export const MINUTES_PLAN_CONFIG: Record<MinutesPlan, MinutesPlanConfig> = {
   starter:    { label: 'Starter',    minutes: 200,  mxn: 1990,  priceId: () => process.env.STRIPE_MINUTES_STARTER! },
-  growth:     { label: 'Growth',     minutes: 500,  mxn: 3990,  priceId: () => process.env.STRIPE_MINUTES_GROWTH! },
-  scale:      { label: 'Scale',      minutes: 1500, mxn: 7990,  priceId: () => process.env.STRIPE_MINUTES_SCALE! },
+  growth:     { label: 'Growth',     minutes: 500,  mxn: 3490,  priceId: () => process.env.STRIPE_MINUTES_GROWTH! },
+  scale:      { label: 'Scale',      minutes: 1000, mxn: 6490,  priceId: () => process.env.STRIPE_MINUTES_SCALE! },
   enterprise: { label: 'Enterprise', minutes: 3000, mxn: 12990, priceId: () => process.env.STRIPE_MINUTES_ENTERPRISE! },
 };
 
