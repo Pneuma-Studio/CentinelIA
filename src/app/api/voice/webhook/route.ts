@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
       const callerNumber = call?.customer?.number ?? '';
 
       // 1. Log call
-      await supabase.from('voice_calls').insert({
+      const { error: callInsertError } = await supabase.from('voice_calls').insert({
         agent_id:            resolvedAgentId,
         vapi_call_id:        call?.id ?? null,
         caller_number:       callerNumber,
@@ -143,7 +143,11 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 3. Update minutes
+      // 3. Update minutes — only if the call was successfully logged
+      if (callInsertError) {
+        console.error('webhook: voice_calls insert failed, skipping minutes increment', callInsertError);
+        break;
+      }
       const minutes = Math.ceil(durationSeconds / 60) || 1;
       await supabase.rpc('increment_minutes_used', { agent_id: resolvedAgentId, minutes });
 
