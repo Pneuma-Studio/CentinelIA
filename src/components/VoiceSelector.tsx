@@ -165,6 +165,8 @@ function VoiceCard({
   );
 }
 
+const OFFICIAL_VOICE_ID = 'jUxkp8eMgszgJX3XU2pV';
+
 export default function VoiceSelector({
   selected,
   onChange,
@@ -175,7 +177,7 @@ export default function VoiceSelector({
   const [voices, setVoices]   = useState<ElevenVoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState<string | null>(null);
-  const [open, setOpen]       = useState<Record<string, boolean>>({ female: true, male: false, other: false });
+  const [open, setOpen]       = useState<Record<string, boolean>>({ official: true, female: false, male: false, other: false });
   const audioRef              = useRef<HTMLAudioElement | null>(null);
 
   useEffect(() => {
@@ -186,12 +188,14 @@ export default function VoiceSelector({
         setVoices(list);
         // Open the group that contains the selected voice
         if (selected) {
-          const selectedVoice = list.find(v => v.voice_id === selected);
-          if (selectedVoice) {
-            const gender = selectedVoice.labels.gender?.toLowerCase();
-            const groupKey = gender === 'female' ? 'female' : gender === 'male' ? 'male' : 'other';
-            setOpen({ female: false, male: false, other: false, [groupKey]: true });
-          }
+          const groupKey = selected === OFFICIAL_VOICE_ID
+            ? 'official'
+            : (() => {
+                const v = list.find(x => x.voice_id === selected);
+                const g = v?.labels.gender?.toLowerCase();
+                return g === 'female' ? 'female' : g === 'male' ? 'male' : 'other';
+              })();
+          setOpen({ official: false, female: false, male: false, other: false, [groupKey]: true });
         }
       })
       .finally(() => setLoading(false));
@@ -242,10 +246,16 @@ export default function VoiceSelector({
 
   const groups: { key: string; label: string; emoji: string; voices: ElevenVoice[] }[] = [
     {
+      key:    'official',
+      label:  'Voz oficial',
+      emoji:  '⭐',
+      voices: voices.filter(v => v.voice_id === OFFICIAL_VOICE_ID),
+    },
+    {
       key:    'female',
       label:  'Voces femeninas',
       emoji:  '👩',
-      voices: voices.filter(v => v.labels.gender?.toLowerCase() === 'female'),
+      voices: voices.filter(v => v.labels.gender?.toLowerCase() === 'female' && v.voice_id !== OFFICIAL_VOICE_ID),
     },
     {
       key:    'male',
