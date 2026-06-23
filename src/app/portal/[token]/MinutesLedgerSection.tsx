@@ -65,32 +65,32 @@ export default async function MinutesLedgerSection({
     source:      (r.source as Source) ?? 'ajuste',
   }));
 
-  const debits: Entry[] = (callsRes.data ?? [])
-    .filter(c => c.duration_seconds > 0)
-    .map(c => {
-      const mins   = Math.ceil(c.duration_seconds / 60);
-      const caller = c.caller_number?.trim() || 'Número privado';
-      return {
-        id:          c.id,
-        date:        c.created_at,
-        amount:      -mins,
-        description: `${caller} · ${mins} min`,
-        source:      'llamada' as Source,
-      };
-    });
-
-  const all = [...credits, ...debits].sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
-
-  // Compute running balance backwards from current
-  const currentBalance = minutesIncluded - minutesUsed;
-  let balance = currentBalance;
-  const entries: (Entry & { balance: number })[] = all.map(e => {
-    const entry = { ...e, balance };
-    balance -= e.amount;
-    return entry;
+  const debits: Entry[] = (callsRes.data ?? []).map(c => {
+    // Match webhook: minimum 1 minute charged per call
+    const mins   = Math.max(1, Math.ceil(c.duration_seconds / 60));
+    const caller = c.caller_number?.trim() || 'Número privado';
+    return {
+      id:          c.id,
+      date:        c.created_at,
+      amount:      -mins,
+      description: `${caller} · ${mins} min`,
+      source:      'llamada' as Source,
+    };
   });
+
+  // Compute balance forward from oldest entry — independent of minutes_used in DB
+  const chronological = [...credits, ...debits].sort(
+    (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
+  );
+  let running = 0;
+  const withBalance = chronological.map(e => {
+    running += e.amount;
+    return { ...e, balance: running };
+  });
+  const currentBalance = running;
+
+  // Reverse for display (newest first)
+  const entries = withBalance.reverse();
 
   if (entries.length === 0) {
     return (
