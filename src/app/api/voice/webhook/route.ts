@@ -201,12 +201,15 @@ export async function POST(req: NextRequest) {
           escalated_whatsapp: '💬 Escalada a WhatsApp',
           other:              '📱 Llamada terminada',
         };
-        const mins = Math.ceil(durationSeconds / 60);
+        const mins = Math.max(1, Math.ceil(durationSeconds / 60));
+        const cleanSummary = summary
+          ? summary.replace(/#{1,6}\s*/g, '').replace(/\*\*(.*?)\*\*/g, '*$1*').trim()
+          : null;
         const msg = [
-          `${outcomeLabels[outcome] ?? '📱 Llamada'} — *${agent.business_name}*`,
+          `*${agent.business_name}*`,
+          `${outcomeLabels[outcome] ?? '📱 Llamada'} · ⏱ ${mins} min`,
           callerNumber ? `📞 ${callerNumber}` : null,
-          `⏱ ${mins} min`,
-          summary ? `\n📝 ${summary}` : null,
+          cleanSummary ? `\n${cleanSummary}` : null,
         ].filter(Boolean).join('\n');
         await sendWhatsApp(agent.transfer_whatsapp, msg);
       }
