@@ -206,7 +206,8 @@ export async function POST(req: NextRequest) {
           ? summary.replace(/#{1,6}\s*/g, '').replace(/\*\*(.*?)\*\*/g, '*$1*').trim()
           : null;
         const msg = [
-          `*${agent.business_name}*`,
+          `🟣 *Centinelia* · ${agent.business_name}`,
+          '━━━━━━━━━━━━━━━━━━━',
           `${outcomeLabels[outcome] ?? '📱 Llamada'} · ⏱ ${mins} min`,
           callerNumber ? `📞 ${callerNumber}` : null,
           cleanSummary ? `\n${cleanSummary}` : null,
