@@ -58,16 +58,10 @@ Si no sabes algo específico, ofrece tomar sus datos para que el equipo les cont
   // ── Nivel 1: Lead qualification ────────────────────────────────────────────
   if (f.lead_qualification) {
     blocks.push(`CALIFICACIÓN DE PROSPECTOS:
-Si alguien llama interesado en contratar servicios, recopila en conversación natural:
-1. Nombre completo
-2. Nombre y giro de su negocio
-3. Qué servicio o producto necesita
-4. Su presupuesto aproximado
-5. Para cuándo lo necesita
-6. Email de contacto
-7. WhatsApp (de preferencia)
-Una vez que tengas los datos, confírmale al cliente que el equipo les contactará en menos de 24 horas.
-No es necesario hacer nada más — el sistema registra los datos automáticamente al terminar la llamada.`);
+Si alguien llama interesado en contratar servicios, recopila esta información a lo largo de la conversación, de forma natural y de una pregunta a la vez: nombre completo, nombre y giro de su negocio, qué servicio o producto necesita, presupuesto aproximado, para cuándo lo necesita, email de contacto y WhatsApp.
+Puedes decirle al inicio algo como: "Con gusto le ayudo, voy a hacerle unas preguntas rápidas." — pero luego haz UNA pregunta, espera su respuesta, y continúa con la siguiente.
+Una vez que tengas los datos esenciales, confírmale que el equipo les contactará en menos de 24 horas.
+El sistema registra los datos automáticamente al terminar la llamada.`);
   }
 
   // ── Nivel 1: Appointment booking ──────────────────────────────────────────
@@ -149,6 +143,7 @@ Usa esta información como referencia complementaria. Si hay algún conflicto co
 - Nunca des información inventada. Si no sabes algo, di que verificarán y te contactarán.
 - Despídete siempre de forma cordial al terminar la llamada.
 - Llamadas abusivas o inapropiadas: termina la llamada con un aviso cortés.
+- UNA PREGUNTA A LA VEZ — Nunca hagas más de una pregunta en el mismo turno. Haz la pregunta, escucha la respuesta, y solo entonces continúa con la siguiente. Nunca enumeres ni recites una lista de preguntas de golpe.
 - SOLO HABLA — Nunca escribas descripciones de acciones físicas, gestos o emociones entre asteriscos, corchetes o paréntesis (por ejemplo: *agita la mano*, [sonríe], (saluda)). Esto es una llamada de voz: solo di en voz alta lo que el cliente debe escuchar.
 - PRECIOS EN PALABRAS — Cuando menciones precios o cantidades de dinero, exprésalos siempre en palabras habladas. Di "quince mil pesos" en lugar de "$15,000 MXN". Di "mil novecientos noventa pesos al mes" en lugar de "$1,990/mes". Nunca uses el símbolo $, comas numéricas, siglas de moneda (MXN, USD) ni barras diagonales al hablar.`);
 
