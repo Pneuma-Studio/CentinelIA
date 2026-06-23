@@ -3,8 +3,11 @@ import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { FEATURE_PLAN_CONFIG, MINUTES_PLAN_CONFIG, minutesPlanFromPriceId, nextResetDate } from '@/lib/billing/plans';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
-import { sendEmail, paymentFailedHtml } from '@/lib/email/send';
+import { sendEmail, paymentFailedHtml, welcomeHtml } from '@/lib/email/send';
 import { pauseVapiAgent, resumeVapiAgent } from '@/lib/vapi/control';
+import { createVapiAssistant } from '@/lib/vapi/sync';
+import { provisionPhoneNumber } from '@/lib/vapi/provision';
+import type { VoiceAgent } from '@/types/agent';
 import type { Plan } from '@/types/agent';
 import type { MinutesPlan } from '@/lib/billing/plans';
 import type Stripe from 'stripe';
@@ -84,11 +87,63 @@ export async function POST(req: NextRequest) {
       // Re-associate Vapi assistant when reactivating
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('phone_number, vapi_agent_id')
+        .select('*')
         .eq('id', agentId)
         .single();
       if (agent?.phone_number && agent?.vapi_agent_id) {
         await resumeVapiAgent(agent.phone_number, agent.vapi_agent_id);
+      }
+
+      // Onboarding flow: auto-create Vapi assistant + provision phone + send welcome email
+      if (session.metadata?.source === 'onboarding' && agent) {
+        const fullAgent = agent as VoiceAgent;
+        const planLabels: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
+        const appUrl    = process.env.NEXT_PUBLIC_APP_URL!;
+        const adminWa   = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP ?? process.env.SUPPORT_WHATSAPP ?? '';
+
+        // 1. Create Vapi assistant
+        let vapiId = fullAgent.vapi_agent_id ?? null;
+        if (!vapiId) {
+          vapiId = await createVapiAssistant(fullAgent);
+          if (vapiId) {
+            await supabase.from('voice_agents').update({ vapi_agent_id: vapiId }).eq('id', agentId);
+          }
+        }
+
+        // 2. Buy Twilio number + import to Vapi + assign assistant
+        const areaCode = session.metadata?.area_code || undefined;
+        let phoneNumber: string | null = null;
+        if (vapiId) {
+          phoneNumber = await provisionPhoneNumber(vapiId, areaCode);
+          if (phoneNumber) {
+            await supabase.from('voice_agents').update({ phone_number: phoneNumber }).eq('id', agentId);
+          }
+        }
+
+        const portalToken = (agent as any).portal_token as string | null;
+
+        // 3. Send welcome email
+        if (agent.client_email && portalToken) {
+          await sendEmail({
+            to:      agent.client_email,
+            subject: '¡Bienvenido a CentinelIA! Tu agente de voz está listo',
+            html:    welcomeHtml({
+              businessName: agent.business_name,
+              setupUrl:     `${appUrl}/portal/${portalToken}/setup`,
+            }),
+          }).catch(console.error);
+        }
+
+        // 4. Notify admin
+        if (adminWa) {
+          const phoneInfo = phoneNumber
+            ? `📞 Número asignado: *${phoneNumber}*`
+            : `⚠️ Pendiente: asignar número de teléfono manualmente`;
+          await sendWhatsApp(
+            adminWa,
+            `🎉 *Nuevo cliente — CentinelIA*\n\nNegocio: *${agent.business_name}*\nPlan: ${planLabels[featurePlan ?? ''] ?? featurePlan}\nEmail: ${agent.client_email}\nWA: ${(agent as any).transfer_whatsapp ?? '—'}\n${phoneInfo}`
+          ).catch(console.error);
+        }
       }
       break;
     }

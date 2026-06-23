@@ -3,6 +3,37 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { createVapiAssistant, updateVapiAssistant, assignAssistantToPhone } from '@/lib/vapi/sync';
 import type { VoiceAgent } from '@/types/agent';
 
+import { scrapeWebsite } from '@/lib/scrape/website';
+
+// Shared resync helper — updates website_knowledge and syncs Vapi
+export async function resyncWebsite(agentId: string): Promise<{ ok: boolean; chars?: number; error?: string }> {
+  const supabase = createAdminClient();
+
+  const { data: agent } = await supabase
+    .from('voice_agents')
+    .select('id, vapi_agent_id, business_website')
+    .eq('id', agentId)
+    .single();
+
+  if (!agent?.business_website) return { ok: false, error: 'No hay URL configurada' };
+
+  const scraped = await scrapeWebsite(agent.business_website);
+  if (!scraped) return { ok: false, error: 'No se pudo acceder al sitio' };
+
+  await supabase
+    .from('voice_agents')
+    .update({ website_knowledge: scraped })
+    .eq('id', agentId);
+
+  // Re-fetch full agent to rebuild system prompt with new website_knowledge
+  const { data: updated } = await supabase.from('voice_agents').select('*').eq('id', agentId).single();
+  if (updated?.vapi_agent_id) {
+    await updateVapiAssistant(updated.vapi_agent_id, updated as VoiceAgent);
+  }
+
+  return { ok: true, chars: scraped.length };
+}
+
 interface Params {
   params: Promise<{ id: string }>;
 }

@@ -133,13 +133,24 @@ Usa esta información para responder preguntas sobre productos, precios, disponi
 Si algo no está en esta lista, dilo honestamente y ofrece tomar sus datos para que el equipo les contacte.`);
   }
 
+  // ── Website knowledge ──────────────────────────────────────────────────────
+  if (agent.website_knowledge?.trim()) {
+    const siteLabel = agent.business_website ? `(${agent.business_website})` : '';
+    blocks.push(`INFORMACIÓN ADICIONAL DEL SITIO WEB ${siteLabel}:
+${agent.website_knowledge.trim()}
+
+Usa esta información como referencia complementaria. Si hay algún conflicto con la base de conocimiento anterior, la base de conocimiento tiene prioridad.`);
+  }
+
   // ── Closing rules ──────────────────────────────────────────────────────────
   blocks.push(`REGLAS GENERALES:
 - Nunca menciones que eres una IA a menos que te pregunten directamente.
 - Si te preguntan directamente si eres IA, sé honesto: "Soy ${agentName}, un asistente de voz automatizado de ${agent.business_name}."
 - Nunca des información inventada. Si no sabes algo, di que verificarán y te contactarán.
 - Despídete siempre de forma cordial al terminar la llamada.
-- Llamadas abusivas o inapropiadas: termina la llamada con un aviso cortés.`);
+- Llamadas abusivas o inapropiadas: termina la llamada con un aviso cortés.
+- SOLO HABLA — Nunca escribas descripciones de acciones físicas, gestos o emociones entre asteriscos, corchetes o paréntesis (por ejemplo: *agita la mano*, [sonríe], (saluda)). Esto es una llamada de voz: solo di en voz alta lo que el cliente debe escuchar.
+- PRECIOS EN PALABRAS — Cuando menciones precios o cantidades de dinero, exprésalos siempre en palabras habladas. Di "quince mil pesos" en lugar de "$15,000 MXN". Di "mil novecientos noventa pesos al mes" en lugar de "$1,990/mes". Nunca uses el símbolo $, comas numéricas, siglas de moneda (MXN, USD) ni barras diagonales al hablar.`);
 
   return blocks.join('\n\n');
 }

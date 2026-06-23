@@ -15,6 +15,7 @@ import BusinessHoursEditor from '../BusinessHoursEditor';
 import KnowledgeBaseEditor from '../KnowledgeBaseEditor';
 import WebsiteSyncButton   from '../WebsiteSyncButton';
 import PortalVoiceSelector from '../PortalVoiceSelector';
+import SupportChat         from '../SupportChat';
 
 const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
 const PLAN_COLORS: Record<string, string> = { basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7' };
@@ -44,7 +45,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
   const planLabel  = PLAN_LABELS[agent.plan] ?? agent.plan;
 
   return (
-    <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="light">
+    <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="dark">
       <div className="min-h-screen" style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}>
 
         {/* Header */}
@@ -139,6 +140,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
           </div>
         </div>
 
+        <SupportChat />
       </div>
     </ThemeProvider>
   );

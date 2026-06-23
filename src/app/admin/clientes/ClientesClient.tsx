@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { Search, ChevronDown, ExternalLink, Users, Settings, KeyRound, Eye, EyeOff, Check, X } from 'lucide-react';
+import { Search, ChevronDown, ExternalLink, Users, Settings, KeyRound, Eye, EyeOff, Check, X, Plus } from 'lucide-react';
 import { PLAN_LABELS } from '@/types/agent';
 import type { Plan } from '@/types/agent';
 
@@ -339,6 +339,17 @@ export default function ClientesClient({ clients }: { clients: ClientGroup[] }) 
                       </div>
                     );
                   })}
+
+                  {/* Add new business for this client */}
+                  <div className="px-5 py-3 flex justify-end" style={{ borderTop: '1px solid var(--c-divider)' }}>
+                    <Link
+                      href={`/admin/agentes/nuevo?client_name=${encodeURIComponent(client.client_name)}&client_email=${encodeURIComponent(client.client_email ?? '')}&portal_email=${encodeURIComponent(client.portal_email ?? '')}`}
+                      className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+                      style={{ background: 'rgba(108,59,255,0.08)', color: '#9B6DFF', border: '1px solid rgba(108,59,255,0.2)' }}
+                    >
+                      <Plus size={11} /> Agregar empresa
+                    </Link>
+                  </div>
                 </div>
               )}
             </div>

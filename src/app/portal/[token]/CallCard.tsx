@@ -30,67 +30,73 @@ export default function CallCard({ call }: { call: Call }) {
   const hasDetails = !!(call.transcript || call.recording_url);
 
   return (
-    <div className="rounded-xl overflow-hidden"
+    <div className="rounded-xl overflow-hidden flex"
       style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
-      {/* Row */}
-      <div className="px-4 py-3">
-        <div className="flex items-center justify-between gap-3 flex-wrap">
-          <div className="flex items-center gap-2 min-w-0">
-            <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-              {call.caller_number || 'Número desconocido'}
-            </span>
-            <span className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
-              style={{ background: outcome.bg, color: outcome.color }}>
-              {outcome.label}
-            </span>
+      {/* Left accent stripe */}
+      <div style={{ width: 3, background: outcome.color, flexShrink: 0, opacity: 0.65 }} />
+
+      {/* Content column */}
+      <div className="flex-1 min-w-0">
+        {/* Row */}
+        <div className="px-4 py-3">
+          <div className="flex items-center justify-between gap-3 flex-wrap">
+            <div className="flex items-center gap-2 min-w-0">
+              <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                {call.caller_number || 'Número desconocido'}
+              </span>
+              <span className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
+                style={{ background: outcome.bg, color: outcome.color }}>
+                {outcome.label}
+              </span>
+            </div>
+            <div className="flex items-center gap-2 flex-shrink-0">
+              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                {Math.ceil(call.duration_seconds / 60)} min
+              </span>
+              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                {new Date(call.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+              </span>
+              {hasDetails && (
+                <button onClick={() => setOpen(v => !v)}
+                  className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg transition-colors"
+                  style={{ background: 'var(--c-surface)', color: 'var(--c-text-3)', border: '1px solid var(--c-border)' }}>
+                  <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
+                  {open ? 'Cerrar' : 'Ver más'}
+                </button>
+              )}
+            </div>
           </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-              {Math.ceil(call.duration_seconds / 60)} min
-            </span>
-            <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-              {new Date(call.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
-            </span>
-            {hasDetails && (
-              <button onClick={() => setOpen(v => !v)}
-                className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg transition-colors"
-                style={{ background: 'var(--c-surface)', color: 'var(--c-text-3)', border: '1px solid var(--c-border)' }}>
-                <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                {open ? 'Cerrar' : 'Ver más'}
-              </button>
+          {call.summary && (
+            <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--c-text-2)' }}>{call.summary}</p>
+          )}
+        </div>
+
+        {/* Expanded details */}
+        {open && hasDetails && (
+          <div className="px-4 pb-4 flex flex-col gap-3" style={{ borderTop: '1px solid var(--c-border)' }}>
+            {call.recording_url && (
+              <div className="pt-3">
+                <div className="flex items-center gap-1.5 mb-2">
+                  <Play size={11} style={{ color: 'var(--c-text-3)' }} />
+                  <span className="text-xs font-medium" style={{ color: 'var(--c-text-3)' }}>Grabación</span>
+                </div>
+                <audio controls src={call.recording_url} className="w-full h-10"
+                  style={{ accentColor: '#6C3BFF' }} />
+              </div>
+            )}
+
+            {call.transcript && (
+              <div>
+                <div className="text-xs font-medium mb-2" style={{ color: 'var(--c-text-3)' }}>Transcripción</div>
+                <div className="max-h-48 overflow-y-auto rounded-lg p-3 text-xs leading-relaxed whitespace-pre-wrap"
+                  style={{ background: 'var(--c-surface)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
+                  {call.transcript}
+                </div>
+              </div>
             )}
           </div>
-        </div>
-        {call.summary && (
-          <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--c-text-2)' }}>{call.summary}</p>
         )}
       </div>
-
-      {/* Expanded details */}
-      {open && hasDetails && (
-        <div className="px-4 pb-4 flex flex-col gap-3" style={{ borderTop: '1px solid var(--c-border)' }}>
-          {call.recording_url && (
-            <div className="pt-3">
-              <div className="flex items-center gap-1.5 mb-2">
-                <Play size={11} style={{ color: 'var(--c-text-3)' }} />
-                <span className="text-xs font-medium" style={{ color: 'var(--c-text-3)' }}>Grabación</span>
-              </div>
-              <audio controls src={call.recording_url} className="w-full h-10"
-                style={{ accentColor: '#6C3BFF' }} />
-            </div>
-          )}
-
-          {call.transcript && (
-            <div>
-              <div className="text-xs font-medium mb-2" style={{ color: 'var(--c-text-3)' }}>Transcripción</div>
-              <div className="max-h-48 overflow-y-auto rounded-lg p-3 text-xs leading-relaxed whitespace-pre-wrap"
-                style={{ background: 'var(--c-surface)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
-                {call.transcript}
-              </div>
-            </div>
-          )}
-        </div>
-      )}
     </div>
   );
 }

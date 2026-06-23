@@ -62,6 +62,8 @@ export interface VoiceAgent {
   calendar_url?: string;          // Calendly / Google Cal link para citas
   crm_webhook?: string;           // webhook externo del sistema del cliente
   knowledge_base?: string;        // catálogo, precios y FAQs del negocio
+  business_website?: string;      // URL del sitio web del negocio
+  website_knowledge?: string;     // contenido extraído del sitio web (servidor lo llena)
   agent_name?: string;            // nombre propio del agente (solo Pro, default: CentinelIA)
   giro_template?: string;         // template de industria: restaurante, consultorio, estetica, agencia, retail, general
   portal_token?: string;          // UUID único para el portal del cliente

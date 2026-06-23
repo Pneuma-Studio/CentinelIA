@@ -27,6 +27,7 @@ import CallCard                from './CallCard';
 import DownloadCallsCSV        from './DownloadCallsCSV';
 import ContractSection         from './ContractSection';
 import CollapsibleSection      from './CollapsibleSection';
+import SupportChat             from './SupportChat';
 
 type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato';
 
@@ -148,7 +149,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   ];
 
   return (
-    <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="light">
+    <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="dark">
       <div className="min-h-screen" style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}>
 
         {/* Header */}
@@ -253,6 +254,29 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {/* ── AGENTES ──────────────────────────────────────────────────── */}
           {tab === 'agentes' && (
             <div className="flex flex-col gap-5">
+              {/* Add agent CTA */}
+              <Link
+                href="/registro"
+                className="flex items-center justify-between px-5 py-4 rounded-xl transition-all group"
+                style={{
+                  background: 'rgba(108,59,255,0.06)',
+                  border:     '1px dashed rgba(108,59,255,0.35)',
+                }}>
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0"
+                    style={{ background: 'rgba(108,59,255,0.15)', border: '1px solid rgba(108,59,255,0.3)' }}>
+                    <span style={{ fontSize: 16 }}>+</span>
+                  </div>
+                  <div>
+                    <p className="text-sm font-semibold" style={{ color: '#9B6DFF' }}>Agregar otro agente</p>
+                    <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>
+                      Usa el mismo correo para que aparezca aquí automáticamente
+                    </p>
+                  </div>
+                </div>
+                <ChevronRight size={16} style={{ color: '#6C3BFF', flexShrink: 0 }} />
+              </Link>
+
               {businessGroups.length === 0 && (
                 <p className="text-sm text-center py-12" style={{ color: 'var(--c-text-3)' }}>Sin agentes asociados</p>
               )}
@@ -301,8 +325,8 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                           background: 'var(--c-surface-2)',
                           borderTop: i > 0 ? '1px solid var(--c-divider)' : undefined,
                         }}>
-                        <div className="w-2 h-2 rounded-full flex-shrink-0"
-                          style={{ background: a.active ? '#22c55e' : '#ef4444' }} />
+                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${a.active && !isClientPaused && !isBillingPaused ? 'animate-pulse' : ''}`}
+                          style={{ background: a.active && !isClientPaused && !isBillingPaused ? '#22c55e' : '#ef4444' }} />
 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-2 flex-wrap">
@@ -362,11 +386,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
               {/* KPI cards */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <KpiCard icon={<PhoneCall size={16} color="#6C3BFF" />}  value={String(calls.length)}   label="Llamadas" sub={`prom. ${avgDuration} min`} valueColor="#6C3BFF" />
-                <KpiCard icon={<span style={{ fontSize: 16 }}>⏱</span>}  value={`${totalHours}h`}       label="Tiempo atendido"  valueColor="var(--c-text)" />
-                {showLeads  && <KpiCard icon={<Users size={16} color="#22c55e" />}       value={String(leads.length)}   label="Leads"    sub={`${calls.length > 0 ? Math.round((leads.length / calls.length) * 100) : 0}% conv.`} valueColor="#22c55e" />}
-                {showOrders && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" />}
-                {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" />}
+                <KpiCard icon={<PhoneCall size={16} color="#6C3BFF" />}  value={String(calls.length)}   label="Llamadas" sub={`prom. ${avgDuration} min`} valueColor="#6C3BFF" accentColor="#6C3BFF" />
+                <KpiCard icon={<span style={{ fontSize: 16 }}>⏱</span>}  value={`${totalHours}h`}       label="Tiempo atendido"  valueColor="var(--c-text)" accentColor="#6b7280" />
+                {showLeads  && <KpiCard icon={<Users size={16} color="#22c55e" />}       value={String(leads.length)}   label="Leads"    sub={`${calls.length > 0 ? Math.round((leads.length / calls.length) * 100) : 0}% conv.`} valueColor="#22c55e" accentColor="#22c55e" />}
+                {showOrders && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" accentColor="#f59e0b" />}
+                {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" accentColor="#3b82f6" />}
               </div>
 
               {/* Period filter */}
@@ -521,20 +545,28 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             </div>
           </div>
         </div>
+
+        <SupportChat />
       </div>
     </ThemeProvider>
   );
 }
 
-function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)' }: {
-  icon: React.ReactNode; value: string; label: string; sub?: string; valueColor?: string;
+function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)', accentColor }: {
+  icon: React.ReactNode; value: string; label: string; sub?: string; valueColor?: string; accentColor?: string;
 }) {
+  const accent = accentColor ?? valueColor;
   return (
-    <div className="rounded-xl p-4" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-      <div className="p-1.5 rounded-lg w-fit mb-2" style={{ background: 'var(--c-surface-2)' }}>{icon}</div>
-      <div className="text-2xl font-bold" style={{ color: valueColor }}>{value}</div>
-      <div className="text-xs font-medium mt-0.5" style={{ color: 'var(--c-text)' }}>{label}</div>
-      {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
+    <div className="rounded-xl overflow-hidden"
+      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+      <div style={{ height: 3, background: `linear-gradient(90deg, ${accent}, ${accent}66)` }} />
+      <div className="p-4">
+        <div className="p-1.5 rounded-lg w-fit mb-2"
+          style={{ background: `${accent}15`, border: `1px solid ${accent}25` }}>{icon}</div>
+        <div className="text-2xl font-bold tabular-nums" style={{ color: valueColor }}>{value}</div>
+        <div className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-text-2)' }}>{label}</div>
+        {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
+      </div>
     </div>
   );
 }

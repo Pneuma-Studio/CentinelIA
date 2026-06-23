@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { PLAN_FEATURES, PLAN_LABELS, PLAN_MINUTES, FEATURE_LABELS } from '@/types/agent';
 import type { Plan, AgentFeatures } from '@/types/agent';
 import { AGENT_TEMPLATES } from '@/lib/voice/templates';
@@ -13,7 +13,14 @@ const PLAN_COLORS: Record<Plan, string> = {
 };
 
 export default function NuevoAgentePage() {
-  const router = useRouter();
+  const router       = useRouter();
+  const searchParams = useSearchParams();
+
+  const prefillClientName  = searchParams.get('client_name')  ?? '';
+  const prefillClientEmail = searchParams.get('client_email') ?? '';
+  const prefillPortalEmail = searchParams.get('portal_email') ?? '';
+  const isExistingClient   = !!prefillPortalEmail;
+
   const [saving, setSaving] = useState(false);
   const [template, setTemplate] = useState<GiroTemplate | null>(null);
   const [plan, setPlan] = useState<Plan>('basico');
@@ -62,6 +69,7 @@ export default function NuevoAgentePage() {
     const body = {
       client_name:            fd.get('client_name'),
       client_email:           fd.get('client_email') || null,
+      portal_email:           prefillPortalEmail || null,
       business_name:          fd.get('business_name'),
       business_description:   fd.get('business_description'),
       business_address:       fd.get('business_address'),
@@ -69,6 +77,7 @@ export default function NuevoAgentePage() {
       transfer_whatsapp:      fd.get('transfer_whatsapp'),
       transfer_number:        fd.get('transfer_number'),
       calendar_url:           fd.get('calendar_url'),
+      business_website:       fd.get('business_website') || null,
       timezone:               fd.get('timezone') || 'America/Monterrey',
       phone_number:           fd.get('phone_number'),
       knowledge_base:         fd.get('knowledge_base'),
@@ -99,9 +108,17 @@ export default function NuevoAgentePage() {
     return (
       <div className="p-4 md:p-8 max-w-3xl">
         <h1 className="text-2xl font-bold mb-2" style={{ color: 'var(--c-text)' }}>Nuevo agente</h1>
-        <p className="text-sm mb-8" style={{ color: 'var(--c-text-2)' }}>
-          Elige el tipo de negocio para pre-configurar las funcionalidades correctas.
-        </p>
+        {isExistingClient ? (
+          <div className="mb-6 px-4 py-3 rounded-xl text-sm flex items-center gap-2"
+            style={{ background: 'rgba(108,59,255,0.08)', border: '1px solid rgba(108,59,255,0.2)', color: '#9B6DFF' }}>
+            Nueva empresa para <strong style={{ color: 'var(--c-text)' }}>{prefillClientName}</strong>
+            <span style={{ color: 'var(--c-text-3)', fontWeight: 400, marginLeft: 4 }}>· acceso portal heredado automáticamente</span>
+          </div>
+        ) : (
+          <p className="text-sm mb-8" style={{ color: 'var(--c-text-2)' }}>
+            Elige el tipo de negocio para pre-configurar las funcionalidades correctas.
+          </p>
+        )}
         <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
           {AGENT_TEMPLATES.map(tpl => (
             <button
@@ -187,8 +204,15 @@ export default function NuevoAgentePage() {
           </Section>
 
           <Section title="Datos del cliente">
-            <Field label="Nombre del cliente (interno)" name="client_name" required />
-            <Field label="Email del cliente (alertas)" name="client_email" placeholder="cliente@email.com" />
+            {isExistingClient && (
+              <div className="px-3 py-2 rounded-lg text-xs" style={{ background: 'rgba(108,59,255,0.06)', border: '1px solid rgba(108,59,255,0.15)', color: 'var(--c-text-3)' }}>
+                Cliente existente · campos bloqueados
+              </div>
+            )}
+            <Field label="Nombre del cliente (interno)" name="client_name" required
+              defaultValue={prefillClientName} readOnly={isExistingClient} />
+            <Field label="Email del cliente (alertas)" name="client_email" placeholder="cliente@email.com"
+              defaultValue={prefillClientEmail} readOnly={isExistingClient} />
             <Field label="WhatsApp del dueño (notificaciones)" name="transfer_whatsapp" placeholder="+52 81 1234 5678" />
           </Section>
 
@@ -202,6 +226,7 @@ export default function NuevoAgentePage() {
             {selectedTpl?.features.appointment_booking && (
               <Field label={`Link de calendario para ${selectedTpl.appointmentLabel}s`} name="calendar_url" placeholder="https://calendly.com/..." />
             )}
+            <Field label="Sitio web del negocio" name="business_website" placeholder="https://negocio.com" />
             <Field label="Zona horaria" name="timezone" placeholder="America/Monterrey" />
             <Field label="Número Vapi (recibe las llamadas)" name="phone_number" placeholder="+19284158163" />
           </Section>
@@ -285,12 +310,13 @@ function Section({ title, children }: { title: string; children: React.ReactNode
   );
 }
 
-function Field({ label, name, required, placeholder, textarea, rows, disabled }: {
+function Field({ label, name, required, placeholder, textarea, rows, disabled, defaultValue, readOnly }: {
   label: string; name: string; required?: boolean; placeholder?: string;
-  textarea?: boolean; rows?: number; disabled?: boolean;
+  textarea?: boolean; rows?: number; disabled?: boolean; defaultValue?: string; readOnly?: boolean;
 }) {
   const base = {
-    background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)',
+    background: readOnly ? 'var(--c-surface-2)' : 'var(--c-input-bg)',
+    border: '1px solid var(--c-input-border)',
     borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)',
     fontSize: 14, width: '100%', outline: 'none',
   };
@@ -301,8 +327,10 @@ function Field({ label, name, required, placeholder, textarea, rows, disabled }:
       </label>
       {textarea
         ? <textarea name={name} rows={rows ?? 3} placeholder={placeholder} disabled={disabled}
+            defaultValue={defaultValue}
             style={{ ...base, resize: 'vertical', opacity: disabled ? 0.4 : 1 }} />
         : <input name={name} required={required} placeholder={placeholder} disabled={disabled}
+            defaultValue={defaultValue} readOnly={readOnly}
             style={{ ...base, opacity: disabled ? 0.4 : 1 }} />
       }
     </div>

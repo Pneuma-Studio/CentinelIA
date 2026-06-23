@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { PLAN_MINUTES } from '@/types/agent';
 import { createVapiAssistant, assignAssistantToPhone } from '@/lib/vapi/sync';
+import { scrapeWebsite } from '@/lib/scrape/website';
 import type { Plan, VoiceAgent } from '@/types/agent';
 
 export async function GET() {
@@ -21,6 +22,7 @@ export async function POST(req: NextRequest) {
     client_name, client_email, business_name, business_description,
     business_address, business_phone_display, transfer_whatsapp,
     calendar_url, timezone, phone_number, transfer_number, knowledge_base, agent_name, plan, features,
+    portal_email: rawPortalEmail, business_website: rawWebsite,
   } = body;
 
   if (!client_name?.trim() || !business_name?.trim()) {
@@ -28,6 +30,24 @@ export async function POST(req: NextRequest) {
   }
 
   const supabase = createAdminClient();
+
+  // If linking to an existing client account, inherit their portal credentials
+  let inheritedPortalEmail: string | null = null;
+  let inheritedPasswordHash: string | null = null;
+  if (rawPortalEmail) {
+    const { data: existing } = await supabase
+      .from('voice_agents')
+      .select('portal_email, portal_password_hash')
+      .eq('portal_email', rawPortalEmail)
+      .limit(1)
+      .single();
+    inheritedPortalEmail  = existing?.portal_email ?? rawPortalEmail;
+    inheritedPasswordHash = existing?.portal_password_hash ?? null;
+  }
+
+  // Scrape website before insert so the Vapi assistant has it from the start
+  const businessWebsite = rawWebsite?.trim() ?? null;
+  const websiteKnowledge = businessWebsite ? await scrapeWebsite(businessWebsite) : null;
 
   const resetDate = new Date();
   resetDate.setMonth(resetDate.getMonth() + 1);
@@ -39,6 +59,10 @@ export async function POST(req: NextRequest) {
     .insert({
       client_name:            client_name.trim(),
       client_email:           client_email?.trim() ?? null,
+      portal_email:           inheritedPortalEmail,
+      portal_password_hash:   inheritedPasswordHash,
+      business_website:       businessWebsite,
+      website_knowledge:      websiteKnowledge,
       business_name:          business_name.trim(),
       business_description:   business_description?.trim() ?? '',
       business_address:       business_address?.trim() ?? null,

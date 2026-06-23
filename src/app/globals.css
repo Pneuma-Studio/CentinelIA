@@ -70,3 +70,13 @@ body {
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: rgba(108,59,255,0.3); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: rgba(108,59,255,0.5); }
+
+/* ── Hero background responsive crop ───────────────────────────────────── */
+.hero-bg-img {
+  object-position: 65% 40% !important; /* mobile: center on meerkats with phones */
+}
+@media (min-width: 640px) {
+  .hero-bg-img {
+    object-position: center 30% !important; /* desktop: wider shot, upper portion */
+  }
+}

@@ -3,7 +3,8 @@
 import { useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { ArrowLeft, ExternalLink } from 'lucide-react';
+import { ArrowLeft, ExternalLink, RefreshCw, Check } from 'lucide-react';
+import VoiceSelector from '@/components/VoiceSelector';
 import { PLAN_FEATURES, PLAN_LABELS, PLAN_MINUTES, FEATURE_LABELS } from '@/types/agent';
 import type { Plan, AgentFeatures, VoiceAgent, BusinessHours, DaySchedule } from '@/types/agent';
 
@@ -46,6 +47,9 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
   const searchParams = useSearchParams();
   const initialTab   = (searchParams.get('tab') as Tab | null) ?? 'info';
   const [saving, setSaving]               = useState(false);
+  const [resyncing, setResyncing]         = useState(false);
+  const [resyncOk, setResyncOk]           = useState(false);
+  const [voiceId, setVoiceId]             = useState<string | null>((agent as any).elevenlabs_voice_id ?? null);
   const [tab, setTab]                     = useState<Tab>(initialTab);
   const [plan, setPlan]                   = useState<Plan>(agent.plan);
   const [features, setFeatures]           = useState<AgentFeatures>(agent.features);
@@ -59,6 +63,15 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
 
   const toggleFeature = (key: keyof AgentFeatures) => {
     setFeatures(prev => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const handleResyncWebsite = async () => {
+    setResyncing(true);
+    setResyncOk(false);
+    const res = await fetch(`/api/admin/agentes/${agent.id}/resync-website`, { method: 'POST' });
+    setResyncing(false);
+    if (res.ok) { setResyncOk(true); setTimeout(() => setResyncOk(false), 4000); }
+    else { const { error } = await res.json().catch(() => ({ error: 'Error' })); alert(error ?? 'No se pudo sincronizar'); }
   };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -75,10 +88,12 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
       transfer_whatsapp:      fd.get('transfer_whatsapp'),
       transfer_number:        fd.get('transfer_number'),
       calendar_url:           fd.get('calendar_url'),
+      business_website:       fd.get('business_website') || null,
       timezone:               fd.get('timezone') || 'America/Monterrey',
       phone_number:           fd.get('phone_number'),
       knowledge_base:         fd.get('knowledge_base'),
       agent_name:             plan === 'pro' ? fd.get('agent_name') : null,
+      elevenlabs_voice_id:    voiceId ?? null,
       plan,
       features,
       business_hours:  hoursEnabled ? businessHours : null,
@@ -157,6 +172,25 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
             <Field label="Teléfono de contacto (que menciona el agente)" name="business_phone_display" defaultValue={agent.business_phone_display} />
             <Field label="Número de transferencia" name="transfer_number" defaultValue={agent.transfer_number ?? ''} />
             <Field label="Link de calendario" name="calendar_url" defaultValue={agent.calendar_url ?? ''} />
+            <div>
+              <label className="block text-xs mb-1.5" style={{ color: 'var(--c-text-2)' }}>Sitio web del negocio</label>
+              <div className="flex gap-2">
+                <input name="business_website" placeholder="https://negocio.com" defaultValue={(agent as any).business_website ?? ''}
+                  className="flex-1"
+                  style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-input-border)', borderRadius: 8, padding: '8px 12px', color: 'var(--c-text)', fontSize: 14, outline: 'none' }} />
+                <button type="button" onClick={handleResyncWebsite} disabled={resyncing}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-medium whitespace-nowrap transition-opacity hover:opacity-80"
+                  style={{
+                    background: resyncOk ? 'rgba(34,197,94,0.1)' : 'rgba(108,59,255,0.08)',
+                    color: resyncOk ? '#16a34a' : '#9B6DFF',
+                    border: `1px solid ${resyncOk ? 'rgba(34,197,94,0.25)' : 'rgba(108,59,255,0.2)'}`,
+                    opacity: resyncing ? 0.5 : 1,
+                  }}>
+                  {resyncing ? <RefreshCw size={11} className="animate-spin" /> : resyncOk ? <Check size={11} /> : <RefreshCw size={11} />}
+                  {resyncing ? 'Sincronizando…' : resyncOk ? 'Listo' : 'Sincronizar'}
+                </button>
+              </div>
+            </div>
             <Field label="Zona horaria" name="timezone" defaultValue={agent.timezone} />
             <Field label="Número Vapi" name="phone_number" defaultValue={agent.phone_number} />
           </Section>
@@ -174,6 +208,13 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
               placeholder="Ej: Sofía (solo Plan Pro)"
               defaultValue={agent.agent_name ?? ''}
               disabled={plan !== 'pro'} />
+          </Section>
+
+          <Section title="Voz del agente">
+            <p className="text-xs mb-1" style={{ color: 'var(--c-text-2)' }}>
+              Elige la voz de ElevenLabs. Usa ▶ para escuchar una muestra antes de seleccionar.
+            </p>
+            <VoiceSelector selected={voiceId} onChange={setVoiceId} />
           </Section>
 
           <Section title="Base de conocimiento">
