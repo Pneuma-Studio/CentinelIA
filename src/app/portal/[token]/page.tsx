@@ -421,7 +421,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 {calls.length === 0
                   ? <p className="text-sm text-center py-8" style={{ color: 'var(--c-text-3)' }}>Sin llamadas en este período</p>
                   : <div className="flex flex-col gap-2">
-                      {calls.slice(0, 30).map(call => <CallCard key={call.id} call={call as any} />)}
+                      {calls.slice(0, 30).map(call => <CallCard key={call.id} call={call as any} isPro={agent.plan === 'pro'} />)}
                       {calls.length > 30 && <p className="text-xs text-center pt-1" style={{ color: 'var(--c-text-4)' }}>Mostrando 30 de {calls.length}</p>}
                     </div>
                 }
