@@ -431,24 +431,32 @@ function RegistroInner() {
                     )}
 
                     <div className="p-5">
-                      {/* Row 1: Radio + Name + Badge */}
+                      {/* Row 1: Radio + Name + Recommended | Ahorras % */}
                       <div className="flex items-center gap-3 mb-4">
-                        <div
-                          className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
-                          style={{
-                            borderColor: selected ? p.color : 'rgba(255,255,255,0.2)',
-                            background:  selected ? p.color : 'transparent',
-                          }}
-                        >
-                          {selected && <div className="w-2 h-2 rounded-full bg-white" />}
-                        </div>
-                        <span className="text-base font-bold text-white">{p.label}</span>
-                        {p.recommended && (
-                          <span
-                            className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                            style={{ background: p.color, color: '#fff' }}
+                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                          <div
+                            className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                            style={{
+                              borderColor: selected ? p.color : 'rgba(255,255,255,0.2)',
+                              background:  selected ? p.color : 'transparent',
+                            }}
                           >
-                            Recomendado
+                            {selected && <div className="w-2 h-2 rounded-full bg-white" />}
+                          </div>
+                          <span className="text-base font-bold text-white">{p.label}</span>
+                          {p.recommended && (
+                            <span
+                              className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                              style={{ background: p.color, color: '#fff' }}
+                            >
+                              Recomendado
+                            </span>
+                          )}
+                        </div>
+                        {!p.custom && (
+                          <span className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
+                            style={{ background: 'rgba(34,197,94,0.13)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
+                            Ahorras {Math.round(((p.origMonthly - p.monthly) / p.origMonthly) * 100)}%
                           </span>
                         )}
                       </div>
@@ -462,8 +470,8 @@ function RegistroInner() {
                           </p>
                         </div>
                       ) : (
-                        <div className="ml-8 mb-3">
-                          <div className="flex items-center gap-2 flex-wrap">
+                        <div className="ml-8 mb-4">
+                          <div className="flex items-baseline gap-2 flex-wrap">
                             <span className="text-4xl font-extrabold tabular-nums" style={{ color: p.color }}>
                               {priceFmt(p.monthly)}
                             </span>
@@ -471,29 +479,18 @@ function RegistroInner() {
                             <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
                               {priceFmt(p.origMonthly)}
                             </span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-2 flex-wrap">
                             <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
                               style={{ background: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}>
                               {p.minutes} min/mes
                             </span>
-                          </div>
-                          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
-                            <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                              style={{ background: 'rgba(34,197,94,0.13)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
-                              Ahorras {Math.round(((p.origMonthly - p.monthly) / p.origMonthly) * 100)}%
+                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                              + {priceFmt(p.price)}{' '}
+                              <span className="line-through" style={{ color: 'rgba(255,255,255,0.18)' }}>{priceFmt(p.origPrice)}</span>
+                              {' '}instalación única
                             </span>
-                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.28)' }}>precio de lanzamiento</span>
                           </div>
-                        </div>
-                      )}
-
-                      {/* Row 3: Setup fee */}
-                      {!p.custom && (
-                        <div className="ml-8 mb-4">
-                          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                            + {priceFmt(p.price)}{' '}
-                            <span className="line-through" style={{ color: 'rgba(255,255,255,0.18)' }}>{priceFmt(p.origPrice)}</span>
-                            {' '}instalación única
-                          </span>
                         </div>
                       )}
 
