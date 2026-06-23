@@ -73,7 +73,7 @@ body {
 
 /* ── Hero background responsive crop ───────────────────────────────────── */
 .hero-bg-img {
-  object-position: 65% 40% !important; /* mobile: center on meerkats with phones */
+  object-position: 82% 40% !important; /* mobile: center on meerkats with phones */
 }
 @media (min-width: 640px) {
   .hero-bg-img {

@@ -96,6 +96,96 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
   </body></html>`;
 }
 
+export function newLeadHtml(opts: {
+  businessName:  string;
+  callerNumber:  string;
+  nombre?:       string | null;
+  servicio?:     string | null;
+  whatsapp?:     string | null;
+  email?:        string | null;
+  summary?:      string | null;
+  outcome:       string;
+  portalUrl:     string;
+}) {
+  const outcomeLabels: Record<string, string> = {
+    lead_created:       '🎯 Nuevo lead',
+    appointment_booked: '📅 Cita agendada',
+    order_taken:        '🛒 Pedido tomado',
+    transferred:        '📞 Llamada transferida',
+    info_provided:      'ℹ️ Consulta atendida',
+    other:              '📱 Llamada completada',
+  };
+  const outcomeLabel = outcomeLabels[opts.outcome] ?? '📱 Llamada';
+
+  function row(label: string, value: string | null | undefined) {
+    if (!value?.trim()) return '';
+    return `<tr>
+      <td style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.38);font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:130px;vertical-align:top">${label}</td>
+      <td style="padding:9px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:#e2e8f0;font-size:14px;font-weight:500">${value}</td>
+    </tr>`;
+  }
+
+  const rows = [
+    row('Teléfono',    opts.callerNumber),
+    row('Nombre',      opts.nombre),
+    row('Interés',     opts.servicio),
+    row('WhatsApp',    opts.whatsapp && opts.whatsapp !== opts.callerNumber ? opts.whatsapp : null),
+    row('Email',       opts.email),
+  ].join('');
+
+  const summarySection = opts.summary
+    ? `<div style="background:rgba(108,59,255,0.08);border:1px solid rgba(108,59,255,0.2);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+        <p style="color:rgba(255,255,255,0.38);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 8px">Resumen de la llamada</p>
+        <p style="color:rgba(255,255,255,0.7);font-size:13px;line-height:1.65;margin:0">${opts.summary}</p>
+      </div>`
+    : '';
+
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="https://centinel-ia.vercel.app/logo.png" alt="Centinelia" height="38"
+        style="height:38px;width:auto;display:inline-block;border-radius:6px" />
+    </div>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(108,59,255,0.2);border:1px solid rgba(108,59,255,0.45);border-radius:20px;padding:5px 16px;color:#C4A8FF;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">
+        ${outcomeLabel}
+      </span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px;line-height:1.2">
+        ${opts.businessName}
+      </h1>
+      <p style="color:rgba(255,255,255,0.38);font-size:13px;margin:0">Tu agente de voz capturó nueva actividad</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 20px 0;margin-bottom:20px">
+      <table style="width:100%;border-collapse:collapse">${rows}</table>
+    </div>
+
+    ${summarySection}
+
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${opts.portalUrl}"
+        style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:12px;letter-spacing:0.01em">
+        Ver en mi portal →
+      </a>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
+      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
+        Centinelia · Pneuma Studio<br>
+        <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>`;
+}
+
 export function paymentFailedHtml(businessName: string) {
   return `<!DOCTYPE html><html><body style="font-family:sans-serif;background:#f9fafb;padding:24px">
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;border:1px solid #e5e7eb">

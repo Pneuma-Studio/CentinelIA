@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
-import { sendEmail, minutesAlertHtml } from '@/lib/email/send';
+import { sendEmail, minutesAlertHtml, newLeadHtml } from '@/lib/email/send';
 import { pauseVapiAgent } from '@/lib/vapi/control';
 
 export async function POST(req: NextRequest) {
@@ -105,6 +105,43 @@ export async function POST(req: NextRequest) {
         });
       }
 
+      // 2c. Lead email notification to business owner
+      const notifyOutcomes = ['lead_created', 'appointment_booked', 'order_taken', 'transferred'];
+      if (notifyOutcomes.includes(outcome)) {
+        // Fetch agent email + portal token (used in the email CTA)
+        const { data: agentForEmail } = await supabase
+          .from('voice_agents')
+          .select('client_email, business_name, portal_token')
+          .eq('id', resolvedAgentId)
+          .single();
+
+        if (agentForEmail?.client_email) {
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinel-ia.vercel.app';
+          const portalUrl = `${appUrl}/portal/${agentForEmail.portal_token}`;
+          const outcomeSubjects: Record<string, string> = {
+            lead_created:       '🎯 Nuevo lead capturado',
+            appointment_booked: '📅 Cita agendada',
+            order_taken:        '🛒 Nuevo pedido',
+            transferred:        '📞 Llamada transferida',
+          };
+          await sendEmail({
+            to:      agentForEmail.client_email,
+            subject: `${outcomeSubjects[outcome] ?? '📱 Llamada'} — ${agentForEmail.business_name}`,
+            html:    newLeadHtml({
+              businessName:  agentForEmail.business_name,
+              callerNumber,
+              nombre:        structured?.nombre   ?? null,
+              servicio:      structured?.servicio ?? structured?.pedido_items ?? null,
+              whatsapp:      structured?.whatsapp ?? null,
+              email:         structured?.email    ?? null,
+              summary,
+              outcome,
+              portalUrl,
+            }),
+          }).catch(console.error);
+        }
+      }
+
       // 3. Update minutes
       const minutes = Math.ceil(durationSeconds / 60) || 1;
       await supabase.rpc('increment_minutes_used', { agent_id: resolvedAgentId, minutes });
@@ -112,7 +149,7 @@ export async function POST(req: NextRequest) {
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, client_email, transfer_whatsapp, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
+        .select('business_name, client_email, transfer_whatsapp, portal_token, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
         .eq('id', resolvedAgentId)
         .single();
 
