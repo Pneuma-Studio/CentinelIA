@@ -96,6 +96,84 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
   </body></html>`;
 }
 
+export function weeklyReportHtml(opts: {
+  businessName: string;
+  portalUrl:    string;
+  period:       string; // e.g. "16 – 22 jun"
+  totalCalls:   number;
+  leads:        number;
+  appointments: number;
+  orders:       number;
+  minutesUsed:  number;
+  minutesTotal: number;
+  peakHour:     string | null; // e.g. "3pm"
+}) {
+  const pct = opts.minutesTotal > 0 ? Math.round((opts.minutesUsed / opts.minutesTotal) * 100) : 0;
+  const barColor = pct >= 80 ? '#ef4444' : pct >= 60 ? '#f59e0b' : '#6C3BFF';
+
+  function statRow(emoji: string, label: string, value: number, color: string) {
+    if (value === 0) return '';
+    return `<tr>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:rgba(255,255,255,0.38);font-size:12px;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;width:140px">${emoji} ${label}</td>
+      <td style="padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.06);color:${color};font-size:22px;font-weight:700;text-align:right">${value}</td>
+    </tr>`;
+  }
+
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="https://centinel-ia.vercel.app/logo.png" alt="Centinelia" height="38"
+        style="height:38px;width:auto;display:inline-block;border-radius:6px" />
+    </div>
+
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(108,59,255,0.2);border:1px solid rgba(108,59,255,0.45);border-radius:20px;padding:5px 16px;color:#C4A8FF;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">
+        📊 Reporte semanal
+      </span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">${opts.businessName}</h1>
+      <p style="color:rgba(255,255,255,0.38);font-size:13px;margin:0">${opts.period}</p>
+    </div>
+
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:8px 20px 0;margin-bottom:20px">
+      <table style="width:100%;border-collapse:collapse">
+        ${statRow('📞', 'Llamadas', opts.totalCalls, '#e2e8f0')}
+        ${statRow('🎯', 'Leads', opts.leads, '#9B6DFF')}
+        ${statRow('📅', 'Citas', opts.appointments, '#3b82f6')}
+        ${statRow('🛒', 'Pedidos', opts.orders, '#f59e0b')}
+      </table>
+    </div>
+
+    <div style="background:rgba(108,59,255,0.08);border:1px solid rgba(108,59,255,0.2);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.38);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 10px">Minutos del plan</p>
+      <div style="background:rgba(255,255,255,0.08);border-radius:6px;height:8px;overflow:hidden;margin-bottom:8px">
+        <div style="height:100%;width:${Math.min(pct, 100)}%;background:${barColor};border-radius:6px;transition:width 0.3s"></div>
+      </div>
+      <p style="color:rgba(255,255,255,0.6);font-size:13px;margin:0">${opts.minutesUsed} de ${opts.minutesTotal} min usados <span style="color:rgba(255,255,255,0.3)">(${pct}%)</span></p>
+      ${opts.peakHour ? `<p style="color:rgba(255,255,255,0.38);font-size:12px;margin:8px 0 0">⏰ Hora pico: <span style="color:rgba(255,255,255,0.6);font-weight:600">${opts.peakHour}</span></p>` : ''}
+    </div>
+
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="${opts.portalUrl}" style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 36px;border-radius:12px">
+        Ver portal completo →
+      </a>
+    </div>
+
+    <div style="text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
+      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
+        Centinelia · Pneuma Studio<br>
+        <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
+      </p>
+    </div>
+
+  </div>
+</body>
+</html>`;
+}
+
 export function newLeadHtml(opts: {
   businessName:  string;
   callerNumber:  string;

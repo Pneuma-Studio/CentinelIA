@@ -27,6 +27,8 @@ import CallCard                from './CallCard';
 import DownloadCallsCSV        from './DownloadCallsCSV';
 import ContractSection         from './ContractSection';
 import CollapsibleSection      from './CollapsibleSection';
+import PeakHoursChart          from './PeakHoursChart';
+import LiveNotifications       from './LiveNotifications';
 import SupportChat             from './SupportChat';
 
 type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato';
@@ -132,6 +134,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const pendingOrders  = orders.filter((o: any) => o.status === 'nuevo' || o.status === 'en_proceso').length;
   const confirmedAppts = appts.filter((a: any) => a.status === 'confirmada').length;
   const isFirstTime    = allCalls.length === 0;
+
+  const hourCounts: number[] = new Array(24).fill(0);
+  for (const c of calls) hourCounts[new Date((c as any).created_at).getHours()]++;
 
   const allTimeTotalMin = allCalls.reduce((s: number, c: any) => s + Math.ceil((c.duration_seconds ?? 0) / 60), 0);
   const firstCallDate   = allCalls.length > 0 ? new Date((allCalls[0] as any).created_at) : null;
@@ -393,6 +398,16 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" accentColor="#3b82f6" />}
               </div>
 
+              {/* Peak hours */}
+              {calls.length > 0 && (
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
+                    Horas pico
+                  </h2>
+                  <PeakHoursChart hourCounts={hourCounts} />
+                </div>
+              )}
+
               {/* Period filter */}
               <div className="flex items-center gap-2">
                 <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>Período:</span>
@@ -547,6 +562,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         </div>
 
         <SupportChat />
+        <LiveNotifications token={token} />
       </div>
     </ThemeProvider>
   );

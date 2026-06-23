@@ -1,0 +1,70 @@
+'use client';
+
+const HOUR_LABELS = [
+  '12a','1a','2a','3a','4a','5a','6a','7a',
+  '8a','9a','10a','11a','12p','1p','2p','3p',
+  '4p','5p','6p','7p','8p','9p','10p','11p',
+];
+
+interface Props {
+  hourCounts: number[];
+}
+
+export default function PeakHoursChart({ hourCounts }: Props) {
+  const max     = Math.max(...hourCounts, 1);
+  const total   = hourCounts.reduce((s, n) => s + n, 0);
+  const peakIdx = total > 0 ? hourCounts.indexOf(Math.max(...hourCounts)) : -1;
+
+  if (total === 0) {
+    return (
+      <p style={{ fontSize: 13, color: 'var(--c-text-3)', textAlign: 'center', padding: '16px 0', margin: 0 }}>
+        Sin datos suficientes
+      </p>
+    );
+  }
+
+  return (
+    <div>
+      <div style={{ display: 'flex', alignItems: 'flex-end', gap: 2, height: 56 }}>
+        {hourCounts.map((count, i) => {
+          const pct    = (count / max) * 100;
+          const isPeak = i === peakIdx && count > 0;
+          return (
+            <div
+              key={i}
+              title={`${HOUR_LABELS[i]}: ${count} llamada${count !== 1 ? 's' : ''}`}
+              style={{
+                flex:            1,
+                display:         'flex',
+                flexDirection:   'column',
+                justifyContent:  'flex-end',
+                height:          '100%',
+              }}
+            >
+              <div style={{
+                width:           '100%',
+                height:          `${Math.max(pct, count > 0 ? 6 : 2)}%`,
+                background:      isPeak ? '#6C3BFF' : count > 0 ? 'rgba(108,59,255,0.3)' : 'var(--c-border)',
+                borderRadius:    '3px 3px 0 0',
+              }} />
+            </div>
+          );
+        })}
+      </div>
+
+      <div style={{ display: 'flex', justifyContent: 'space-between', paddingTop: 4 }}>
+        {[0, 6, 12, 18, 23].map(h => (
+          <span key={h} style={{ fontSize: 10, color: 'var(--c-text-4)' }}>{HOUR_LABELS[h]}</span>
+        ))}
+      </div>
+
+      {peakIdx >= 0 && (
+        <p style={{ fontSize: 12, color: 'var(--c-text-3)', marginTop: 10, marginBottom: 0 }}>
+          Hora pico:{' '}
+          <span style={{ color: '#9B6DFF', fontWeight: 600 }}>{HOUR_LABELS[peakIdx]}</span>
+          <span style={{ color: 'var(--c-text-4)' }}> · {hourCounts[peakIdx]} llamada{hourCounts[peakIdx] !== 1 ? 's' : ''}</span>
+        </p>
+      )}
+    </div>
+  );
+}

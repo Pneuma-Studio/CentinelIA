@@ -44,7 +44,8 @@ export async function POST(req: NextRequest) {
       const durationSeconds = startedAt && endedAt ? Math.round((endedAt - startedAt) / 1000) : 0;
 
       const structured   = message.analysis?.structuredData ?? null;
-      const outcome      = detectOutcome(message, structured);
+      const rawOutcome   = detectOutcome(message, structured);
+      const outcome      = durationSeconds <= 5 ? 'missed' : rawOutcome;
       const transcript   = message.transcript ?? null;
       const summary      = message.analysis?.summary ?? null;
       const recordingUrl = call?.recordingUrl ?? null;

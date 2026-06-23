@@ -137,7 +137,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       maxTokens: 300,
     },
     voice: { provider: '11labs', voiceId: 'j7e3J6ksqsziQcIGyAWI' },
-    firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. En que le puedo ayudar?`,
+    firstMessage: agent.first_message?.trim() || `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Hasta luego, que tenga un excelente día.',
     transcriber: {
       provider: 'deepgram',

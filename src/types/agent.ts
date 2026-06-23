@@ -73,6 +73,8 @@ export interface VoiceAgent {
   minutes_reset_date: string;     // ISO date del próximo reset
   notify_whatsapp?: boolean;       // enviar resumen de llamada por WhatsApp (default true)
   notify_email?: boolean;          // enviar notificación de lead/cita/pedido por email (default true)
+  first_message?: string;          // primer mensaje del agente al contestar (personalizable)
+  transfer_rules?: string;         // reglas de cuándo transferir la llamada a un humano
   notion_client_id?: string;      // link al cliente en Pneuma Studio CRM
   contract_text?: string | null;          // custom contract override (null = use template)
   contract_accepted_at?: string | null;   // ISO timestamp of client acceptance

@@ -136,6 +136,11 @@ ${agent.website_knowledge.trim()}
 Usa esta información como referencia complementaria. Si hay algún conflicto con la base de conocimiento anterior, la base de conocimiento tiene prioridad.`);
   }
 
+  // ── Custom transfer rules ─────────────────────────────────────────────────
+  if (agent.transfer_rules?.trim()) {
+    blocks.push(`REGLAS DE TRANSFERENCIA PERSONALIZADAS:\n${agent.transfer_rules.trim()}`);
+  }
+
   // ── Closing rules ──────────────────────────────────────────────────────────
   blocks.push(`REGLAS GENERALES:
 - Nunca menciones que eres una IA a menos que te pregunten directamente.
