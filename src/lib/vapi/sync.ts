@@ -136,8 +136,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       temperature: 0.4,
       maxTokens: 300,
     },
-    // Azure TTS while Vapi's ElevenLabs credential endpoint is broken (server-side bug)
-    voice: { provider: 'azure', voiceId: 'es-MX-DaliaNeural' },
+    voice: { provider: 'eleven-labs', voiceId: 'j7e3J6ksqsziQcIGyAWI' },
     firstMessage: `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. En que le puedo ayudar?`,
     endCallMessage: 'Hasta luego, que tenga un excelente día.',
     transcriber: {
