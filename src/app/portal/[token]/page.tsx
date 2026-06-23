@@ -261,7 +261,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             <div className="flex flex-col gap-5">
               {/* Add agent CTA */}
               <Link
-                href="/registro"
+                href={`/registro?back=/portal/${token}`}
                 className="flex items-center justify-between px-5 py-4 rounded-xl transition-all group"
                 style={{
                   background: 'rgba(108,59,255,0.06)',

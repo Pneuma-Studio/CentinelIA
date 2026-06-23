@@ -210,6 +210,7 @@ function CitySelect({ value, onChange }: { value: string; onChange: (v: string) 
 function RegistroInner() {
   const params   = useSearchParams();
   const canceled = params.get('canceled') === '1';
+  const backUrl  = params.get('back') ?? null;
 
   const [step,         setStep]         = useState<1 | 2 | 3>(1);
   const [loading,      setLoading]      = useState(false);
@@ -339,15 +340,19 @@ function RegistroInner() {
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
       <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
-        <div className="max-w-5xl mx-auto px-4 py-4 flex items-center justify-between">
+        <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center">
-            <div style={{ background: '#fff', borderRadius: 6, padding: '2px 8px', display: 'inline-flex', alignItems: 'center' }}>
-              <Image src="/logo.png" alt="Centinelia" width={110} height={24} style={{ height: 22, width: 'auto' }} />
-            </div>
+            <Image src="/logo-icon.png" alt="Centinelia" width={44} height={44} style={{ width: 44, height: 44, objectFit: 'contain' }} />
           </a>
-          <a href="/portal/login" className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
-            ¿Ya tienes cuenta? Entra aquí
-          </a>
+          {backUrl ? (
+            <a href={backUrl} className="flex items-center gap-1 text-xs font-medium transition-opacity hover:opacity-80" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <ChevronLeft size={13} /> Devuelta al portal
+            </a>
+          ) : (
+            <a href="/portal/login" className="text-xs" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              ¿Ya tienes cuenta? Entra aquí
+            </a>
+          )}
         </div>
       </div>
 
@@ -426,63 +431,78 @@ function RegistroInner() {
                     )}
 
                     <div className="p-5">
-                      {/* Plan header row */}
-                      <div className="flex items-start justify-between gap-3 mb-3">
-                        <div className="flex items-center gap-3">
-                          {/* Radio dot */}
-                          <div
-                            className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
-                            style={{
-                              borderColor: selected ? p.color : 'rgba(255,255,255,0.2)',
-                              background:  selected ? p.color : 'transparent',
-                            }}
-                          >
-                            {selected && <div className="w-2 h-2 rounded-full bg-white" />}
-                          </div>
-                          <span className="font-bold text-white">{p.label}</span>
-                          {p.recommended && (
-                            <span
-                              className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                              style={{ background: p.color, color: '#fff' }}
-                            >
-                              Recomendado
-                            </span>
-                          )}
+                      {/* Row 1: Radio + Name + Badge */}
+                      <div className="flex items-center gap-3 mb-4">
+                        <div
+                          className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
+                          style={{
+                            borderColor: selected ? p.color : 'rgba(255,255,255,0.2)',
+                            background:  selected ? p.color : 'transparent',
+                          }}
+                        >
+                          {selected && <div className="w-2 h-2 rounded-full bg-white" />}
                         </div>
-
-                        {/* Price — right side */}
-                        {p.custom ? (
-                          <span className="text-sm font-semibold" style={{ color: p.color }}>Cotización</span>
-                        ) : (
-                          <div className="text-right flex-shrink-0">
-                            <div className="flex items-baseline gap-1 justify-end">
-                              <span className="text-xl font-bold" style={{ color: p.color }}>
-                                {priceFmt(p.monthly)}
-                              </span>
-                              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
-                            </div>
-                            <span className="text-xs line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                              {priceFmt(p.origMonthly)}
-                            </span>
-                          </div>
+                        <span className="text-base font-bold text-white">{p.label}</span>
+                        {p.recommended && (
+                          <span
+                            className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                            style={{ background: p.color, color: '#fff' }}
+                          >
+                            Recomendado
+                          </span>
                         )}
                       </div>
 
-                      {/* Setup fee + minutes — compact */}
-                      {!p.custom && (
-                        <p className="text-xs mb-3 ml-8" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                          + {priceFmt(p.price)}{' '}
-                          <span className="line-through">{priceFmt(p.origPrice)}</span>
-                          {' '}instalación · {p.minutes} min/mes incluidos
-                        </p>
-                      )}
-                      {p.custom && (
-                        <p className="text-xs mb-3 ml-8" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                          Propuesta personalizada según tu industria e integraciones
-                        </p>
+                      {/* Row 2: Price — hero element */}
+                      {p.custom ? (
+                        <div className="ml-8 mb-4">
+                          <p className="text-2xl font-bold text-white">Cotización personalizada</p>
+                          <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>
+                            Propuesta según tu industria e integraciones requeridas
+                          </p>
+                        </div>
+                      ) : (
+                        <div className="ml-8 mb-3">
+                          <div className="flex items-baseline gap-2 flex-wrap">
+                            <span className="text-4xl font-extrabold tabular-nums" style={{ color: p.color }}>
+                              {priceFmt(p.monthly)}
+                            </span>
+                            <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
+                            <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
+                              {priceFmt(p.origMonthly)}
+                            </span>
+                          </div>
+                          <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                            <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                              style={{ background: 'rgba(34,197,94,0.13)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
+                              Ahorras {Math.round(((p.origMonthly - p.monthly) / p.origMonthly) * 100)}%
+                            </span>
+                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.28)' }}>precio de lanzamiento</span>
+                          </div>
+                        </div>
                       )}
 
-                      {/* Feature list — labels always visible, descriptions when selected */}
+                      {/* Row 3: Minutes badge + setup fee */}
+                      {!p.custom && (
+                        <div className="ml-8 flex flex-wrap items-center gap-2 mb-4">
+                          <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
+                            style={{ background: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}>
+                            {p.minutes} min/mes
+                          </span>
+                          <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
+                            + {priceFmt(p.price)}{' '}
+                            <span className="line-through" style={{ color: 'rgba(255,255,255,0.18)' }}>{priceFmt(p.origPrice)}</span>
+                            {' '}instalación única
+                          </span>
+                        </div>
+                      )}
+
+                      {/* Divider before features when selected */}
+                      {selected && (
+                        <div className="ml-8 mb-3" style={{ borderTop: '1px solid rgba(255,255,255,0.08)' }} />
+                      )}
+
+                      {/* Feature list */}
                       <div className="ml-8 flex flex-col gap-2">
                         {p.features.map(f => (
                           <div key={f.label} className="flex items-start gap-2">
