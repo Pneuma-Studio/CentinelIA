@@ -170,7 +170,16 @@ export default async function ConfigurarAgentePage({ params }: Props) {
         <div className="mt-6 px-4 sm:px-6 py-4" style={{ borderTop: '1px solid var(--c-border)' }}>
           <div className="max-w-4xl mx-auto">
             <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
-              Powered by <span style={{ color: '#6C3BFF' }}>CentinelIA</span> · Pneuma Studio
+              Powered by{' '}
+              <a
+                href="https://pneumastudio.mx"
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ color: '#00f5ff' }}
+                className="hover:opacity-80 transition-opacity"
+              >
+                Pneuma Studio
+              </a>
             </span>
           </div>
         </div>

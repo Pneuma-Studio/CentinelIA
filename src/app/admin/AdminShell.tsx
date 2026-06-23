@@ -48,6 +48,20 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
           </div>
         </div>
         <AdminNav />
+        <div className="px-5 py-4 mt-auto border-t" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
+          <p className="text-xs" style={{ color: 'rgba(255,255,255,0.2)' }}>
+            Powered by{' '}
+            <a
+              href="https://pneumastudio.mx"
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ color: '#00f5ff' }}
+              className="hover:opacity-80 transition-opacity"
+            >
+              Pneuma Studio
+            </a>
+          </p>
+        </div>
       </aside>
 
       {/* Main area */}
