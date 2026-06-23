@@ -456,17 +456,17 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <>
                   {showOrders && (
                     <CollapsibleSection title="Pedidos" icon={<ShoppingBag size={14} />} defaultOpen={orders.length > 0} count={orders.length}>
-                      <PortalOrdersSection initialOrders={orders as any} token={token} />
+                      <PortalOrdersSection initialOrders={orders as any} token={token} isPro={agent.plan === 'pro'} />
                     </CollapsibleSection>
                   )}
                   {showAppts && (
                     <CollapsibleSection title="Citas" icon={<CalendarDays size={14} />} defaultOpen={appts.length > 0} count={appts.length}>
-                      <PortalAppointmentsSection initialAppointments={appts as any} token={token} label="cita" />
+                      <PortalAppointmentsSection initialAppointments={appts as any} token={token} label="cita" isPro={agent.plan === 'pro'} />
                     </CollapsibleSection>
                   )}
                   {showLeads && (
                     <CollapsibleSection title="Leads" icon={<Users size={14} />} defaultOpen={leads.length > 0} count={leads.length}>
-                      <PortalLeadsSection initialLeads={leads as any} token={token}
+                      <PortalLeadsSection initialLeads={leads as any} token={token} isPro={agent.plan === 'pro'}
                         filename={`leads-${agent.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />
                     </CollapsibleSection>
                   )}

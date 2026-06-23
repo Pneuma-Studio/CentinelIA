@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { CalendarDays, Filter, Pencil, X, Check, Loader2 } from 'lucide-react';
+import ActivityDetailModal, { type ActivityItem } from './ActivityDetailModal';
 
 type ApptStatus = 'confirmada' | 'completada' | 'cancelada' | 'no_asistio';
 
@@ -57,13 +58,15 @@ const EDIT_FIELDS: { key: keyof Appointment; label: string; type?: string; place
   { key: 'hora',     label: 'Hora',                type: 'time' },
 ];
 
-export default function PortalAppointmentsSection({ initialAppointments, token, label = 'cita' }: {
+export default function PortalAppointmentsSection({ initialAppointments, token, label = 'cita', isPro }: {
   initialAppointments: Appointment[];
   token: string;
   label?: string;
+  isPro?: boolean;
 }) {
   const [appts, setAppts]               = useState<Appointment[]>(initialAppointments);
   const [editing, setEditing]           = useState<Appointment | null>(null);
+  const [detailAppt, setDetailAppt]     = useState<Appointment | null>(null);
   const [editForm, setEditForm]         = useState<Partial<Appointment>>({});
   const [saving, setSaving]             = useState(false);
   const [updatingStatus, setUpdating]   = useState<string | null>(null);
@@ -147,8 +150,9 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
             const status = (appt.status ?? 'confirmada') as ApptStatus;
             const sc = STATUS_CONFIG[status] ?? STATUS_CONFIG.confirmada;
             return (
-              <div key={appt.id} className="rounded-xl p-4"
-                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div key={appt.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
+                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
+                onClick={() => setDetailAppt(appt)}>
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -168,7 +172,7 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
 
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                     <div className="flex items-center gap-1.5">
-                      <button onClick={() => { setEditing(appt); setEditForm({ ...appt }); }}
+                      <button onClick={e => { e.stopPropagation(); setEditing(appt); setEditForm({ ...appt }); }}
                         className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
                         style={{ color: 'var(--c-text-3)' }}>
                         <Pencil size={13} />
@@ -179,6 +183,7 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
                     </div>
                     <select value={status} disabled={updatingStatus === appt.id}
                       onChange={e => updateStatus(appt.id, e.target.value as ApptStatus)}
+                      onClick={e => e.stopPropagation()}
                       className="text-xs font-semibold rounded-full px-2.5 py-1 outline-none cursor-pointer border-0 appearance-none"
                       style={{ background: sc.bg, color: sc.color, opacity: updatingStatus === appt.id ? 0.5 : 1 }}>
                       {(Object.entries(STATUS_CONFIG) as [ApptStatus, typeof sc][]).map(([val, cfg]) => (
@@ -228,6 +233,17 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
             </div>
           </div>
         </div>
+      )}
+
+      {/* Detail modal */}
+      {detailAppt && (
+        <ActivityDetailModal
+          type="appt"
+          item={detailAppt as ActivityItem}
+          isPro={!!isPro}
+          token={token}
+          onClose={() => setDetailAppt(null)}
+        />
       )}
     </>
   );

@@ -3,6 +3,7 @@
 import { useState, useMemo } from 'react';
 import { User, MessageCircle, Mail, DollarSign, Calendar, Pencil, X, Check, Loader2, Filter } from 'lucide-react';
 import ExportCSVButton from './ExportCSVButton';
+import ActivityDetailModal, { type ActivityItem } from './ActivityDetailModal';
 
 type LeadStatus = 'nuevo' | 'contactado' | 'cerrado' | 'perdido';
 
@@ -68,13 +69,15 @@ const EDIT_FIELDS: { key: keyof Lead; label: string; placeholder?: string }[] = 
   { key: 'email',       label: 'Correo electrónico',   placeholder: 'Ej: contacto@empresa.com' },
 ];
 
-export default function PortalLeadsSection({ initialLeads, token, filename }: {
+export default function PortalLeadsSection({ initialLeads, token, filename, isPro }: {
   initialLeads: Lead[];
   token: string;
   filename: string;
+  isPro?: boolean;
 }) {
   const [leads, setLeads]               = useState<Lead[]>(initialLeads);
   const [editingLead, setEditingLead]   = useState<Lead | null>(null);
+  const [detailLead, setDetailLead]     = useState<Lead | null>(null);
   const [editForm, setEditForm]         = useState<Partial<Lead>>({});
   const [saving, setSaving]             = useState(false);
   const [updatingStatus, setUpdatingStatus] = useState<string | null>(null);
@@ -197,8 +200,9 @@ export default function PortalLeadsSection({ initialLeads, token, filename }: {
             const status = (lead.status ?? 'nuevo') as LeadStatus;
             const sc = STATUS_CONFIG[status] ?? STATUS_CONFIG.nuevo;
             return (
-              <div key={lead.id} className="rounded-xl p-4"
-                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div key={lead.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
+                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
+                onClick={() => setDetailLead(lead)}>
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -235,7 +239,7 @@ export default function PortalLeadsSection({ initialLeads, token, filename }: {
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                     <div className="flex items-center gap-1.5">
                       <button
-                        onClick={() => openEdit(lead)}
+                        onClick={e => { e.stopPropagation(); openEdit(lead); }}
                         className="p-1.5 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]"
                         style={{ color: 'var(--c-text-3)' }}
                         title="Editar datos del lead"
@@ -250,6 +254,7 @@ export default function PortalLeadsSection({ initialLeads, token, filename }: {
                       value={status}
                       disabled={updatingStatus === lead.id}
                       onChange={e => updateStatus(lead.id, e.target.value as LeadStatus)}
+                      onClick={e => e.stopPropagation()}
                       className="text-xs font-semibold rounded-full px-2.5 py-1 outline-none cursor-pointer border-0 appearance-none"
                       style={{ background: sc.bg, color: sc.color, opacity: updatingStatus === lead.id ? 0.5 : 1 }}
                     >
@@ -313,6 +318,17 @@ export default function PortalLeadsSection({ initialLeads, token, filename }: {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Detail modal */}
+      {detailLead && (
+        <ActivityDetailModal
+          type="lead"
+          item={detailLead as ActivityItem}
+          isPro={!!isPro}
+          token={token}
+          onClose={() => setDetailLead(null)}
+        />
       )}
     </>
   );

@@ -342,7 +342,7 @@ function RegistroInner() {
       <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center">
-            <Image src="/logo-icon.png" alt="Centinelia" width={44} height={44} style={{ width: 44, height: 44, objectFit: 'contain' }} />
+            <Image src="/logo-icon.png" alt="Centinelia" width={56} height={56} style={{ width: 56, height: 56, objectFit: 'contain' }} />
           </a>
           {backUrl ? (
             <a href={backUrl} className="flex items-center gap-1 text-xs font-medium transition-opacity hover:opacity-80" style={{ color: 'rgba(255,255,255,0.5)' }}>

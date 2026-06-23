@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { ShoppingBag, Filter, Truck, Store, Pencil, X, Check, Loader2 } from 'lucide-react';
+import ActivityDetailModal, { type ActivityItem } from './ActivityDetailModal';
 
 type OrderStatus = 'nuevo' | 'en_proceso' | 'listo' | 'entregado' | 'cancelado';
 
@@ -60,12 +61,14 @@ const EDIT_FIELDS: { key: keyof Order; label: string; placeholder?: string }[] =
   { key: 'notas',     label: 'Notas especiales',     placeholder: 'Ej: Sin cebolla' },
 ];
 
-export default function PortalOrdersSection({ initialOrders, token }: {
+export default function PortalOrdersSection({ initialOrders, token, isPro }: {
   initialOrders: Order[];
   token: string;
+  isPro?: boolean;
 }) {
   const [orders, setOrders]             = useState<Order[]>(initialOrders);
   const [editingOrder, setEditingOrder] = useState<Order | null>(null);
+  const [detailOrder, setDetailOrder]   = useState<Order | null>(null);
   const [editForm, setEditForm]         = useState<Partial<Order>>({});
   const [saving, setSaving]             = useState(false);
   const [updatingStatus, setUpdating]   = useState<string | null>(null);
@@ -148,8 +151,9 @@ export default function PortalOrdersSection({ initialOrders, token }: {
             const status = (order.status ?? 'nuevo') as OrderStatus;
             const sc = STATUS_CONFIG[status] ?? STATUS_CONFIG.nuevo;
             return (
-              <div key={order.id} className="rounded-xl p-4"
-                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div key={order.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
+                style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
+                onClick={() => setDetailOrder(order)}>
                 <div className="flex items-start gap-3">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
@@ -172,7 +176,7 @@ export default function PortalOrdersSection({ initialOrders, token }: {
 
                   <div className="flex flex-col items-end gap-2 flex-shrink-0">
                     <div className="flex items-center gap-1.5">
-                      <button onClick={() => { setEditingOrder(order); setEditForm({ ...order }); }}
+                      <button onClick={e => { e.stopPropagation(); setEditingOrder(order); setEditForm({ ...order }); }}
                         className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
                         style={{ color: 'var(--c-text-3)' }}>
                         <Pencil size={13} />
@@ -183,6 +187,7 @@ export default function PortalOrdersSection({ initialOrders, token }: {
                     </div>
                     <select value={status} disabled={updatingStatus === order.id}
                       onChange={e => updateStatus(order.id, e.target.value as OrderStatus)}
+                      onClick={e => e.stopPropagation()}
                       className="text-xs font-semibold rounded-full px-2.5 py-1 outline-none cursor-pointer border-0 appearance-none"
                       style={{ background: sc.bg, color: sc.color, opacity: updatingStatus === order.id ? 0.5 : 1 }}>
                       {(Object.entries(STATUS_CONFIG) as [OrderStatus, typeof sc][]).map(([val, cfg]) => (
@@ -233,6 +238,17 @@ export default function PortalOrdersSection({ initialOrders, token }: {
             </div>
           </div>
         </div>
+      )}
+
+      {/* Detail modal */}
+      {detailOrder && (
+        <ActivityDetailModal
+          type="order"
+          item={detailOrder as ActivityItem}
+          isPro={!!isPro}
+          token={token}
+          onClose={() => setDetailOrder(null)}
+        />
       )}
     </>
   );
