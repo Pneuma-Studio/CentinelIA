@@ -17,6 +17,7 @@ import WebsiteSyncButton      from '../WebsiteSyncButton';
 import PortalVoiceSelector    from '../PortalVoiceSelector';
 import NotificationsToggle    from '../NotificationsToggle';
 import AgentCustomization     from '../AgentCustomization';
+import ResyncButton           from '../ResyncButton';
 import SupportChat            from '../SupportChat';
 
 const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
@@ -157,6 +158,10 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               initWhatsApp={(agent as any).notify_whatsapp ?? true}
               initEmail={(agent as any).notify_email ?? true}
             />
+          </div>
+
+          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+            <ResyncButton token={token} />
           </div>
 
         </div>
