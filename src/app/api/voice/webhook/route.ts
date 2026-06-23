@@ -111,11 +111,11 @@ export async function POST(req: NextRequest) {
         // Fetch agent email + portal token (used in the email CTA)
         const { data: agentForEmail } = await supabase
           .from('voice_agents')
-          .select('client_email, business_name, portal_token')
+          .select('client_email, business_name, portal_token, notify_email')
           .eq('id', resolvedAgentId)
           .single();
 
-        if (agentForEmail?.client_email) {
+        if (agentForEmail?.client_email && (agentForEmail.notify_email ?? true)) {
           const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinel-ia.vercel.app';
           const portalUrl = `${appUrl}/portal/${agentForEmail.portal_token}`;
           const outcomeSubjects: Record<string, string> = {
@@ -149,7 +149,7 @@ export async function POST(req: NextRequest) {
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, client_email, transfer_whatsapp, portal_token, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
+        .select('business_name, client_email, transfer_whatsapp, portal_token, notify_whatsapp, notify_email, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
         .eq('id', resolvedAgentId)
         .single();
 
@@ -191,7 +191,7 @@ export async function POST(req: NextRequest) {
       }
 
       // 7. WhatsApp call summary to owner
-      if (agent?.transfer_whatsapp) {
+      if (agent?.transfer_whatsapp && (agent.notify_whatsapp ?? true)) {
         const outcomeLabels: Record<string, string> = {
           lead_created:       '🎯 Nuevo lead',
           appointment_booked: '📅 Cita agendada',

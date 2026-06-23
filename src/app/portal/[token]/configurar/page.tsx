@@ -10,12 +10,13 @@ import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
 import type { BusinessHours } from '@/types/agent';
 
-import PortalLogout        from '../PortalLogout';
-import BusinessHoursEditor from '../BusinessHoursEditor';
-import KnowledgeBaseEditor from '../KnowledgeBaseEditor';
-import WebsiteSyncButton   from '../WebsiteSyncButton';
-import PortalVoiceSelector from '../PortalVoiceSelector';
-import SupportChat         from '../SupportChat';
+import PortalLogout           from '../PortalLogout';
+import BusinessHoursEditor    from '../BusinessHoursEditor';
+import KnowledgeBaseEditor    from '../KnowledgeBaseEditor';
+import WebsiteSyncButton      from '../WebsiteSyncButton';
+import PortalVoiceSelector    from '../PortalVoiceSelector';
+import NotificationsToggle    from '../NotificationsToggle';
+import SupportChat            from '../SupportChat';
 
 const PLAN_LABELS: Record<string, string> = { basico: 'Básico', estandar: 'Estándar', pro: 'Pro' };
 const PLAN_COLORS: Record<string, string> = { basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7' };
@@ -127,6 +128,20 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               Horario de atención
             </h2>
             <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
+          </div>
+
+          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+            <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
+              Notificaciones
+            </h2>
+            <p className="text-xs mb-4" style={{ color: 'var(--c-text-3)' }}>
+              Elige cómo quieres recibir la información de cada llamada.
+            </p>
+            <NotificationsToggle
+              token={token}
+              initWhatsApp={(agent as any).notify_whatsapp ?? true}
+              initEmail={(agent as any).notify_email ?? true}
+            />
           </div>
 
         </div>
