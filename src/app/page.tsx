@@ -71,19 +71,19 @@ const PAINS = [
 ];
 
 const PLANS: {
-  name: string; price: number; setup: number; minutes: number;
-  color: string; popular?: boolean; includes: string[];
+  name: string; price: number; origPrice: number; setup: number; origSetup: number;
+  minutes: number; color: string; popular?: boolean; includes: string[];
 }[] = [
   {
-    name: 'Recepcionista', price: 1990, setup: 4990, minutes: 200, color: '#6b7280',
+    name: 'Recepcionista', price: 1990, origPrice: 2490, setup: 4990, origSetup: 6990, minutes: 200, color: '#6b7280',
     includes: ['Recepcionista 24/7', 'Agenda de citas', 'Resúmenes WhatsApp + Email', 'Portal con horas pico', '200 min/mes incluidos'],
   },
   {
-    name: 'Comercial', price: 3490, setup: 7990, minutes: 500, color: '#6C3BFF', popular: true,
+    name: 'Comercial', price: 3490, origPrice: 4490, setup: 7990, origSetup: 9990, minutes: 500, color: '#6C3BFF', popular: true,
     includes: ['Todo Recepcionista', 'Captura de leads', 'Toma de pedidos', 'Escalación a WhatsApp', 'Reporte semanal', '500 min/mes incluidos'],
   },
   {
-    name: 'Pro', price: 6490, setup: 12990, minutes: 1000, color: '#7c3aed',
+    name: 'Pro', price: 6490, origPrice: 8490, setup: 12990, origSetup: 16990, minutes: 1000, color: '#7c3aed',
     includes: ['Todo Comercial', 'Transferencia inteligente', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Grabaciones 7 días', '1,000 min/mes incluidos'],
   },
 ];
@@ -373,9 +373,10 @@ export default function LandingPage() {
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
           <div className="text-center mb-14">
-            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-              Planes
-            </p>
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
+              style={{ background: 'rgba(108,59,255,0.08)', border: '1px solid rgba(108,59,255,0.2)', color: C.accent }}>
+              🚀 Precio de lanzamiento · Primeros 20 clientes
+            </div>
             <h2
               className="font-bold tracking-tight mb-4"
               style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
@@ -410,15 +411,26 @@ export default function LandingPage() {
                   </span>
                 )}
 
-                <p className="font-semibold mb-3" style={{ color: C.text }}>{p.name}</p>
-                <div className="flex items-baseline gap-1 mb-1">
+                <div className="flex items-center justify-between mb-3">
+                  <p className="font-semibold" style={{ color: C.text }}>{p.name}</p>
+                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                    style={{ background: 'rgba(34,197,94,0.1)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.2)' }}>
+                    Lanzamiento
+                  </span>
+                </div>
+                <div className="flex items-baseline gap-1.5 mb-0.5">
                   <span className="text-3xl font-bold tabular-nums" style={{ color: p.popular ? p.color : C.text }}>
                     ${fmt(p.price)}
                   </span>
                   <span className="text-sm" style={{ color: C.textMute }}>/mes</span>
+                  <span className="text-sm line-through" style={{ color: C.textMute }}>
+                    ${fmt(p.origPrice)}
+                  </span>
                 </div>
                 <p className="text-xs mb-5" style={{ color: C.textMute }}>
-                  + ${fmt(p.setup)} instalación · {fmt(p.minutes)} min incluidos
+                  + ${fmt(p.setup)} instalación{' '}
+                  <span className="line-through" style={{ color: C.textMute }}>${fmt(p.origSetup)}</span>
+                  {' '}· {fmt(p.minutes)} min incluidos
                 </p>
 
                 <ul className="flex flex-col gap-2 flex-1 mb-6">

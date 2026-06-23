@@ -49,20 +49,22 @@ const CITIES: { label: string; lada: string }[] = [
 ];
 
 type PlanDef = {
-  id:           FormPlan;
-  label:        string;
-  price:        number;
-  monthly:      number;
-  minutes:      number;
-  recommended?: boolean;
-  custom?:      boolean;
-  color:        string;
-  features:     { label: string; desc: string }[];
+  id:            FormPlan;
+  label:         string;
+  price:         number;
+  origPrice:     number;
+  monthly:       number;
+  origMonthly:   number;
+  minutes:       number;
+  recommended?:  boolean;
+  custom?:       boolean;
+  color:         string;
+  features:      { label: string; desc: string }[];
 };
 
 const PLANS: PlanDef[] = [
   {
-    id: 'basico', label: 'Recepcionista', price: 4990, monthly: 1990, minutes: 200, color: '#6b7280',
+    id: 'basico', label: 'Recepcionista', price: 4990, origPrice: 6990, monthly: 1990, origMonthly: 2490, minutes: 200, color: '#6b7280',
     features: [
       { label: 'Recepcionista 24/7',          desc: 'Atiende llamadas en cualquier horario, incluso fuera de tu horario laboral y fines de semana.' },
       { label: 'Agenda de citas',              desc: 'Confirma, modifica y cancela citas durante la llamada sin que tengas que intervenir.' },
@@ -71,7 +73,7 @@ const PLANS: PlanDef[] = [
     ],
   },
   {
-    id: 'estandar', label: 'Comercial', price: 7990, monthly: 3490, minutes: 500, recommended: true, color: '#3b82f6',
+    id: 'estandar', label: 'Comercial', price: 7990, origPrice: 9990, monthly: 3490, origMonthly: 4490, minutes: 500, recommended: true, color: '#3b82f6',
     features: [
       { label: 'Todo lo de Recepcionista',    desc: 'Recepcionista 24/7, agenda de citas, resúmenes y portal completo.' },
       { label: 'Captura de leads',             desc: 'Registra nombre, teléfono, servicio y presupuesto de cada prospecto automáticamente.' },
@@ -81,7 +83,7 @@ const PLANS: PlanDef[] = [
     ],
   },
   {
-    id: 'pro', label: 'Pro', price: 12990, monthly: 6490, minutes: 1000, color: '#a855f7',
+    id: 'pro', label: 'Pro', price: 12990, origPrice: 16990, monthly: 6490, origMonthly: 8490, minutes: 1000, color: '#a855f7',
     features: [
       { label: 'Todo lo de Comercial',         desc: 'Incluye todas las funciones del plan Comercial.' },
       { label: 'Transferencia inteligente',    desc: 'El agente detecta cuándo una llamada necesita atención humana y transfiere automáticamente a tu número.' },
@@ -91,7 +93,7 @@ const PLANS: PlanDef[] = [
     ],
   },
   {
-    id: 'empresarial', label: 'Empresarial', price: 0, monthly: 0, minutes: 0, custom: true, color: '#f59e0b',
+    id: 'empresarial', label: 'Empresarial', price: 0, origPrice: 0, monthly: 0, origMonthly: 0, minutes: 0, custom: true, color: '#f59e0b',
     features: [
       { label: 'Integración con tu sistema',         desc: 'Conectamos tu agente con el POS, CRM o calendario que ya usas: Square, Shopify, Calendly, Google Calendar y más.' },
       { label: 'Flujos conversacionales a medida',   desc: 'Diseñamos conversaciones específicas para los procesos únicos de tu negocio, sin limitaciones de plantilla.' },
@@ -453,10 +455,15 @@ function RegistroInner() {
                           <span className="text-sm font-semibold" style={{ color: p.color }}>Cotización</span>
                         ) : (
                           <div className="text-right flex-shrink-0">
-                            <span className="text-xl font-bold" style={{ color: p.color }}>
-                              {priceFmt(p.monthly)}
+                            <div className="flex items-baseline gap-1 justify-end">
+                              <span className="text-xl font-bold" style={{ color: p.color }}>
+                                {priceFmt(p.monthly)}
+                              </span>
+                              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
+                            </div>
+                            <span className="text-xs line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>
+                              {priceFmt(p.origMonthly)}
                             </span>
-                            <span className="text-xs ml-1" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
                           </div>
                         )}
                       </div>
@@ -464,7 +471,9 @@ function RegistroInner() {
                       {/* Setup fee + minutes — compact */}
                       {!p.custom && (
                         <p className="text-xs mb-3 ml-8" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                          + {priceFmt(p.price)} instalación · {p.minutes} min/mes incluidos
+                          + {priceFmt(p.price)}{' '}
+                          <span className="line-through">{priceFmt(p.origPrice)}</span>
+                          {' '}instalación · {p.minutes} min/mes incluidos
                         </p>
                       )}
                       {p.custom && (
@@ -732,10 +741,19 @@ function RegistroInner() {
                       {priceFmt(selectedPlan.monthly)}
                     </span>
                     <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
+                    <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
+                      {priceFmt(selectedPlan.origMonthly)}
+                    </span>
                   </div>
-                  <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.28)' }}>
-                    Sin contrato mínimo · Cancela cuando quieras
-                  </p>
+                  <div className="flex items-center gap-2 mt-1">
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                      style={{ background: 'rgba(34,197,94,0.12)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
+                      Precio de lanzamiento
+                    </span>
+                    <p className="text-xs" style={{ color: 'rgba(255,255,255,0.28)' }}>
+                      Sin contrato mínimo
+                    </p>
+                  </div>
                 </div>
 
                 {/* Line items */}
@@ -749,7 +767,10 @@ function RegistroInner() {
                       Instalación del agente
                       <span className="text-xs ml-1.5" style={{ color: 'rgba(255,255,255,0.25)' }}>(pago único)</span>
                     </span>
-                    <span className="text-sm font-medium text-white">{priceFmt(selectedPlan.price)}</span>
+                    <div className="flex items-center gap-1.5">
+                      <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>{priceFmt(selectedPlan.origPrice)}</span>
+                      <span className="text-sm font-medium text-white">{priceFmt(selectedPlan.price)}</span>
+                    </div>
                   </div>
                 </div>
 
