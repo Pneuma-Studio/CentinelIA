@@ -522,7 +522,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               {/* Ledger */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</h2>
-                <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} />
+                <div className="overflow-y-auto" style={{ maxHeight: '420px' }}>
+                  <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} />
+                </div>
               </div>
             </div>
           )}
