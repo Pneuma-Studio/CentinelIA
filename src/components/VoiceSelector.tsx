@@ -30,26 +30,39 @@ const DESC_LABEL: Record<string, string> = {
   formal:         'Formal',
   casual:         'Casual',
   neutral:        'Neutral',
+  upbeat:         'Dinámica',
+  gentle:         'Gentil',
+  classy:         'Elegante',
 };
 
 // Description overrides — checked first, before the ElevenLabs `descriptive` label
 const VOICE_DESC_OVERRIDE: Record<string, string> = {
-  'm7yTemJqdIqrcNleANfX': 'Tranquila',  // Ana María (removed from allowlist, kept for safety)
-  'IPgYtHTNLjC7Bq7IPHrm': 'Nítida',    // Alexandre Boutin
-  'htFfPSZGJwjBv1CL0aMD': 'Neutral',   // Antonio
-  'nTkjq09AuYgsNR8E4sDe': 'Regia',     // Cristina Campos
+  // Female
+  'jUxkp8eMgszgJX3XU2pV': 'Bilingüe',  // Annie — EL label 'casual', pero es bilingüe
+  'nTkjq09AuYgsNR8E4sDe': 'Regia',      // Cristina — EL label 'excited'
+  'crQgCQuWgUucmYHEPsrB': 'Enérgica',   // Fran — EL label 'excited', pero es más energética
+  'cAvMBIZ0VNTU8XdsUpEq': 'Cálida',     // Susana — EL label 'casual', pero es "Warm, Soft"
+  // Male
+  'htFfPSZGJwjBv1CL0aMD': 'Neutral',    // Antonio — EL label 'confident'
+  'id7LQ3n0ft94moeTT1ER': 'Intenso',    // David — EL label 'professional', pero es "Intense, Rapid"
+  'dlGxemPxFMTY7iXagmOj': 'Persuasivo', // Fernando — EL label 'casual', pero es "Rapid, Persuasive"
+  'sDh3eviBhiuHKi0MjTNq': 'Elegante',   // Francis — EL label 'professional', pero es "Corporate, Elegant"
+  '3mmJ2Z5SLZ9OkeZZcv5p': 'Fluido',     // Oscar — EL label 'confident', pero es "Fluid pitch"
 };
 
 // Name overrides — removes last names and fixes non-standard dash patterns
 const VOICE_NAME_OVERRIDE: Record<string, string> = {
-  'j7e3J6ksqsziQcIGyAWI': 'CentinelIA', // Valentina — voz oficial
-  'ewn5JTa3lNPY8QVuZJi6': 'Ana Sofía',  // "Ana Sofía-Conversational"
-  'YKUjKbMlejgvkOZlnnvt': 'Alejandro',  // "Alejandro Ballesteros-Warm and Joyful"
-  '1vvbVDm3EpGMyY1WVZ3r': 'Yessenia',  // Yessenia Mazón
-  'nTkjq09AuYgsNR8E4sDe': 'Cristina',  // Cristina Campos
-  'pBabaO9WxfrjXjKADHma': 'Cindy',     // Cindy Calderon
-  'IPgYtHTNLjC7Bq7IPHrm': 'Alexandre', // Alexandre Boutin
-  'nmvA11Y688M5reLqDsVm': 'Samuel',    // Samuel Rosales
+  // Female
+  'j7e3J6ksqsziQcIGyAWI': 'Valentina',   // Valentina
+  'jUxkp8eMgszgJX3XU2pV': 'CentinelIA', // Annie KPasa — voz oficial
+  'hrlCBOGwBPZYViXHeZjS': 'Sofía',      // "Sofía Juliette - ..."
+  'cAvMBIZ0VNTU8XdsUpEq': 'Susana',     // "Susana Elizabeth - ..."
+  'nTkjq09AuYgsNR8E4sDe': 'Cristina',   // "Cristina Campos - ..."
+  'pBabaO9WxfrjXjKADHma': 'Cindy',      // "Cindy Calderon" (sin guion)
+  // Male
+  'YKUjKbMlejgvkOZlnnvt': 'Alejandro',  // "Alejandro Ballesteros-Warm..." (guion sin espacios)
+  'XgQWNZcJ8SRkxXwwhPTo': 'Brian',      // "Brian Cortez - ..."
+  'dlGxemPxFMTY7iXagmOj': 'Fernando',   // "Fernando Martínez - ..."
 };
 
 const MASCULINE_MAP: Record<string, string> = {
@@ -63,6 +76,7 @@ const MASCULINE_MAP: Record<string, string> = {
   'Ronca':       'Ronco',
   'Narrativa':   'Narrativo',
   'Animada':     'Animado',
+  'Dinámica':    'Dinámico',
 };
 
 function getBaseName(voice: ElevenVoice): string {

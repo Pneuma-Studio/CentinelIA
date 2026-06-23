@@ -108,6 +108,20 @@ export default async function ConfigurarAgentePage({ params }: Props) {
           )}
 
           <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+            <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
+              Personalización del agente
+            </h2>
+            <p className="text-xs mb-4" style={{ color: 'var(--c-text-3)' }}>
+              Ajusta cómo habla y cuándo transfiere tu agente.
+            </p>
+            <AgentCustomization
+              token={token}
+              initGreeting={(agent as any).first_message ?? ''}
+              initTransferRules={(agent as any).transfer_rules ?? ''}
+            />
+          </div>
+
+          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
             <h2 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
               Base de conocimiento
             </h2>
@@ -129,20 +143,6 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               Horario de atención
             </h2>
             <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
-          </div>
-
-          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-              Personalización del agente
-            </h2>
-            <p className="text-xs mb-4" style={{ color: 'var(--c-text-3)' }}>
-              Ajusta cómo habla y cuándo transfiere tu agente.
-            </p>
-            <AgentCustomization
-              token={token}
-              initGreeting={(agent as any).first_message ?? ''}
-              initTransferRules={(agent as any).transfer_rules ?? ''}
-            />
           </div>
 
           <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
