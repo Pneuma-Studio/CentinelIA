@@ -302,8 +302,6 @@ export default function LandingPage() {
                 style={{ objectFit: 'contain', objectPosition: 'top center' }}
               />
             </div>
-            {/* Gradient fade que disuelve los pies en el fondo oscuro */}
-            <div className="absolute" style={{ bottom: -16, left: -5, width: 110, height: 70, background: 'linear-gradient(to bottom, transparent 0%, #0D0520 100%)', zIndex: 2, pointerEvents: 'none' }} />
             <div style={{ paddingLeft: 112 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
                 El problema
