@@ -156,10 +156,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
   return (
     <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="dark">
-      <div className="min-h-screen" style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}>
+      <div className="min-h-screen relative overflow-hidden" style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}>
+        {/* Ambient orb — top center */}
+        <div style={{ position: 'absolute', width: 900, height: 500, top: -320, left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(ellipse, rgba(108,59,255,0.13) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         {/* Header */}
-        <div style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
+        <div style={{ background: 'var(--c-modal)', borderBottom: '1px solid rgba(108,59,255,0.18)', boxShadow: '0 2px 24px rgba(0,0,0,0.18)', position: 'relative', zIndex: 10 }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-3">
             <BusinessSwitcher
               current={{
@@ -198,7 +200,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         </div>
 
         {/* Tab nav */}
-        <div style={{ background: 'var(--c-surface)', borderBottom: '1px solid var(--c-border)' }}>
+        <div style={{ background: 'var(--c-modal)', borderBottom: '1px solid var(--c-border)', position: 'relative', zIndex: 9 }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
             <div className="flex gap-0 overflow-x-auto">
               {TABS.map(t => (
@@ -209,6 +211,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   style={{
                     borderColor: tab === t.id ? '#6C3BFF' : 'transparent',
                     color:       tab === t.id ? '#6C3BFF' : 'var(--c-text-3)',
+                    filter:      tab === t.id ? 'drop-shadow(0 0 8px rgba(108,59,255,0.5))' : undefined,
                   }}
                 >
                   {t.label}
@@ -223,31 +226,31 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           <div className="max-w-4xl mx-auto px-4 sm:px-6 pt-4 flex flex-col gap-2">
             {billingPaused && (
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{ background: '#FEF2F2', border: '1px solid rgba(239,68,68,0.25)' }}>
-                <AlertTriangle size={15} color="#ef4444" className="flex-shrink-0" />
-                <p className="text-sm" style={{ color: '#dc2626' }}>
+                style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)' }}>
+                <AlertTriangle size={15} color="#f87171" className="flex-shrink-0" />
+                <p className="text-sm" style={{ color: 'var(--c-text)' }}>
                   Tu agente está pausado por falta de pago. Actualiza tu método de pago o contacta a CentinelIA.
                 </p>
               </div>
             )}
             {clientPaused && !billingPaused && (
               <div className="flex items-center gap-3 px-4 py-3 rounded-xl"
-                style={{ background: '#FFF7ED', border: '1px solid rgba(245,158,11,0.3)' }}>
-                <AlertTriangle size={15} color="#f59e0b" className="flex-shrink-0" />
-                <p className="text-sm" style={{ color: '#92400e' }}>
+                style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
+                <AlertTriangle size={15} color="#fbbf24" className="flex-shrink-0" />
+                <p className="text-sm" style={{ color: 'var(--c-text)' }}>
                   Tu agente está pausado voluntariamente. Puedes reanudarlo cuando quieras desde la pestaña Resumen.
                 </p>
               </div>
             )}
             {minutesPct > 80 && agent.active && (
               <div className="flex items-start gap-3 px-4 py-3 rounded-xl"
-                style={{ background: '#FFFBEB', border: '1px solid rgba(245,158,11,0.3)' }}>
-                <AlertTriangle size={15} color="#f59e0b" className="flex-shrink-0 mt-0.5" />
+                style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)' }}>
+                <AlertTriangle size={15} color="#fbbf24" className="flex-shrink-0 mt-0.5" />
                 <div>
-                  <p className="text-sm font-medium" style={{ color: '#92400e' }}>
+                  <p className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
                     Estás al {Math.round(minutesPct)}% de tus minutos — te quedan {minutesRemain} min
                   </p>
-                  <p className="text-xs mt-0.5" style={{ color: '#b45309' }}>Reset el {resetDate}</p>
+                  <p className="text-xs mt-0.5" style={{ color: '#fbbf24' }}>Reset el {resetDate}</p>
                 </div>
               </div>
             )}
@@ -255,7 +258,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         )}
 
         {/* Tab content */}
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-6" style={{ position: 'relative', zIndex: 1 }}>
 
           {/* ── AGENTES ──────────────────────────────────────────────────── */}
           {tab === 'agentes' && (
@@ -407,7 +410,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
               {/* Peak hours */}
               {calls.length > 0 && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                   <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
                     Horas pico
                   </h2>
@@ -418,7 +421,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               {/* Period filter */}
               <div className="flex items-center gap-2">
                 <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>Período:</span>
-                <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="flex gap-1 p-1 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                   {[{ label: '7 días', param: '7' }, { label: '30 días', param: '30' }, { label: 'Todo', param: '' }].map(({ label, param }) => {
                     const active = (period ?? '') === param;
                     return (
@@ -433,7 +436,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               </div>
 
               {/* Recent calls */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xs font-semibold tracking-widest uppercase flex items-center gap-1.5" style={{ color: 'var(--c-text-3)' }}>
                     <PhoneCall size={13} /> Llamadas recientes {calls.length > 0 && `(${calls.length})`}
@@ -463,7 +466,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {tab === 'actividad' && (
             <div className="flex flex-col gap-5">
               {!showLeads && !showOrders && !showAppts ? (
-                <div className="flex flex-col items-center py-12 gap-4 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="flex flex-col items-center py-12 gap-4 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                   <div className="relative" style={{ width: 140, height: 200 }}>
                     <Image src="/agent-duo-stand.png" alt="" fill sizes="140px"
                       style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
@@ -500,7 +503,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {tab === 'minutos' && (
             <div className="flex flex-col gap-5">
               {/* Usage card */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Uso del mes</h2>
                 <div className="flex items-end gap-2 mb-2">
                   <span className="text-4xl font-bold tabular-nums" style={{ color: minutesColor }}>{minutesUsed}</span>
@@ -522,7 +525,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
 
               {/* Averages */}
               {allCalls.length > 0 && (
-                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                   <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Consumo promedio</h2>
                   <div className="grid grid-cols-3 gap-3">
                     <StatBox label="Por día"   value={`${avgMinPerDay} min`} />
@@ -534,14 +537,14 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               )}
 
               {/* Buy extra */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Comprar minutos extra</h2>
                 <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>Se suman al saldo actual al instante. No afectan tu plan mensual.</p>
                 <BuyMinutesSection token={token} />
               </div>
 
               {/* Ledger */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</h2>
                 <div className="overflow-y-auto" style={{ maxHeight: '420px' }}>
                   <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} />
@@ -562,7 +565,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         </div>
 
         {/* Footer */}
-        <div className="mt-6 px-4 sm:px-6 py-4" style={{ borderTop: '1px solid var(--c-border)' }}>
+        <div className="mt-6 px-4 sm:px-6 pt-4 pb-28 sm:pb-6" style={{ borderTop: '1px solid var(--c-border)', position: 'relative', zIndex: 1 }}>
           <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
             <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
               Powered by{' '}
@@ -606,14 +609,14 @@ function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)', accent
   const accent = accentColor ?? valueColor;
   return (
     <div className="rounded-xl overflow-hidden"
-      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+      style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
       <div style={{ height: 3, background: `linear-gradient(90deg, ${accent}, ${accent}66)` }} />
       <div className="p-4">
         <div className="p-1.5 rounded-lg w-fit mb-2"
-          style={{ background: `${accent}15`, border: `1px solid ${accent}25` }}>{icon}</div>
+          style={{ background: `${accent}15`, border: `1px solid ${accent}30` }}>{icon}</div>
         <div className="text-2xl font-bold tabular-nums" style={{ color: valueColor }}>{value}</div>
         <div className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-text-2)' }}>{label}</div>
-        {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
+        {sub && <div className="text-xs mt.0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
       </div>
     </div>
   );
@@ -621,7 +624,7 @@ function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)', accent
 
 function StatBox({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <div className="rounded-lg p-3 text-center" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+    <div className="rounded-lg p-3 text-center" style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(8px)', WebkitBackdropFilter: 'blur(8px)' }}>
       <div className="text-sm font-bold" style={{ color: highlight ? '#ef4444' : 'var(--c-text)' }}>{value}</div>
       <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{label}</div>
     </div>
