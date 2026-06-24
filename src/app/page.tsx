@@ -3,7 +3,7 @@ import Image from 'next/image';
 import {
   Phone, Users, CalendarDays, ShoppingBag,
   MessageCircle, BarChart3, PhoneOff, TrendingDown,
-  Clock, Check, ArrowRight, Play,
+  Clock, Check, ArrowRight, Play, Target, Rocket, Star,
 } from 'lucide-react';
 import LandingNav from './LandingNav';
 import LandingWidgets from './LandingWidgets';
@@ -179,10 +179,10 @@ export default function LandingPage() {
           <div className="mx-auto sm:mx-0" style={{ maxWidth: 560 }}>
 
             {/* Live waveform indicator */}
-            <div className="inline-flex items-center gap-3 mb-5">
+            <div className="inline-flex items-center gap-3 mb-6">
               <span
                 className="flex items-center gap-1.5 text-xs font-semibold"
-                style={{ color: '#4ade80' }}
+                style={{ color: '#C4A8FF' }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
                 AGENTE EN LÍNEA
@@ -190,17 +190,10 @@ export default function LandingPage() {
               <AudioWaveform barCount={22} />
             </div>
 
-            {/* Badge */}
-            <div
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-semibold mb-7"
-              style={{
-                background: 'rgba(108,59,255,0.22)',
-                border:     '1px solid rgba(108,59,255,0.45)',
-                color:      '#C4A8FF',
-              }}
-            >
-              Agente de voz con IA · Para cualquier negocio
-            </div>
+            {/* Eyebrow */}
+            <p className="text-xs font-semibold tracking-widest uppercase mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+              Agente de voz con inteligencia artificial
+            </p>
 
             {/* Headline */}
             <h1
@@ -271,29 +264,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
-      <section id="demo" style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
-          <AnimatedSection className="text-center mb-12">
-            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-              Demo en vivo
-            </p>
-            <h2
-              className="font-bold tracking-tight mb-4"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
-            >
-              Escúchalo antes de decidir
-            </h2>
-            <p className="max-w-lg mx-auto" style={{ color: C.textSub }}>
-              Llama al agente demo y pruébalo en vivo. Invéntate el negocio que quieras
-              o pídele que elija un escenario por ti — él lleva la conversación.
-            </p>
-          </AnimatedSection>
-
-          <DemoSelector demoPhone={DEMO_PHONE} demoPhoneHref={DEMO_PHONE_HREF} />
-        </div>
-      </section>
-
       {/* ── MARQUEE TICKER ───────────────────────────────────────────────── */}
       <div style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, paddingTop: 14, paddingBottom: 14, background: C.bgAlt }}>
         <Marquee />
@@ -357,7 +327,9 @@ export default function LandingPage() {
                 border:     `1px solid rgba(108,59,255,0.28)`,
               }}
             >
-              <div className="text-2xl flex-shrink-0">🎯</div>
+              <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(108,59,255,0.25)', border: '1px solid rgba(108,59,255,0.4)' }}>
+                <Target size={18} color="#C4A8FF" />
+              </div>
               <div>
                 <p className="font-semibold mb-1" style={{ color: '#fff' }}>
                   Centinelia resuelve los tres problemas a la vez.
@@ -492,39 +464,26 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── CONFIANZA ────────────────────────────────────────────────────── */}
-      <section style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
-          <p className="text-center text-xs font-semibold tracking-widest uppercase mb-8" style={{ color: C.textMute }}>
-            Construido sobre tecnología de nivel empresarial
-          </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 mb-10">
-            {[
-              { name: 'Vapi',         desc: 'Infraestructura de voz IA' },
-              { name: 'ElevenLabs',   desc: 'Síntesis de voz natural' },
-              { name: 'Anthropic',    desc: 'Inteligencia artificial' },
-              { name: 'Twilio',       desc: 'Telefonía y WhatsApp' },
-            ].map(t => (
-              <div key={t.name} className="text-center">
-                <p className="font-bold text-sm" style={{ color: C.text }}>{t.name}</p>
-                <p className="text-xs" style={{ color: C.textMute }}>{t.desc}</p>
-              </div>
-            ))}
-          </div>
-          <div
-            className="rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 max-w-3xl mx-auto"
-            style={{ background: 'rgba(108,59,255,0.06)', border: `1px solid rgba(108,59,255,0.18)` }}
-          >
-            <div className="text-2xl flex-shrink-0">🚀</div>
-            <div>
-              <p className="font-semibold mb-1" style={{ color: C.text }}>
-                Estamos en fase de lanzamiento — primeros 20 clientes.
-              </p>
-              <p className="text-sm" style={{ color: C.textSub }}>
-                Los primeros clientes obtienen precio de lanzamiento fijo garantizado y configuración prioritaria. Una vez que se llenen los 20 lugares, los precios suben a tarifa regular.
-              </p>
-            </div>
-          </div>
+      {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
+      <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}` }}>
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
+          <AnimatedSection className="text-center mb-12">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+              Demo en vivo
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-4"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+            >
+              Escúchalo antes de decidir
+            </h2>
+            <p className="max-w-lg mx-auto" style={{ color: C.textSub }}>
+              Llama al agente demo y pruébalo en vivo. Invéntate el negocio que quieras
+              o pídele que elija un escenario por ti — él lleva la conversación.
+            </p>
+          </AnimatedSection>
+
+          <DemoSelector demoPhone={DEMO_PHONE} demoPhoneHref={DEMO_PHONE_HREF} />
         </div>
       </section>
 
@@ -537,7 +496,7 @@ export default function LandingPage() {
           <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
               style={{ background: 'rgba(108,59,255,0.08)', border: '1px solid rgba(108,59,255,0.2)', color: C.accent }}>
-              🚀 Precio de lanzamiento · Primeros 20 clientes
+              <Rocket size={12} /> Precio de lanzamiento · Primeros 20 clientes
             </div>
             <h2
               className="font-bold tracking-tight mb-4"
@@ -564,17 +523,18 @@ export default function LandingPage() {
                   <div style={{ position: 'absolute', top: 0, left: 0, right: 0, height: 3, background: `linear-gradient(90deg, ${p.color}, ${p.color}88)` }} />
                 )}
 
-                {p.popular && (
-                  <span
-                    className="absolute top-5 right-4 text-xs px-2.5 py-1 rounded-full font-semibold"
-                    style={{ background: p.color, color: '#fff' }}
-                  >
-                    Popular
-                  </span>
-                )}
-
                 <div className="flex items-center justify-between mb-3">
-                  <p className="font-semibold" style={{ color: C.text }}>{p.name}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="font-semibold" style={{ color: C.text }}>{p.name}</p>
+                    {p.popular && (
+                      <span
+                        className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-semibold"
+                        style={{ background: p.color, color: '#fff' }}
+                      >
+                        <Star size={9} style={{ fill: '#fff' }} /> Popular
+                      </span>
+                    )}
+                  </div>
                   <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
                     style={{ background: 'rgba(34,197,94,0.1)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.2)' }}>
                     Lanzamiento
