@@ -3,10 +3,17 @@ import Image from 'next/image';
 import {
   Phone, Users, CalendarDays, ShoppingBag,
   MessageCircle, BarChart3, PhoneOff, TrendingDown,
-  Clock, Check, ArrowRight,
+  Clock, Check, ArrowRight, Play,
 } from 'lucide-react';
 import LandingNav from './LandingNav';
 import LandingWidgets from './LandingWidgets';
+import RotatingNiche from './RotatingNiche';
+import FaqSection from './FaqSection';
+
+// ─── Demo agent ───────────────────────────────────────────────────────────────
+// Reemplaza con el número real del agente demo cuando esté configurado
+const DEMO_PHONE      = '+52 (81) 000-0000';
+const DEMO_PHONE_HREF = 'tel:+5281000000';
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -158,12 +165,12 @@ export default function LandingPage() {
                 color:      '#C4A8FF',
               }}
             >
-              Agente de voz con IA · Hecho para negocios en México
+              Agente de voz con IA · Para cualquier negocio
             </div>
 
             {/* Headline */}
             <h1
-              className="font-bold leading-[1.06] tracking-tight mb-6"
+              className="font-bold leading-[1.06] tracking-tight mb-3"
               style={{ fontSize: 'clamp(2.8rem, 6vw, 5.2rem)', color: '#fff' }}
             >
               El que contesta,
@@ -177,9 +184,14 @@ export default function LandingPage() {
               </span>
             </h1>
 
+            {/* Rotating niche */}
+            <p className="mb-6 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
+              Perfecto para <RotatingNiche />
+            </p>
+
             {/* Sub */}
             <p
-              className="mb-10 leading-relaxed"
+              className="mb-8 leading-relaxed"
               style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)' }}
             >
               Centinelia atiende tus llamadas, agenda citas y captura leads con
@@ -201,15 +213,15 @@ export default function LandingPage() {
                 Contratar ahora <ArrowRight size={15} />
               </Link>
               <a
-                href="#problema"
+                href="#demo"
                 className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-medium transition-colors"
                 style={{
                   background: 'rgba(255,255,255,0.08)',
-                  color:      'rgba(255,255,255,0.72)',
-                  border:     '1px solid rgba(255,255,255,0.15)',
+                  color:      'rgba(255,255,255,0.82)',
+                  border:     '1px solid rgba(255,255,255,0.2)',
                 }}
               >
-                Ver cómo funciona
+                <Play size={13} style={{ fill: 'currentColor' }} /> Prueba la demo
               </a>
             </div>
 
@@ -222,6 +234,80 @@ export default function LandingPage() {
               ))}
             </div>
 
+          </div>
+        </div>
+      </section>
+
+      {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
+      <section id="demo" style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
+          <div className="text-center mb-12">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+              Demo en vivo
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-4"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+            >
+              Escúchalo antes de decidir
+            </h2>
+            <p className="max-w-lg mx-auto" style={{ color: C.textSub }}>
+              Llama al agente demo y pruébalo en vivo. Invéntate el negocio que quieras
+              o pídele que elija un escenario por ti — él lleva la conversación.
+            </p>
+          </div>
+
+          {/* Phone number card */}
+          <div className="max-w-sm mx-auto mb-10">
+            <a
+              href={DEMO_PHONE_HREF}
+              className="flex flex-col items-center gap-3 rounded-2xl p-8 transition-all hover:scale-[1.02]"
+              style={{
+                background: `linear-gradient(135deg, rgba(108,59,255,0.08), rgba(155,109,255,0.05))`,
+                border:     `1.5px solid rgba(108,59,255,0.3)`,
+                boxShadow:  '0 8px 40px rgba(108,59,255,0.1)',
+                textDecoration: 'none',
+              }}
+            >
+              <div
+                className="flex items-center justify-center rounded-full"
+                style={{ width: 52, height: 52, background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' }}
+              >
+                <Phone size={22} color="#fff" />
+              </div>
+              <div className="text-center">
+                <p className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: C.textMute }}>
+                  Agente demo · 24/7
+                </p>
+                <p className="font-bold tabular-nums" style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', color: C.text }}>
+                  {DEMO_PHONE}
+                </p>
+                <p className="text-xs mt-1" style={{ color: C.textMute }}>Toca para llamar desde móvil</p>
+              </div>
+            </a>
+          </div>
+
+          {/* What to expect chips */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
+            {[
+              { n: '1', text: 'Dile qué giro quieres probar: clínica, restaurante, despacho, lo que sea.' },
+              { n: '2', text: 'El agente juega ese papel y lleva la conversación naturalmente.' },
+              { n: '3', text: 'Si te convence, en menos de 24h tienes uno igual para tu negocio.' },
+            ].map(s => (
+              <div
+                key={s.n}
+                className="rounded-xl p-5 flex gap-4 items-start"
+                style={{ background: C.surface, border: `1px solid ${C.border}` }}
+              >
+                <span
+                  className="font-bold flex-shrink-0"
+                  style={{ fontSize: '1.6rem', color: 'rgba(108,59,255,0.18)', lineHeight: 1, minWidth: 32 }}
+                >
+                  {s.n}
+                </span>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{s.text}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -410,6 +496,42 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── CONFIANZA ────────────────────────────────────────────────────── */}
+      <section style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}>
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-14 sm:py-16">
+          <p className="text-center text-xs font-semibold tracking-widest uppercase mb-8" style={{ color: C.textMute }}>
+            Construido sobre tecnología de nivel empresarial
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-6 mb-10">
+            {[
+              { name: 'Vapi',         desc: 'Infraestructura de voz IA' },
+              { name: 'ElevenLabs',   desc: 'Síntesis de voz natural' },
+              { name: 'Anthropic',    desc: 'Inteligencia artificial' },
+              { name: 'Twilio',       desc: 'Telefonía y WhatsApp' },
+            ].map(t => (
+              <div key={t.name} className="text-center">
+                <p className="font-bold text-sm" style={{ color: C.text }}>{t.name}</p>
+                <p className="text-xs" style={{ color: C.textMute }}>{t.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div
+            className="rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5 max-w-3xl mx-auto"
+            style={{ background: 'rgba(108,59,255,0.06)', border: `1px solid rgba(108,59,255,0.18)` }}
+          >
+            <div className="text-2xl flex-shrink-0">🚀</div>
+            <div>
+              <p className="font-semibold mb-1" style={{ color: C.text }}>
+                Estamos en fase de lanzamiento — primeros 20 clientes.
+              </p>
+              <p className="text-sm" style={{ color: C.textSub }}>
+                Los primeros clientes obtienen precio de lanzamiento fijo garantizado y configuración prioritaria. Una vez que se llenen los 20 lugares, los precios suben a tarifa regular.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* ── PLANES ───────────────────────────────────────────────────────── */}
       <section
         className="py-20 sm:py-28"
@@ -502,6 +624,22 @@ export default function LandingPage() {
         </div>
       </section>
 
+      {/* ── FAQ ──────────────────────────────────────────────────────────── */}
+      <section className="max-w-3xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+        <div className="text-center mb-12">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+            Preguntas frecuentes
+          </p>
+          <h2
+            className="font-bold tracking-tight"
+            style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+          >
+            Resolvemos tus dudas
+          </h2>
+        </div>
+        <FaqSection />
+      </section>
+
       {/* ── BOTTOM CTA ───────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden" style={{ background: '#1A0A3B' }}>
         {/* Glow */}
@@ -532,17 +670,30 @@ export default function LandingPage() {
             Tu agente puede estar en línea en menos de 24 horas.<br />
             Sin contratos largos. Sin complicaciones.
           </p>
-          <Link
-            href="/registro"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
-            style={{
-              background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
-              color:      '#fff',
-              boxShadow:  '0 8px 40px rgba(108,59,255,0.55)',
-            }}
-          >
-            Contratar ahora <ArrowRight size={15} />
-          </Link>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/registro"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+              style={{
+                background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
+                color:      '#fff',
+                boxShadow:  '0 8px 40px rgba(108,59,255,0.55)',
+              }}
+            >
+              Contratar ahora <ArrowRight size={15} />
+            </Link>
+            <a
+              href={DEMO_PHONE_HREF}
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-medium transition-all hover:opacity-90"
+              style={{
+                background: 'rgba(255,255,255,0.08)',
+                color:      'rgba(255,255,255,0.72)',
+                border:     '1px solid rgba(255,255,255,0.15)',
+              }}
+            >
+              <Phone size={14} /> Habla con un asesor
+            </a>
+          </div>
         </div>
 
         {/* Duo — peeking up from the bottom edge */}

@@ -87,9 +87,11 @@ Nunca inventes información — si no está en el sistema, dilo honestamente.`);
   if (f.smart_transfer) {
     blocks.push(`TRANSFERENCIA INTELIGENTE:
 Si el cliente solicita hablar con una persona, la situación es urgente, o no puedes resolver su solicitud:
-1. Informa que vas a transferir la llamada
-2. Transfiere al número: ${agent.transfer_number ?? '[número de transferencia no configurado]'}
-Si nadie contesta, ofrece tomar un mensaje y que alguien les llame de regreso.`);
+1. Avisa al cliente: "Con gusto te comunico con el equipo, dame un momento."
+2. Llama a la herramienta notificar_transferencia (incluye nombre del cliente, motivo y resumen breve).
+3. Una vez confirmada la notificación, llama a transferir_llamada para conectar la llamada en tiempo real.
+Si nadie contesta en la transferencia, ofrece tomar un mensaje y que alguien les llame de regreso.
+${agent.transfer_rules?.trim() ? '' : 'Transfiere solo cuando el cliente lo solicite explícitamente o cuando la situación sea urgente y no puedas resolverla.'}`);
   }
 
   // ── Nivel 2: Order taking ──────────────────────────────────────────────────

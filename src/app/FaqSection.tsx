@@ -1,0 +1,109 @@
+'use client';
+
+import { useState } from 'react';
+import { ChevronDown } from 'lucide-react';
+
+const C = {
+  text:    '#1A0A3B',
+  textSub: 'rgba(26,10,59,0.55)',
+  surface: '#FFFFFF',
+  border:  'rgba(108,59,255,0.1)',
+  accent:  '#6C3BFF',
+};
+
+const FAQS = [
+  {
+    q: '¿Suena natural o robótico?',
+    a: 'El agente usa voces de ElevenLabs, la misma tecnología que usan estudios de doblaje y plataformas globales. La mayoría de los clientes no notan la diferencia. Si quieres comprobarlo antes de contratar, llama al agente demo.',
+  },
+  {
+    q: '¿Qué pasa si el agente no sabe responder algo?',
+    a: 'El agente reconoce sus límites. Si no tiene la información, lo dice con honestidad y ofrece tomar los datos del cliente para que el equipo le llame de regreso. Nunca inventa respuestas ni da información incorrecta.',
+  },
+  {
+    q: '¿Cuánto tiempo tarda en estar activo?',
+    a: 'Menos de 24 horas. Después de contratar, accedes al portal, agregas la información de tu negocio (horarios, servicios, precios, FAQs) y el agente queda listo. No necesitas saber de tecnología.',
+  },
+  {
+    q: '¿Funciona para mi tipo de negocio?',
+    a: 'Funciona para cualquier negocio que reciba llamadas: clínicas, restaurantes, despachos, inmobiliarias, tiendas, academias y más. El agente aprende sobre tu negocio específico — no es un bot genérico.',
+  },
+  {
+    q: '¿Puedo cancelar cuando quiera?',
+    a: 'Sí, sin penalizaciones ni trámites. No hay contratos de permanencia. Si decides cancelar, el servicio termina al final del ciclo de facturación.',
+  },
+  {
+    q: '¿Qué pasa si el agente comete un error?',
+    a: 'Tienes acceso a las grabaciones y transcripciones de cada llamada desde tu portal. Si algo no quedó bien, lo ajustas en la configuración en tiempo real y el cambio se aplica en minutos.',
+  },
+  {
+    q: '¿Mis clientes van a saber que están hablando con una IA?',
+    a: 'El agente habla de forma natural y no menciona proactivamente que es un asistente automatizado. Si algún cliente pregunta directamente, el agente responde con honestidad. Puedes personalizar el nombre y la voz del agente para que se sienta parte de tu equipo.',
+  },
+];
+
+export default function FaqSection() {
+  const [open, setOpen] = useState<number | null>(null);
+
+  return (
+    <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+      {FAQS.map((f, i) => {
+        const isOpen = open === i;
+        return (
+          <div
+            key={i}
+            style={{
+              borderRadius: 14,
+              border:       `1px solid ${isOpen ? 'rgba(108,59,255,0.25)' : C.border}`,
+              background:   C.surface,
+              overflow:     'hidden',
+              transition:   'border-color 0.2s',
+            }}
+          >
+            <button
+              onClick={() => setOpen(isOpen ? null : i)}
+              style={{
+                width:          '100%',
+                display:        'flex',
+                alignItems:     'center',
+                justifyContent: 'space-between',
+                gap:            16,
+                padding:        '16px 20px',
+                background:     'none',
+                border:         'none',
+                cursor:         'pointer',
+                textAlign:      'left',
+              }}
+            >
+              <span style={{ fontSize: 14, fontWeight: 600, color: C.text, lineHeight: 1.4 }}>
+                {f.q}
+              </span>
+              <ChevronDown
+                size={16}
+                color={C.accent}
+                style={{
+                  flexShrink: 0,
+                  transform:  isOpen ? 'rotate(180deg)' : 'rotate(0deg)',
+                  transition: 'transform 0.25s',
+                }}
+              />
+            </button>
+            {isOpen && (
+              <p
+                style={{
+                  margin:     0,
+                  padding:    '0 20px 16px',
+                  fontSize:   13,
+                  lineHeight: 1.65,
+                  color:      C.textSub,
+                }}
+              >
+                {f.a}
+              </p>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
