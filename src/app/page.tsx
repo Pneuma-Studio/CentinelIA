@@ -112,7 +112,7 @@ export default function LandingPage() {
       <LandingNav />
 
       {/* ── HERO — full-screen cinematic image ───────────────────────────── */}
-      <section className="relative" style={{ minHeight: '100svh', display: 'flex', alignItems: 'center' }}>
+      <section className="relative" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start' }}>
 
         {/* Background image */}
         <Image
@@ -402,10 +402,10 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character — explicit height so fill image renders */}
-          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 320, height: 410 }}>
-            <Image src="/agent-m4.png" alt="Agente CentinelIA" fill
-              sizes="320px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+          {/* Character — cover + objectPosition muestra cuerpo completo sin letterbox */}
+          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 340, height: 450 }}>
+            <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
+              sizes="340px" style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
           </div>
         </div>
       </section>
