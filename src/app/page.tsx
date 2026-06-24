@@ -394,7 +394,7 @@ export default function LandingPage() {
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            style={{ position: 'relative', zIndex: 1 }}>
+            style={{ position: 'relative', zIndex: 1, marginTop: 48 }}>
             {FEATURES.map((f, i) => (
               <AnimatedSection key={f.title} delay={i * 0.07}>
                 <div
@@ -471,7 +471,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
-      <section id="demo" style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
+      <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}` }}>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
           <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>

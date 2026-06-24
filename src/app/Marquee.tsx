@@ -1,23 +1,23 @@
 'use client';
 
 import {
-  Phone, CalendarDays, Users, ShoppingBag,
-  MessageCircle, BarChart3, ArrowLeftRight,
-  Globe, Cpu, Zap,
+  ArrowLeftRight, Globe, Cpu, Zap,
+  Mic, ShieldCheck, PhoneIncoming, FileText, Clock, BadgeCheck,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 
+// Solo capacidades que NO aparecen en las tarjetas de arriba
 const ITEMS: { icon: LucideIcon; label: string }[] = [
-  { icon: Phone,            label: 'Recepcionista 24/7' },
-  { icon: CalendarDays,     label: 'Agenda de citas' },
-  { icon: Users,            label: 'Captura de leads' },
-  { icon: ShoppingBag,      label: 'Toma de pedidos' },
-  { icon: MessageCircle,    label: 'Resúmenes por WhatsApp' },
-  { icon: BarChart3,        label: 'Portal de reportes' },
-  { icon: ArrowLeftRight,   label: 'Transferencia inteligente' },
-  { icon: Globe,            label: 'Multiidioma ES + EN' },
-  { icon: Cpu,              label: 'Inteligencia Artificial' },
-  { icon: Zap,              label: 'Activo en 24 horas' },
+  { icon: ArrowLeftRight, label: 'Transferencia inteligente' },
+  { icon: Globe,          label: 'Multiidioma ES + EN' },
+  { icon: Cpu,            label: 'Inteligencia Artificial' },
+  { icon: Zap,            label: 'Activo en 24 horas' },
+  { icon: Mic,            label: 'Voz natural y fluida' },
+  { icon: ShieldCheck,    label: 'Sin contratos' },
+  { icon: PhoneIncoming,  label: 'Número local incluido' },
+  { icon: FileText,       label: 'Grabaciones y transcripciones' },
+  { icon: Clock,          label: 'Soporte en español' },
+  { icon: BadgeCheck,     label: 'Recuperador de llamadas perdidas' },
 ];
 
 export default function Marquee() {
