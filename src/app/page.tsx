@@ -621,7 +621,7 @@ export default function LandingPage() {
 
                 {/* Precio regular tachado — contexto */}
                 <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
-                  Antes: <span className="line-through">${fmt(p.origPrice)}/mes</span>
+                  Próximamente: ${fmt(p.origPrice)}/mes
                 </p>
 
                 {/* Precio de lanzamiento — prominente */}
