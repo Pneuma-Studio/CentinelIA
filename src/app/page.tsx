@@ -315,7 +315,7 @@ export default function LandingPage() {
                 Cada llamada perdida<br />es dinero perdido
               </h2>
               <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: '0.875rem', lineHeight: 1.6 }}>
-                Mientras tu negocio está cerrado, tu competencia contesta.
+                Mientras tu negocio no contesta, tu competencia sí lo hace.
                 Esto le pasa a un negocio promedio cada semana:
               </p>
             </div>
@@ -333,7 +333,7 @@ export default function LandingPage() {
               Cada llamada perdida<br />es dinero perdido
             </h2>
             <p className="max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
-              Mientras tu negocio está cerrado, tu competencia contesta.
+              Mientras tu negocio no contesta, tu competencia sí lo hace.
               Esto le pasa a un negocio promedio cada semana:
             </p>
           </AnimatedSection>
