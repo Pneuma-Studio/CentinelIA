@@ -391,7 +391,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Mobile: encabezado centrado + suricata */}
+          {/* Mobile: encabezado centrado */}
           <AnimatedSection className="lg:hidden text-center mb-10">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
@@ -402,15 +402,16 @@ export default function LandingPage() {
             >
               Todo lo que necesitas,<br />desde el primer día
             </h2>
-            <p className="max-w-md mx-auto mb-6" style={{ color: C.textSub }}>
+            <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
               Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
             </p>
-            {/* Suricata mobile */}
-            <div className="agent-float relative mx-auto pointer-events-none select-none" style={{ width: 160, height: 220 }}>
-              <Image src="/agent-f2.png" alt="" fill sizes="160px"
-                style={{ objectFit: 'contain', objectPosition: 'center' }} />
-            </div>
           </AnimatedSection>
+
+          {/* Suricata mobile — absoluta a la derecha, asomándose encima de la primera card */}
+          <div className="agent-float meerkat-f2-mob">
+            <Image src="/agent-f2.png" alt="" fill sizes="120px"
+              style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+          </div>
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -446,7 +447,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── CÓMO FUNCIONA ────────────────────────────────────────────────── */}
-      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+      <section className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28 pb-40 lg:pb-28 relative overflow-hidden">
         <AnimatedSection className="text-center mb-14">
           <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
             Cómo funciona
@@ -482,12 +483,18 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character flotante — centrado mobile, lateral desktop */}
+          {/* Character — desktop: lateral en el flex, mobile: oculto aquí */}
           <div className="agent-float-slow meerkat-duo-stand overflow-hidden">
             <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
-              sizes="(min-width: 1024px) 340px, 100vw"
-              style={{ objectFit: 'cover', objectPosition: 'center 30%' }} />
+              sizes="340px"
+              style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
           </div>
+        </div>
+
+        {/* Duo mobile — asomándose desde el borde inferior de la sección */}
+        <div className="agent-float-slow meerkat-duo-mob">
+          <Image src="/agent-duo-stand2.png" alt="" fill sizes="220px"
+            style={{ objectFit: 'cover', objectPosition: 'center 20%' }} />
         </div>
       </section>
 

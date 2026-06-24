@@ -217,18 +217,48 @@ body {
 }
 
 .meerkat-duo-stand {
-  position: relative;
-  flex-shrink: 0;
-  width: 100%;
-  height: 220px;
-  margin-top: 24px;
+  display: none;
 }
 @media (min-width: 1024px) {
   .meerkat-duo-stand {
+    display: block;
+    position: relative;
+    flex-shrink: 0;
     width: 340px;
     height: 450px;
-    margin-top: 0;
   }
+}
+
+/* Mobile-only absolute meerkats */
+.meerkat-f2-mob {
+  display: block;
+  position: absolute;
+  top: 260px;
+  right: -38px;
+  width: 120px;
+  height: 200px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 1024px) {
+  .meerkat-f2-mob { display: none; }
+}
+
+.meerkat-duo-mob {
+  display: block;
+  position: absolute;
+  bottom: -35px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 220px;
+  height: 260px;
+  z-index: 2;
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 1024px) {
+  .meerkat-duo-mob { display: none; }
 }
 
 /* ── Agent / meerkat animations ─────────────────────────────────────────── */
