@@ -286,7 +286,7 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
-          <AnimatedSection className="text-center mb-14">
+          <AnimatedSection className="pl-32 text-right sm:pl-0 sm:text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
               El problema
             </p>
@@ -296,7 +296,7 @@ export default function LandingPage() {
             >
               Cada llamada perdida<br />es dinero perdido
             </h2>
-            <p className="max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
+            <p className="sm:max-w-lg sm:mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
               Mientras tu negocio está cerrado, tu competencia contesta.
               Esto le pasa a un negocio promedio cada semana:
             </p>

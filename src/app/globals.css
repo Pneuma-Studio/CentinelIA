@@ -195,12 +195,12 @@ body {
 /* ── Meerkat responsive positioning ────────────────────────────────────── */
 .meerkat-money {
   position: absolute;
-  top: 60px;
-  left: -60px;
+  top: 50px;
+  left: -8px;
   right: auto;
   bottom: auto;
-  width: 170px;
-  height: 280px;
+  width: 130px;
+  height: 220px;
   z-index: 2;
   pointer-events: none;
   user-select: none;
