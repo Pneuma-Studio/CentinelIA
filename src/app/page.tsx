@@ -163,14 +163,14 @@ export default function LandingPage() {
           zIndex: 1,
         }} />
 
-        {/* Bottom fade → blends into light page */}
+        {/* Bottom fade → blends into Problema dark section */}
         <div style={{
           position:   'absolute',
           bottom:     0,
           left:       0,
           right:      0,
-          height:     36,
-          background: `linear-gradient(to bottom, transparent, ${C.bg})`,
+          height:     80,
+          background: 'linear-gradient(to bottom, transparent, #0D0520)',
           zIndex:     2,
         }} />
 
@@ -392,11 +392,6 @@ export default function LandingPage() {
             </p>
           </AnimatedSection>
 
-          {/* Marquee — entre heading y tarjetas */}
-          <div style={{ marginBottom: 32, marginLeft: -20, marginRight: -20 }}>
-            <Marquee />
-          </div>
-
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
             style={{ position: 'relative', zIndex: 1 }}>
@@ -421,6 +416,11 @@ export default function LandingPage() {
                 </div>
               </AnimatedSection>
             ))}
+          </div>
+
+          {/* Marquee — debajo de las tarjetas */}
+          <div style={{ marginTop: 40, marginLeft: -20, marginRight: -20 }}>
+            <Marquee />
           </div>
         </div>
       </section>
@@ -471,7 +471,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
-      <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}` }}>
+      <section id="demo" style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
           <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
@@ -495,22 +495,30 @@ export default function LandingPage() {
 
       {/* ── PLANES ───────────────────────────────────────────────────────── */}
       <section
-        className="py-20 sm:py-28"
-        style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}
+        className="py-20 sm:py-28 relative overflow-hidden"
+        style={{ background: '#0D0520' }}
       >
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        {/* Orb de profundidad */}
+        <div className="orb" style={{
+          width: 600, height: 600,
+          top: -100, left: '50%', transform: 'translateX(-50%)',
+          background: 'radial-gradient(circle, rgba(108,59,255,0.2) 0%, transparent 65%)',
+          ['--orb-dur' as string]: '13s',
+        }} />
+
+        <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
-              style={{ background: 'rgba(108,59,255,0.08)', border: '1px solid rgba(108,59,255,0.2)', color: C.accent }}>
+              style={{ background: 'rgba(108,59,255,0.18)', border: '1px solid rgba(108,59,255,0.35)', color: '#C4A8FF' }}>
               <Rocket size={12} /> Precio de lanzamiento · Primeros 20 clientes
             </div>
             <h2
               className="font-bold tracking-tight mb-4"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}
             >
               El precio correcto<br />para tu negocio
             </h2>
-            <p style={{ color: C.textSub }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
+            <p style={{ color: 'rgba(255,255,255,0.5)' }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
           </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
@@ -519,9 +527,12 @@ export default function LandingPage() {
                 key={p.name}
                 className="rounded-2xl p-6 flex flex-col relative overflow-hidden"
                 style={{
-                  background: p.popular ? `${p.color}08` : C.surface,
-                  border:     `1px solid ${p.popular ? p.color + '35' : C.border}`,
-                  boxShadow:  p.popular ? `0 8px 32px ${p.color}18` : 'none',
+                  background: p.popular
+                    ? `linear-gradient(145deg, ${p.color}22, ${p.color}0a)`
+                    : 'rgba(255,255,255,0.04)',
+                  border:    `1px solid ${p.popular ? p.color + '55' : 'rgba(255,255,255,0.09)'}`,
+                  boxShadow:  p.popular ? `0 12px 48px ${p.color}30` : 'none',
+                  backdropFilter: 'blur(12px)',
                 }}
               >
                 {/* Top accent stripe */}
@@ -531,7 +542,7 @@ export default function LandingPage() {
 
                 <div className="flex items-center justify-between mb-3">
                   <div className="flex items-center gap-2">
-                    <p className="font-semibold" style={{ color: C.text }}>{p.name}</p>
+                    <p className="font-semibold" style={{ color: '#fff' }}>{p.name}</p>
                     {p.popular && (
                       <span
                         className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-semibold"
@@ -542,40 +553,41 @@ export default function LandingPage() {
                     )}
                   </div>
                   <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                    style={{ background: 'rgba(34,197,94,0.1)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.2)' }}>
+                    style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
                     Lanzamiento
                   </span>
                 </div>
+
                 <div className="flex items-baseline gap-1.5 mb-0.5">
-                  <span className="text-3xl font-bold tabular-nums" style={{ color: p.popular ? p.color : C.text }}>
+                  <span className="text-3xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
                     ${fmt(p.price)}
                   </span>
-                  <span className="text-sm" style={{ color: C.textMute }}>/mes</span>
-                  <span className="text-sm line-through" style={{ color: C.textMute }}>
+                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
+                  <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>
                     ${fmt(p.origPrice)}
                   </span>
                 </div>
-                <p className="text-xs mb-5" style={{ color: C.textMute }}>
+                <p className="text-xs mb-5" style={{ color: 'rgba(255,255,255,0.35)' }}>
                   + ${fmt(p.setup)} instalación{' '}
-                  <span className="line-through" style={{ color: C.textMute }}>${fmt(p.origSetup)}</span>
+                  <span className="line-through">${fmt(p.origSetup)}</span>
                   {' '}· {fmt(p.minutes)} min incluidos
                 </p>
 
                 <ul className="flex flex-col gap-2 flex-1 mb-6">
                   {p.includes.map(f => (
-                    <li key={f} className="flex items-start gap-2 text-sm" style={{ color: C.textSub }}>
-                      <Check size={13} color={p.color} className="flex-shrink-0 mt-0.5" /> {f}
+                    <li key={f} className="flex items-start gap-2 text-sm" style={{ color: 'rgba(255,255,255,0.6)' }}>
+                      <Check size={13} color={p.popular ? p.color : '#9B6DFF'} className="flex-shrink-0 mt-0.5" /> {f}
                     </li>
                   ))}
                 </ul>
 
                 <Link
                   href="/registro"
-                  className="text-center py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
+                  className="text-center py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.02]"
                   style={{
-                    background: p.popular ? p.color : 'transparent',
-                    color:      p.popular ? '#fff' : p.color,
-                    border:     p.popular ? 'none' : `1.5px solid ${p.color}`,
+                    background: p.popular ? p.color : 'rgba(108,59,255,0.2)',
+                    color:      '#fff',
+                    border:     p.popular ? 'none' : `1.5px solid rgba(108,59,255,0.4)`,
                   }}
                 >
                   Contratar
