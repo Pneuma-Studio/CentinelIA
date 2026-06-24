@@ -291,7 +291,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
 
           {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
-          <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
+          <div className="lg:hidden relative mb-4" style={{ minHeight: 230 }}>
             <div className="absolute" style={{ top: 0, left: -5, width: 105, height: 290, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image
                 src="/agent-money.png"
@@ -423,7 +423,7 @@ export default function LandingPage() {
 
           {/* Mobile: suricata absoluta derecha, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
-            <div className="agent-float absolute" style={{ top: 0, right: -5, width: 115, height: 290, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
+            <div className="agent-float absolute" style={{ top: 0, right: -5, width: 115, height: 360, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image src="/agent-f2.png" alt="" fill sizes="115px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
             </div>
