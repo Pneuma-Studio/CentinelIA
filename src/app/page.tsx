@@ -289,7 +289,35 @@ export default function LandingPage() {
         </div>
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
-          <AnimatedSection className="pl-32 text-right sm:pl-0 sm:text-center mb-14">
+
+          {/* Mobile: float layout — meerkat left, text wraps right */}
+          <div className="lg:hidden mb-8" style={{ overflow: 'visible' }}>
+            <div style={{ float: 'left', width: 105, height: 285, marginRight: 14, position: 'relative' }}>
+              <Image
+                src="/agent-money.png"
+                alt=""
+                fill
+                sizes="105px"
+                style={{ objectFit: 'contain', objectPosition: 'top center' }}
+              />
+            </div>
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
+              El problema
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-3"
+              style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: '#fff', lineHeight: 1.25 }}
+            >
+              Cada llamada perdida<br />es dinero perdido
+            </h2>
+            <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: '0.875rem', lineHeight: 1.6 }}>
+              Mientras tu negocio está cerrado, tu competencia contesta.
+              Esto le pasa a un negocio promedio cada semana:
+            </p>
+          </div>
+
+          {/* Desktop: centered heading */}
+          <AnimatedSection className="hidden lg:block text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
               El problema
             </p>
@@ -299,7 +327,7 @@ export default function LandingPage() {
             >
               Cada llamada perdida<br />es dinero perdido
             </h2>
-            <p className="sm:max-w-lg sm:mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
+            <p className="max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
               Mientras tu negocio está cerrado, tu competencia contesta.
               Esto le pasa a un negocio promedio cada semana:
             </p>
