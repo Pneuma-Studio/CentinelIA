@@ -419,26 +419,24 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Mobile: encabezado centrado */}
-          <AnimatedSection className="lg:hidden text-center mb-10">
+          {/* Mobile: float layout — suricata derecha, texto wraps izquierda */}
+          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -130 }}>
+            <div className="agent-float" style={{ float: 'right', width: 115, height: 280, marginLeft: 14, position: 'relative' }}>
+              <Image src="/agent-f2.png" alt="" fill sizes="115px"
+                style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+            </div>
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
             </p>
             <h2
-              className="font-bold tracking-tight mb-4"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+              className="font-bold tracking-tight mb-3"
+              style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: C.text, lineHeight: 1.25 }}
             >
               Todo lo que necesitas,<br />desde el primer día
             </h2>
-            <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
+            <p style={{ color: C.textSub, fontSize: '0.875rem', lineHeight: 1.6 }}>
               Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
             </p>
-          </AnimatedSection>
-
-          {/* Suricata mobile — absoluta a la derecha, asomándose encima de la primera card */}
-          <div className="agent-float meerkat-f2-mob">
-            <Image src="/agent-f2.png" alt="" fill sizes="120px"
-              style={{ objectFit: 'contain', objectPosition: 'top center' }} />
           </div>
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
