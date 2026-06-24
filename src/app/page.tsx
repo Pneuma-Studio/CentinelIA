@@ -274,7 +274,21 @@ export default function LandingPage() {
           ['--orb-dur' as string]: '11s',
         }} />
 
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
+        {/* Suricata — dinero volando, cortada por el borde inferior */}
+        <div
+          className="hidden lg:block absolute pointer-events-none select-none"
+          style={{ bottom: -110, left: -10, width: 360, height: 600, zIndex: 0 }}
+        >
+          <Image
+            src="/agent-money.png"
+            alt=""
+            fill
+            sizes="360px"
+            style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
+          />
+        </div>
+
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection className="text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
               El problema
