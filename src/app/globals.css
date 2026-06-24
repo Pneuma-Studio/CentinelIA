@@ -169,7 +169,7 @@ body {
 
 .marquee-item {
   white-space: nowrap;
-  padding: 0 1.8rem;
+  padding: 0 2rem;
   font-size: 0.75rem;
   font-weight: 600;
   color: rgba(26,10,59,0.45);
@@ -177,17 +177,7 @@ body {
   text-transform: uppercase;
   display: inline-flex;
   align-items: center;
-  gap: 1.4rem;
-}
-
-.marquee-dot {
-  display: inline-block;
-  width: 4px;
-  height: 4px;
-  border-radius: 50%;
-  background: #6C3BFF;
-  opacity: 0.45;
-  flex-shrink: 0;
+  gap: 0.55rem;
 }
 
 /* ── Pulsing CTA glow ───────────────────────────────────────────────────── */
