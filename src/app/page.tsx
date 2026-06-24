@@ -676,10 +676,10 @@ export default function LandingPage() {
                 {/* Mobile peeking meerkat — right side of button */}
                 <div className="block sm:hidden" style={{
                   position: 'absolute', bottom: p.meerkatBottom, right: 10,
-                  width: 88, height: 88, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
+                  width: 108, height: 108, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
                 }}>
                   <Image src={p.meerkat} alt="" fill sizes="88px"
-                    style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+                    style={{ objectFit: 'cover', objectPosition: 'top center' }} />
                 </div>
                 <Link
                   href="/registro"
