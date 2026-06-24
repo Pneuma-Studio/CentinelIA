@@ -291,7 +291,7 @@ export default function LandingPage() {
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
 
           {/* Mobile: float layout — meerkat left, text wraps right, float contained so cards unaffected */}
-          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -130 }}>
+          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -80 }}>
             <div style={{ float: 'left', width: 105, height: 285, marginRight: 14, position: 'relative' }}>
               <Image
                 src="/agent-money.png"
