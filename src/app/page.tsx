@@ -296,19 +296,26 @@ export default function LandingPage() {
         style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
-          <div className="text-center mb-14">
-            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-              Capacidades
-            </p>
-            <h2
-              className="font-bold tracking-tight mb-4"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
-            >
-              Todo lo que necesitas,<br />desde el primer día
-            </h2>
-            <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
-              Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
-            </p>
+          {/* Header row — text left, character right */}
+          <div className="flex items-end gap-6 mb-14">
+            <div className="flex-1">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+                Capacidades
+              </p>
+              <h2
+                className="font-bold tracking-tight mb-4"
+                style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+              >
+                Todo lo que necesitas,<br />desde el primer día
+              </h2>
+              <p className="max-w-md" style={{ color: C.textSub }}>
+                Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
+              </p>
+            </div>
+            <div className="hidden md:block relative flex-shrink-0" style={{ width: 180, height: 260 }}>
+              <Image src="/agent-f2.png" alt="Agente CentinelIA" fill priority={false}
+                sizes="180px" style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
+            </div>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -346,23 +353,34 @@ export default function LandingPage() {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-8">
-          {[
-            { n: '01', title: 'Elige tu plan y paga',       desc: 'Selecciona el plan que se adapte a tu negocio y completa el pago en línea. Tarda menos de 5 minutos.' },
-            { n: '02', title: 'Configura tu agente',         desc: 'Accede a tu portal, agrega la información de tu negocio y personaliza cómo responde tu agente.' },
-            { n: '03', title: 'Empieza a recibir llamadas',  desc: 'Tu número queda activo en horas. Tu agente atiende, tú solo monitoreas desde el portal.' },
-          ].map(s => (
-            <div key={s.n} className="flex flex-col gap-3">
-              <span
-                className="font-bold tabular-nums"
-                style={{ fontSize: '3.5rem', color: 'rgba(108,59,255,0.18)', lineHeight: 1 }}
-              >
-                {s.n}
-              </span>
-              <h3 className="font-semibold" style={{ color: C.text }}>{s.title}</h3>
-              <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{s.desc}</p>
-            </div>
-          ))}
+        {/* Steps + character side by side */}
+        <div className="flex items-center gap-8 lg:gap-16">
+          <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-8 flex-1">
+            {[
+              { n: '01', title: 'Elige tu plan y paga',       desc: 'Selecciona el plan que se adapte a tu negocio y completa el pago en línea. Tarda menos de 5 minutos.' },
+              { n: '02', title: 'Configura tu agente',         desc: 'Accede a tu portal, agrega la información de tu negocio y personaliza cómo responde tu agente.' },
+              { n: '03', title: 'Empieza a recibir llamadas',  desc: 'Tu número queda activo en horas. Tu agente atiende, tú solo monitoreas desde el portal.' },
+            ].map(s => (
+              <div key={s.n} className="flex gap-5 items-start">
+                <span
+                  className="font-bold tabular-nums flex-shrink-0"
+                  style={{ fontSize: '2.8rem', color: 'rgba(108,59,255,0.18)', lineHeight: 1, minWidth: 64 }}
+                >
+                  {s.n}
+                </span>
+                <div className="pt-1">
+                  <h3 className="font-semibold mb-1.5" style={{ color: C.text }}>{s.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{s.desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Character */}
+          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 260, height: 380 }}>
+            <Image src="/agent-m3.png" alt="Agente CentinelIA" fill
+              sizes="260px" style={{ objectFit: 'contain', objectPosition: 'center bottom' }} />
+          </div>
         </div>
       </section>
 
@@ -460,43 +478,54 @@ export default function LandingPage() {
 
       {/* ── BOTTOM CTA ───────────────────────────────────────────────────── */}
       <section
-        className="px-5 sm:px-8 py-24 sm:py-32"
+        className="overflow-hidden"
         style={{ background: '#1A0A3B' }}
       >
-        <div className="max-w-3xl mx-auto text-center relative">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-32 flex items-end justify-between gap-8 relative">
           {/* Glow */}
           <div style={{
             position:     'absolute',
-            top:          '-60px',
-            left:         '50%',
-            transform:    'translateX(-50%)',
+            top:          0,
+            left:         '20%',
             width:        600,
-            height:       400,
-            background:   'radial-gradient(circle, rgba(108,59,255,0.3) 0%, transparent 65%)',
+            height:       500,
+            background:   'radial-gradient(circle, rgba(108,59,255,0.28) 0%, transparent 65%)',
             pointerEvents:'none',
           }} />
 
-          <h2
-            className="font-bold tracking-tight mb-4 relative"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#fff' }}
-          >
-            ¿Listo para vender<br />más con cada llamada?
-          </h2>
-          <p className="mb-8 relative" style={{ color: 'rgba(255,255,255,0.52)' }}>
-            Tu agente puede estar en línea en menos de 24 horas.<br />
-            Sin contratos largos. Sin complicaciones.
-          </p>
-          <Link
-            href="/registro"
-            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02] relative"
-            style={{
-              background:  'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
-              color:       '#fff',
-              boxShadow:   '0 8px 40px rgba(108,59,255,0.55)',
-            }}
-          >
-            Contratar ahora <ArrowRight size={15} />
-          </Link>
+          {/* Content */}
+          <div className="relative max-w-lg">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
+              Tu equipo te espera
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-5"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#fff' }}
+            >
+              Mientras tú atiendes<br />tu negocio, ellos<br />atienden el teléfono.
+            </h2>
+            <p className="mb-8" style={{ color: 'rgba(255,255,255,0.52)' }}>
+              Tu agente puede estar en línea en menos de 24 horas.<br />
+              Sin contratos largos. Sin complicaciones.
+            </p>
+            <Link
+              href="/registro"
+              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+              style={{
+                background:  'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
+                color:       '#fff',
+                boxShadow:   '0 8px 40px rgba(108,59,255,0.55)',
+              }}
+            >
+              Contratar ahora <ArrowRight size={15} />
+            </Link>
+          </div>
+
+          {/* Characters — the team */}
+          <div className="hidden sm:block relative flex-shrink-0 self-end" style={{ width: 300, height: 400 }}>
+            <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
+              sizes="300px" style={{ objectFit: 'contain', objectPosition: 'right bottom' }} />
+          </div>
         </div>
       </section>
 

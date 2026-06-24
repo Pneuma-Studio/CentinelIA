@@ -3,6 +3,7 @@ export const dynamic = 'force-dynamic';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Phone, CheckCircle, XCircle, CreditCard, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, AlertTriangle, ChevronRight } from 'lucide-react';
 // Phone, CheckCircle, XCircle still used in Agentes tab and alerts
 import type { VoiceCall } from '@/types/agent';
@@ -380,12 +381,18 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {tab === 'resumen' && (
             <div className="flex flex-col gap-5">
               {isFirstTime && (
-                <div className="px-5 py-4 rounded-xl"
+                <div className="flex items-end gap-4 px-5 pt-2 pb-4 rounded-xl overflow-hidden"
                   style={{ background: 'rgba(108,59,255,0.06)', border: '1px solid rgba(108,59,255,0.15)' }}>
-                  <p className="text-sm font-semibold mb-1" style={{ color: '#6C3BFF' }}>¡Tu agente está listo! 🎉</p>
-                  <p className="text-sm leading-relaxed" style={{ color: 'var(--c-text-2)' }}>
-                    Cuando tu número reciba la primera llamada, los registros aparecerán aquí automáticamente.
-                  </p>
+                  <div className="relative flex-shrink-0" style={{ width: 72, height: 100 }}>
+                    <Image src="/agent-m1.png" alt="" fill sizes="72px"
+                      style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
+                  </div>
+                  <div className="pb-1">
+                    <p className="text-sm font-semibold mb-1" style={{ color: '#6C3BFF' }}>¡Tu equipo está listo!</p>
+                    <p className="text-sm leading-relaxed" style={{ color: 'var(--c-text-2)' }}>
+                      En cuanto llegue la primera llamada, los registros aparecerán aquí automáticamente.
+                    </p>
+                  </div>
                 </div>
               )}
 
@@ -434,7 +441,15 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                   <DownloadCallsCSV calls={calls} filename={`llamadas-${agent.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />
                 </div>
                 {calls.length === 0
-                  ? <p className="text-sm text-center py-8" style={{ color: 'var(--c-text-3)' }}>Sin llamadas en este período</p>
+                  ? (
+                    <div className="flex flex-col items-center py-8 gap-3">
+                      <div className="relative" style={{ width: 64, height: 88 }}>
+                        <Image src="/agent-f2.png" alt="" fill sizes="64px"
+                          style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
+                      </div>
+                      <p className="text-sm" style={{ color: 'var(--c-text-3)' }}>Sin llamadas en este período</p>
+                    </div>
+                  )
                   : <div className="flex flex-col gap-2">
                       {calls.slice(0, 30).map(call => <CallCard key={call.id} call={call as any} isPro={agent.plan === 'pro'} />)}
                       {calls.length > 30 && <p className="text-xs text-center pt-1" style={{ color: 'var(--c-text-4)' }}>Mostrando 30 de {calls.length}</p>}
@@ -448,9 +463,15 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
           {tab === 'actividad' && (
             <div className="flex flex-col gap-5">
               {!showLeads && !showOrders && !showAppts ? (
-                <div className="text-center py-16 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-                  <p className="text-sm font-medium" style={{ color: 'var(--c-text-2)' }}>Tu plan no incluye módulos de actividad</p>
-                  <p className="text-xs mt-1" style={{ color: 'var(--c-text-3)' }}>Leads, pedidos y citas están disponibles en planes superiores</p>
+                <div className="flex flex-col items-center py-12 gap-4 rounded-xl" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
+                  <div className="relative" style={{ width: 140, height: 200 }}>
+                    <Image src="/agent-duo-stand.png" alt="" fill sizes="140px"
+                      style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
+                  </div>
+                  <div className="text-center">
+                    <p className="text-sm font-medium" style={{ color: 'var(--c-text-2)' }}>Tu equipo está listo — esperando la primera llamada</p>
+                    <p className="text-xs mt-1" style={{ color: 'var(--c-text-3)' }}>Leads, pedidos y citas están disponibles en planes superiores</p>
+                  </div>
                 </div>
               ) : (
                 <>
