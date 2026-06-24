@@ -189,9 +189,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <ThemeToggle className="!text-[var(--c-text-2)] !bg-[var(--c-surface-2)]" />
               {hasStripe && (
                 <a href={`/api/billing/portal-session?token=${token}`}
-                  className="flex items-center gap-1.5 px-3 py-2 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80"
+                  className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg text-xs font-semibold transition-opacity hover:opacity-80"
                   style={{ background: '#6C3BFF', color: '#fff' }}>
-                  <CreditCard size={13} /> Suscripción
+                  <CreditCard size={13} /><span className="hidden sm:inline">Suscripción</span>
                 </a>
               )}
               <PortalLogout />
@@ -202,21 +202,26 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         {/* Tab nav */}
         <div style={{ background: 'var(--c-modal)', borderBottom: '1px solid var(--c-border)', position: 'relative', zIndex: 9 }}>
           <div className="max-w-4xl mx-auto px-4 sm:px-6">
-            <div className="flex gap-0 overflow-x-auto">
-              {TABS.map(t => (
-                <Link
-                  key={t.id}
-                  href={`/portal/${token}?tab=${t.id}`}
-                  className="px-4 py-3 text-xs font-semibold whitespace-nowrap transition-colors border-b-2"
-                  style={{
-                    borderColor: tab === t.id ? '#6C3BFF' : 'transparent',
-                    color:       tab === t.id ? '#6C3BFF' : 'var(--c-text-3)',
-                    filter:      tab === t.id ? 'drop-shadow(0 0 8px rgba(108,59,255,0.5))' : undefined,
-                  }}
-                >
-                  {t.label}
-                </Link>
-              ))}
+            <div className="relative">
+              <div className="flex gap-0 overflow-x-auto" style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}>
+                {TABS.map(t => (
+                  <Link
+                    key={t.id}
+                    href={`/portal/${token}?tab=${t.id}`}
+                    className="px-4 py-3 text-xs font-semibold whitespace-nowrap transition-colors border-b-2"
+                    style={{
+                      borderColor: tab === t.id ? '#6C3BFF' : 'transparent',
+                      color:       tab === t.id ? '#6C3BFF' : 'var(--c-text-3)',
+                      filter:      tab === t.id ? 'drop-shadow(0 0 8px rgba(108,59,255,0.5))' : undefined,
+                    }}
+                  >
+                    {t.label}
+                  </Link>
+                ))}
+              </div>
+              {/* Fade mask to indicate horizontal scroll on mobile */}
+              <div className="pointer-events-none absolute right-0 top-0 bottom-0 w-10 sm:hidden"
+                style={{ background: 'linear-gradient(to right, transparent, var(--c-modal))' }} />
             </div>
           </div>
         </div>
@@ -616,7 +621,7 @@ function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)', accent
           style={{ background: `${accent}15`, border: `1px solid ${accent}30` }}>{icon}</div>
         <div className="text-2xl font-bold tabular-nums" style={{ color: valueColor }}>{value}</div>
         <div className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-text-2)' }}>{label}</div>
-        {sub && <div className="text-xs mt.0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
+        {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
       </div>
     </div>
   );

@@ -75,7 +75,7 @@ function RecordingPlayer({ url, createdAt }: { url: string; createdAt: string })
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8 }}>
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
           <Play size={11} style={{ color: 'var(--c-text-3)' }} />
           <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--c-text-3)' }}>Grabación</span>
@@ -89,7 +89,7 @@ function RecordingPlayer({ url, createdAt }: { url: string; createdAt: string })
             color:        daysLeft <= 2 ? '#f59e0b' : 'var(--c-text-3)',
           }}>
             <Clock size={10} />
-            Disponible hasta {expiresLabel}
+            Hasta {expiresLabel}
           </span>
           <button
             onClick={handleDownload}

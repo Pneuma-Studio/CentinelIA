@@ -167,7 +167,7 @@ export default async function DashboardPage() {
                     </div>
 
                     {/* Last call */}
-                    <div className="text-right flex-shrink-0 w-20">
+                    <div className="text-right flex-shrink-0 hidden sm:block w-20">
                       {daysSince === null
                         ? <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>Sin llamadas</span>
                         : daysSince === 0
