@@ -619,20 +619,34 @@ export default function LandingPage() {
                   </span>
                 </div>
 
-                <div className="flex items-baseline gap-1.5 mb-0.5">
-                  <span className="text-3xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
+                {/* Precio regular tachado — contexto */}
+                <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
+                  Antes: <span className="line-through">${fmt(p.origPrice)}/mes</span>
+                </p>
+
+                {/* Precio de lanzamiento — prominente */}
+                <div className="flex items-baseline gap-1 mb-4">
+                  <span className="text-4xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
                     ${fmt(p.price)}
                   </span>
-                  <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
-                  <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>
-                    ${fmt(p.origPrice)}
-                  </span>
+                  <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>/mes</span>
                 </div>
-                <p className="text-xs mb-5" style={{ color: 'rgba(255,255,255,0.35)' }}>
-                  + ${fmt(p.setup)} instalación{' '}
-                  <span className="line-through">${fmt(p.origSetup)}</span>
-                  {' '}· {fmt(p.minutes)} min incluidos
-                </p>
+
+                {/* Bloque instalación + minutos */}
+                <div className="rounded-xl px-3 py-2.5 mb-5 flex flex-col gap-2"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                  <div className="flex items-center justify-between text-xs">
+                    <span style={{ color: 'rgba(255,255,255,0.45)' }}>Instalación</span>
+                    <div className="flex items-center gap-2">
+                      <span className="line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>${fmt(p.origSetup)}</span>
+                      <span className="font-semibold" style={{ color: '#fff' }}>${fmt(p.setup)}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between text-xs">
+                    <span style={{ color: 'rgba(255,255,255,0.45)' }}>Minutos incluidos</span>
+                    <span className="font-semibold" style={{ color: '#fff' }}>{fmt(p.minutes)} min/mes</span>
+                  </div>
+                </div>
 
                 <ul className="flex flex-col gap-2 flex-1 mb-6">
                   {p.includes.map(f => (
