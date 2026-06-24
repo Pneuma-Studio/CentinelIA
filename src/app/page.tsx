@@ -780,7 +780,7 @@ export default function LandingPage() {
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer
-        className="max-w-6xl mx-auto px-5 sm:px-8 py-10 flex flex-col sm:flex-row items-center justify-between gap-4"
+        className="max-w-6xl mx-auto px-5 sm:px-8 pt-10 pb-28 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
         <div className="flex items-center gap-3">

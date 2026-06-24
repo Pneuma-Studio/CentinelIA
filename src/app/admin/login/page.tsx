@@ -1,24 +1,24 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
 import { Lock, Loader2 } from 'lucide-react';
-import { Suspense } from 'react';
+import Image from 'next/image';
 
 function LoginForm() {
   const params = useSearchParams();
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
-  const [loading, setLoading] = useState(false);
+  const [error, setError]       = useState('');
+  const [loading, setLoading]   = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     const res = await fetch('/api/admin/auth', {
-      method: 'POST',
+      method:  'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ password }),
+      body:    JSON.stringify({ password }),
     });
     if (res.ok) {
       window.location.href = params.get('from') ?? '/admin/dashboard';
@@ -29,20 +29,37 @@ function LoginForm() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center p-6" style={{ background: '#120726' }}>
-      <div className="w-full max-w-sm">
+    <div
+      className="min-h-screen relative flex items-center justify-center p-6 overflow-hidden film-grain"
+      style={{ background: '#120726' }}
+    >
+      {/* Orbs */}
+      <div className="orb" style={{ width: 600, height: 600, top: -200, left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, rgba(108,59,255,0.25) 0%, transparent 65%)', ['--orb-dur' as string]: '11s' }} />
+      <div className="orb" style={{ width: 280, height: 280, bottom: -80, right: -60, background: 'radial-gradient(circle, rgba(155,109,255,0.18) 0%, transparent 65%)', ['--orb-dur' as string]: '15s' }} />
+
+      <div className="w-full max-w-sm" style={{ position: 'relative', zIndex: 1 }}>
         <div className="text-center mb-8">
-          <div className="inline-flex items-center justify-center w-12 h-12 rounded-2xl mb-4"
-            style={{ background: 'rgba(108,59,255,0.15)', border: '1px solid rgba(108,59,255,0.3)' }}>
-            <Lock size={20} style={{ color: '#9B6DFF' }} />
+          <div className="flex justify-center mb-5">
+            <Image src="/logo-icon.png" alt="CentinelIA" width={68} height={68} style={{ width: 68, height: 68, objectFit: 'contain' }} />
           </div>
-          <h1 className="text-xl font-bold text-white">CentinelIA</h1>
-          <p className="text-sm mt-1" style={{ color: 'rgba(255,255,255,0.4)' }}>Panel de administración</p>
+          <h1 className="text-2xl font-bold text-white" style={{ fontFamily: 'var(--font-sora)' }}>CentinelIA</h1>
+          <p className="text-sm mt-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>Panel de administración</p>
         </div>
 
-        <form onSubmit={handleSubmit} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit}
+          className="flex flex-col gap-4"
+          style={{
+            background:           'rgba(255,255,255,0.04)',
+            backdropFilter:       'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border:               '1px solid rgba(255,255,255,0.09)',
+            borderRadius:         20,
+            padding:              28,
+          }}
+        >
           <div>
-            <label className="block text-xs mb-1.5" style={{ color: 'rgba(255,255,255,0.5)' }}>Contraseña</label>
+            <label className="block text-xs mb-2" style={{ color: 'rgba(255,255,255,0.45)' }}>Contraseña</label>
             <input
               type="password"
               value={password}
@@ -50,21 +67,28 @@ function LoginForm() {
               autoFocus
               required
               placeholder="••••••••"
-              className="w-full rounded-xl px-4 py-3 text-sm outline-none"
+              className="w-full rounded-xl px-4 py-3 text-sm"
               style={{
                 background: 'rgba(255,255,255,0.06)',
-                border: `1px solid ${error ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.1)'}`,
-                color: '#e2e8f0',
+                border:     `1px solid ${error ? 'rgba(239,68,68,0.5)' : 'rgba(255,255,255,0.1)'}`,
+                color:      '#e2e8f0',
+                outline:    'none',
               }}
             />
-            {error && <p className="text-xs mt-1.5" style={{ color: '#f87171' }}>{error}</p>}
+            {error && <p className="text-xs mt-2" style={{ color: '#f87171' }}>{error}</p>}
           </div>
 
           <button
             type="submit"
             disabled={loading || !password}
-            className="w-full py-3 rounded-xl font-semibold text-sm transition-opacity flex items-center justify-center gap-2"
-            style={{ background: '#6C3BFF', color: '#fff', opacity: loading || !password ? 0.6 : 1 }}
+            className="w-full py-3 rounded-xl font-semibold text-sm flex items-center justify-center gap-2 transition-opacity"
+            style={{
+              background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
+              color:      '#fff',
+              opacity:    loading || !password ? 0.6 : 1,
+              border:     'none',
+              cursor:     loading || !password ? 'not-allowed' : 'pointer',
+            }}
           >
             {loading ? <Loader2 size={15} className="animate-spin" /> : <Lock size={14} />}
             {loading ? 'Verificando…' : 'Entrar'}

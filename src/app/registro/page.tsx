@@ -298,7 +298,8 @@ function RegistroInner() {
   // ── Empresarial success screen ─────────────────────────────────────────────
   if (submitted) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-4" style={{ background: '#0D0621' }}>
+      <div className="min-h-screen relative flex flex-col items-center justify-center px-4 overflow-hidden film-grain" style={{ background: '#0D0621' }}>
+      <div className="orb" style={{ width: 500, height: 500, top: -150, left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(circle, rgba(245,158,11,0.15) 0%, transparent 65%)', ['--orb-dur' as string]: '12s' }} />
         <div
           className="w-full max-w-md rounded-3xl p-8 text-center"
           style={{ background: 'rgba(245,158,11,0.07)', border: '1px solid rgba(245,158,11,0.3)' }}
@@ -336,10 +337,13 @@ function RegistroInner() {
   }
 
   return (
-    <div className="min-h-screen" style={{ background: '#0D0621' }}>
+    <div className="min-h-screen relative overflow-hidden film-grain" style={{ background: '#0D0621' }}>
+      {/* Orbs */}
+      <div className="orb" style={{ width: 600, height: 600, top: -200, right: -150, background: 'radial-gradient(circle, rgba(108,59,255,0.2) 0%, transparent 65%)', ['--orb-dur' as string]: '13s' }} />
+      <div className="orb" style={{ width: 400, height: 400, bottom: 50, left: -120, background: 'radial-gradient(circle, rgba(155,109,255,0.12) 0%, transparent 65%)', ['--orb-dur' as string]: '18s' }} />
 
       {/* ── Header ──────────────────────────────────────────────────────────── */}
-      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+      <div style={{ borderBottom: '1px solid rgba(255,255,255,0.06)', position: 'relative', zIndex: 1 }}>
         <div className="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
           <a href="/" className="flex items-center">
             <Image src="/logo-icon.png" alt="Centinelia" width={56} height={56} style={{ width: 56, height: 56, objectFit: 'contain' }} />
@@ -356,7 +360,7 @@ function RegistroInner() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-4 py-10">
+      <div className="max-w-2xl mx-auto px-4 py-10" style={{ position: 'relative', zIndex: 1 }}>
 
         {/* ── Steps indicator ─────────────────────────────────────────────── */}
         <div className="flex items-center justify-center gap-0 mb-10">
