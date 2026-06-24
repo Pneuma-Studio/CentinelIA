@@ -301,8 +301,33 @@ export default function LandingPage() {
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
 
-          {/* Header */}
-          <div className="text-center mb-10">
+          {/* Desktop: 2-col — texto izquierda, suricata derecha asomándose sobre las tarjetas */}
+          <div className="hidden lg:flex items-end gap-10 mb-0">
+            <div className="flex-1">
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+                Capacidades
+              </p>
+              <h2
+                className="font-bold tracking-tight mb-4"
+                style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+              >
+                Todo lo que necesitas,<br />desde el primer día
+              </h2>
+              <p style={{ color: C.textSub }}>
+                Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
+              </p>
+            </div>
+
+            {/* Suricata — marginBottom negativo la hace sobresalir encima de las tarjetas */}
+            <div className="relative flex-shrink-0 pointer-events-none select-none"
+              style={{ width: 280, height: 360, marginBottom: -160 }}>
+              <Image src="/agent-f2.png" alt="" fill sizes="280px"
+                style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+            </div>
+          </div>
+
+          {/* Mobile: encabezado centrado */}
+          <div className="lg:hidden text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
             </p>
@@ -317,35 +342,25 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Peek zone: 140px above the grid gives the meerkat head room to appear */}
-          <div className="relative" style={{ paddingTop: 140 }}>
-            {/* Meerkat — top:0 puts her head in the peek zone; cards cover her body */}
-            <div className="hidden lg:block absolute pointer-events-none select-none"
-              style={{ top: 0, right: 0, width: 260, height: 380, zIndex: 0 }}>
-              <Image src="/agent-f2.png" alt="" fill sizes="260px"
-                style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-            </div>
-
-            {/* Cards at zIndex:1 sit on top of the meerkat's body */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-              style={{ position: 'relative', zIndex: 1 }}>
-              {FEATURES.map(f => (
+          {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+            style={{ position: 'relative', zIndex: 1 }}>
+            {FEATURES.map(f => (
+              <div
+                key={f.title}
+                className="rounded-2xl p-6"
+                style={{ background: C.surface, border: `1px solid ${C.border}` }}
+              >
                 <div
-                  key={f.title}
-                  className="rounded-2xl p-6"
-                  style={{ background: C.surface, border: `1px solid ${C.border}` }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                    style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
-                  >
-                    {f.icon}
-                  </div>
-                  <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
-                  <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
+                  {f.icon}
                 </div>
-              ))}
-            </div>
+                <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
