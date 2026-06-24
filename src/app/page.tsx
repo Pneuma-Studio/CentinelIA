@@ -266,12 +266,15 @@ export default function LandingPage() {
 
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
       <section id="problema" style={{ background: '#0D0520', position: 'relative', overflow: 'hidden' }}>
-        {/* Subtle orb in dark section */}
-        <div className="orb" style={{
+        {/* Static orb — no animation to avoid backdrop-filter flicker */}
+        <div style={{
+          position: 'absolute',
           width: 560, height: 560,
           top: -80, left: '50%', transform: 'translateX(-50%)',
           background: 'radial-gradient(circle, rgba(108,59,255,0.18) 0%, transparent 65%)',
-          ['--orb-dur' as string]: '11s',
+          borderRadius: '50%',
+          filter: 'blur(80px)',
+          pointerEvents: 'none',
         }} />
 
         {/* Suricata — dinero volando, cortada por el borde inferior */}
@@ -306,7 +309,8 @@ export default function LandingPage() {
             {PAINS.map((p, i) => (
               <AnimatedSection key={p.stat} delay={i * 0.1}>
                 <div
-                  className="glass-card rounded-2xl p-6 h-full"
+                  className="rounded-2xl p-6 h-full"
+                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)' }}
                 >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
