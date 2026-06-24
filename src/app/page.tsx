@@ -74,10 +74,10 @@ const PAINS = [
     color: '#d97706',
   },
   {
-    icon:  <Clock size={22} color="#6b7280" />,
+    icon:  <Clock size={22} color="#eab308" />,
     stat:  '16 h',
     label: 'al día tu negocio está cerrado — pero tus clientes no dejan de llamar.',
-    color: '#6b7280',
+    color: '#eab308',
   },
 ];
 
