@@ -83,19 +83,22 @@ const PAINS = [
 
 const PLANS: {
   name: string; price: number; origPrice: number; setup: number; origSetup: number;
-  minutes: number; color: string; popular?: boolean; includes: string[];
+  minutes: number; color: string; popular?: boolean; includes: string[]; meerkat: string;
 }[] = [
   {
     name: 'Recepcionista', price: 1990, origPrice: 2490, setup: 4990, origSetup: 6990, minutes: 200, color: '#6b7280',
     includes: ['Recepcionista 24/7', 'Agenda de citas', 'Resúmenes WhatsApp + Email', 'Portal con horas pico', '200 min/mes incluidos'],
+    meerkat: '/agent-plan-basico.png',
   },
   {
     name: 'Comercial', price: 3490, origPrice: 4490, setup: 7990, origSetup: 9990, minutes: 500, color: '#6C3BFF', popular: true,
     includes: ['Todo Recepcionista', 'Captura de leads', 'Toma de pedidos', 'Escalación a WhatsApp', 'Reporte semanal', '500 min/mes incluidos'],
+    meerkat: '/agent-plan-estandar.png',
   },
   {
     name: 'Pro', price: 6490, origPrice: 8490, setup: 12990, origSetup: 16990, minutes: 1000, color: '#7c3aed',
     includes: ['Todo Comercial', 'Transferencia inteligente', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Grabaciones 7 días', '1,000 min/mes incluidos'],
+    meerkat: '/agent-plan-pro.png',
   },
 ];
 
@@ -530,8 +533,18 @@ export default function LandingPage() {
       </section>
 
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
-      <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}` }}>
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
+      <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, position: 'relative', overflow: 'hidden' }}>
+        {/* Headset meerkat — mobile: overflows from Demo into Planes section below */}
+        <div className="meerkat-headset-mob">
+          <Image src="/agent-headset.png" alt="" fill sizes="170px"
+            style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+        </div>
+        {/* Desktop: right side */}
+        <div className="agent-sway meerkat-headset-desk">
+          <Image src="/agent-headset.png" alt="" fill sizes="260px"
+            style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+        </div>
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-44 sm:py-24">
           <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Demo en vivo
@@ -564,6 +577,12 @@ export default function LandingPage() {
           background: 'radial-gradient(circle, rgba(108,59,255,0.2) 0%, transparent 65%)',
           ['--orb-dur' as string]: '13s',
         }} />
+
+        {/* Headset meerkat desktop — right side of Planes section */}
+        <div className="agent-sway meerkat-headset-desk">
+          <Image src="/agent-headset.png" alt="" fill sizes="260px"
+            style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+        </div>
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection className="text-center mb-14">
@@ -654,13 +673,23 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
+                {/* Mobile peeking meerkat — right side of button */}
+                <div className="block sm:hidden" style={{
+                  position: 'absolute', bottom: 64, right: -20,
+                  width: 88, height: 88, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
+                }}>
+                  <Image src={p.meerkat} alt="" fill sizes="88px"
+                    style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+                </div>
                 <Link
                   href="/registro"
-                  className="text-center py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.02]"
+                  className="block text-center py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.02]"
                   style={{
                     background: p.popular ? p.color : 'rgba(108,59,255,0.2)',
                     color:      '#fff',
                     border:     p.popular ? 'none' : `1.5px solid rgba(108,59,255,0.4)`,
+                    position:   'relative',
+                    zIndex:     1,
                   }}
                 >
                   Contratar
