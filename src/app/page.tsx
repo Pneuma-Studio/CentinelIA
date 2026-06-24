@@ -9,6 +9,7 @@ import LandingNav from './LandingNav';
 import LandingWidgets from './LandingWidgets';
 import RotatingNiche from './RotatingNiche';
 import FaqSection from './FaqSection';
+import DemoSelector from './DemoSelector';
 
 // ─── Demo agent ───────────────────────────────────────────────────────────────
 // Reemplaza con el número real del agente demo cuando esté configurado
@@ -257,58 +258,7 @@ export default function LandingPage() {
             </p>
           </div>
 
-          {/* Phone number card */}
-          <div className="max-w-sm mx-auto mb-10">
-            <a
-              href={DEMO_PHONE_HREF}
-              className="flex flex-col items-center gap-3 rounded-2xl p-8 transition-all hover:scale-[1.02]"
-              style={{
-                background: `linear-gradient(135deg, rgba(108,59,255,0.08), rgba(155,109,255,0.05))`,
-                border:     `1.5px solid rgba(108,59,255,0.3)`,
-                boxShadow:  '0 8px 40px rgba(108,59,255,0.1)',
-                textDecoration: 'none',
-              }}
-            >
-              <div
-                className="flex items-center justify-center rounded-full"
-                style={{ width: 52, height: 52, background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' }}
-              >
-                <Phone size={22} color="#fff" />
-              </div>
-              <div className="text-center">
-                <p className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: C.textMute }}>
-                  Agente demo · 24/7
-                </p>
-                <p className="font-bold tabular-nums" style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', color: C.text }}>
-                  {DEMO_PHONE}
-                </p>
-                <p className="text-xs mt-1" style={{ color: C.textMute }}>Toca para llamar desde móvil</p>
-              </div>
-            </a>
-          </div>
-
-          {/* What to expect chips */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl mx-auto">
-            {[
-              { n: '1', text: 'Dile qué giro quieres probar: clínica, restaurante, despacho, lo que sea.' },
-              { n: '2', text: 'El agente juega ese papel y lleva la conversación naturalmente.' },
-              { n: '3', text: 'Si te convence, en menos de 24h tienes uno igual para tu negocio.' },
-            ].map(s => (
-              <div
-                key={s.n}
-                className="rounded-xl p-5 flex gap-4 items-start"
-                style={{ background: C.surface, border: `1px solid ${C.border}` }}
-              >
-                <span
-                  className="font-bold flex-shrink-0"
-                  style={{ fontSize: '1.6rem', color: 'rgba(108,59,255,0.18)', lineHeight: 1, minWidth: 32 }}
-                >
-                  {s.n}
-                </span>
-                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{s.text}</p>
-              </div>
-            ))}
-          </div>
+          <DemoSelector demoPhone={DEMO_PHONE} demoPhoneHref={DEMO_PHONE_HREF} />
         </div>
       </section>
 
