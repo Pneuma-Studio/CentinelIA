@@ -403,9 +403,9 @@ export default function LandingPage() {
           </div>
 
           {/* Character — explicit height so fill image renders */}
-          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 280, height: 360 }}>
-            <Image src="/agent-m3.png" alt="Agente CentinelIA" fill
-              sizes="280px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 320, height: 410 }}>
+            <Image src="/agent-m4.png" alt="Agente CentinelIA" fill
+              sizes="320px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
           </div>
         </div>
       </section>
