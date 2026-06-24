@@ -293,48 +293,59 @@ export default function LandingPage() {
       {/* ── FEATURES ─────────────────────────────────────────────────────── */}
       <section
         className="py-20 sm:py-28"
-        style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}
+        style={{
+          background: C.bgAlt,
+          borderTop: `1px solid ${C.border}`,
+          borderBottom: `1px solid ${C.border}`,
+        }}
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
-          {/* Header row — text left, character right */}
-          <div className="flex items-end gap-6 mb-14">
-            <div className="flex-1">
-              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-                Capacidades
-              </p>
-              <h2
-                className="font-bold tracking-tight mb-4"
-                style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
-              >
-                Todo lo que necesitas,<br />desde el primer día
-              </h2>
-              <p className="max-w-md" style={{ color: C.textSub }}>
-                Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
-              </p>
-            </div>
-            <div className="hidden md:block relative flex-shrink-0" style={{ width: 180, height: 260 }}>
-              <Image src="/agent-f2.png" alt="Agente CentinelIA" fill priority={false}
-                sizes="180px" style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
-            </div>
+
+          {/* Header */}
+          <div className="text-center mb-10">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+              Capacidades
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-4"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
+            >
+              Todo lo que necesitas,<br />desde el primer día
+            </h2>
+            <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
+              Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {FEATURES.map(f => (
-              <div
-                key={f.title}
-                className="rounded-2xl p-6"
-                style={{ background: C.surface, border: `1px solid ${C.border}` }}
-              >
+          {/* Peek zone: 140px above the grid gives the meerkat head room to appear */}
+          <div className="relative" style={{ paddingTop: 140 }}>
+            {/* Meerkat — top:0 puts her head in the peek zone; cards cover her body */}
+            <div className="hidden lg:block absolute pointer-events-none select-none"
+              style={{ top: 0, right: 0, width: 260, height: 380, zIndex: 0 }}>
+              <Image src="/agent-f2.png" alt="" fill sizes="260px"
+                style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+            </div>
+
+            {/* Cards at zIndex:1 sit on top of the meerkat's body */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
+              style={{ position: 'relative', zIndex: 1 }}>
+              {FEATURES.map(f => (
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
+                  key={f.title}
+                  className="rounded-2xl p-6"
+                  style={{ background: C.surface, border: `1px solid ${C.border}` }}
                 >
-                  {f.icon}
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                    style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
+                  >
+                    {f.icon}
+                  </div>
+                  <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
                 </div>
-                <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -376,10 +387,10 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character */}
-          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 260, height: 380 }}>
+          {/* Character — explicit height so fill image renders */}
+          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 280, height: 360 }}>
             <Image src="/agent-m3.png" alt="Agente CentinelIA" fill
-              sizes="260px" style={{ objectFit: 'contain', objectPosition: 'center bottom' }} />
+              sizes="280px" style={{ objectFit: 'contain', objectPosition: 'center bottom' }} />
           </div>
         </div>
       </section>
@@ -477,55 +488,52 @@ export default function LandingPage() {
       </section>
 
       {/* ── BOTTOM CTA ───────────────────────────────────────────────────── */}
-      <section
-        className="overflow-hidden"
-        style={{ background: '#1A0A3B' }}
-      >
-        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-24 sm:py-32 flex items-end justify-between gap-8 relative">
-          {/* Glow */}
-          <div style={{
-            position:     'absolute',
-            top:          0,
-            left:         '20%',
-            width:        600,
-            height:       500,
-            background:   'radial-gradient(circle, rgba(108,59,255,0.28) 0%, transparent 65%)',
-            pointerEvents:'none',
-          }} />
+      <section className="relative overflow-hidden" style={{ background: '#1A0A3B' }}>
+        {/* Glow */}
+        <div style={{
+          position:     'absolute',
+          top:          0,
+          left:         '50%',
+          transform:    'translateX(-50%)',
+          width:        700,
+          height:       500,
+          background:   'radial-gradient(circle, rgba(108,59,255,0.3) 0%, transparent 65%)',
+          pointerEvents:'none',
+          zIndex:       0,
+        }} />
 
-          {/* Content */}
-          <div className="relative max-w-lg">
-            <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
-              Tu equipo te espera
-            </p>
-            <h2
-              className="font-bold tracking-tight mb-5"
-              style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#fff' }}
-            >
-              Mientras tú atiendes<br />tu negocio, ellos<br />atienden el teléfono.
-            </h2>
-            <p className="mb-8" style={{ color: 'rgba(255,255,255,0.52)' }}>
-              Tu agente puede estar en línea en menos de 24 horas.<br />
-              Sin contratos largos. Sin complicaciones.
-            </p>
-            <Link
-              href="/registro"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
-              style={{
-                background:  'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
-                color:       '#fff',
-                boxShadow:   '0 8px 40px rgba(108,59,255,0.55)',
-              }}
-            >
-              Contratar ahora <ArrowRight size={15} />
-            </Link>
-          </div>
+        {/* Centered text — large bottom padding lifts text above the duo */}
+        <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 420 }}>
+          <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
+            Tu equipo te espera
+          </p>
+          <h2
+            className="font-bold tracking-tight mb-5"
+            style={{ fontSize: 'clamp(1.8rem, 4vw, 2.8rem)', color: '#fff' }}
+          >
+            Mientras tú atiendes tu negocio,<br />ellos atienden el teléfono.
+          </h2>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.52)' }}>
+            Tu agente puede estar en línea en menos de 24 horas.<br />
+            Sin contratos largos. Sin complicaciones.
+          </p>
+          <Link
+            href="/registro"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+            style={{
+              background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
+              color:      '#fff',
+              boxShadow:  '0 8px 40px rgba(108,59,255,0.55)',
+            }}
+          >
+            Contratar ahora <ArrowRight size={15} />
+          </Link>
+        </div>
 
-          {/* Characters — the team */}
-          <div className="hidden sm:block relative flex-shrink-0 self-end" style={{ width: 300, height: 400 }}>
-            <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
-              sizes="300px" style={{ objectFit: 'contain', objectPosition: 'right bottom' }} />
-          </div>
+        {/* Duo — peeking up from the bottom edge */}
+        <div className="absolute bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none" style={{ width: 580, height: 420, zIndex: 1 }}>
+          <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
+            sizes="580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </div>
       </section>
 
