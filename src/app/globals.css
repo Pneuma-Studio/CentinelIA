@@ -192,6 +192,43 @@ body {
   animation: pulse-glow 2.4s ease-in-out infinite;
 }
 
+/* ── Meerkat responsive positioning ────────────────────────────────────── */
+.meerkat-money {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: auto;
+  width: 140px;
+  height: 220px;
+  z-index: 0;
+  pointer-events: none;
+  user-select: none;
+}
+@media (min-width: 1024px) {
+  .meerkat-money {
+    bottom: -110px;
+    left: -10px;
+    right: auto;
+    width: 360px;
+    height: 600px;
+  }
+}
+
+.meerkat-duo-stand {
+  position: relative;
+  flex-shrink: 0;
+  width: 100%;
+  height: 220px;
+  margin-top: 24px;
+}
+@media (min-width: 1024px) {
+  .meerkat-duo-stand {
+    width: 340px;
+    height: 450px;
+    margin-top: 0;
+  }
+}
+
 /* ── Agent / meerkat animations ─────────────────────────────────────────── */
 @keyframes agent-float {
   0%, 100% { transform: translateY(0px); }

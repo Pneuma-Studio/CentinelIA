@@ -275,16 +275,13 @@ export default function LandingPage() {
         }} />
 
         {/* Suricata — dinero volando, cortada por el borde inferior */}
-        <div
-          className="hidden lg:block absolute pointer-events-none select-none"
-          style={{ bottom: -110, left: -10, width: 360, height: 600, zIndex: 0 }}
-        >
+        <div className="meerkat-money">
           <Image
             src="/agent-money.png"
             alt=""
             fill
-            sizes="360px"
-            style={{ objectFit: 'contain', objectPosition: 'bottom left' }}
+            sizes="(min-width: 1024px) 360px, 140px"
+            style={{ objectFit: 'contain', objectPosition: 'bottom center' }}
           />
         </div>
 
@@ -390,7 +387,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Mobile: encabezado centrado */}
+          {/* Mobile: encabezado centrado + suricata */}
           <AnimatedSection className="lg:hidden text-center mb-10">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
@@ -401,9 +398,14 @@ export default function LandingPage() {
             >
               Todo lo que necesitas,<br />desde el primer día
             </h2>
-            <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
+            <p className="max-w-md mx-auto mb-6" style={{ color: C.textSub }}>
               Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
             </p>
+            {/* Suricata mobile */}
+            <div className="agent-float relative mx-auto pointer-events-none select-none" style={{ width: 160, height: 220 }}>
+              <Image src="/agent-f2.png" alt="" fill sizes="160px"
+                style={{ objectFit: 'contain', objectPosition: 'center' }} />
+            </div>
           </AnimatedSection>
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
@@ -453,8 +455,8 @@ export default function LandingPage() {
           </h2>
         </AnimatedSection>
 
-        {/* Steps + character side by side */}
-        <div className="flex items-start gap-8 lg:gap-16">
+        {/* Steps + character side by side on desktop, stacked on mobile */}
+        <div className="flex flex-col lg:flex-row items-start gap-8 lg:gap-16">
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-8 flex-1">
             {[
               { n: '01', title: 'Elige tu plan y paga',       desc: 'Selecciona el plan que se adapte a tu negocio y completa el pago en línea. Tarda menos de 5 minutos.' },
@@ -476,10 +478,11 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character flotante */}
-          <div className="agent-float-slow hidden lg:block relative flex-shrink-0" style={{ width: 340, height: 450 }}>
+          {/* Character flotante — centrado mobile, lateral desktop */}
+          <div className="agent-float-slow meerkat-duo-stand overflow-hidden">
             <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
-              sizes="340px" style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
+              sizes="(min-width: 1024px) 340px, 100vw"
+              style={{ objectFit: 'cover', objectPosition: 'center 30%' }} />
           </div>
         </div>
       </section>
