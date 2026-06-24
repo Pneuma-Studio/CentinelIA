@@ -31,6 +31,7 @@ import CollapsibleSection      from './CollapsibleSection';
 import PeakHoursChart          from './PeakHoursChart';
 import LiveNotifications       from './LiveNotifications';
 import SupportChat             from './SupportChat';
+import CallsSearch             from './CallsSearch';
 
 type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato';
 
@@ -334,38 +335,42 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                     else if (isClientPaused){ statusLabel = 'Pausado';        statusColor = '#f59e0b'; statusBg = 'rgba(245,158,11,0.1)'; }
 
                     return (
-                      <div key={a.id} className="flex items-center gap-3 px-5 py-3"
+                      <div key={a.id} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:gap-3"
                         style={{
                           background: 'var(--c-surface-2)',
                           borderTop: i > 0 ? '1px solid var(--c-divider)' : undefined,
                         }}>
-                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${a.active && !isClientPaused && !isBillingPaused ? 'animate-pulse' : ''}`}
-                          style={{ background: a.active && !isClientPaused && !isBillingPaused ? '#22c55e' : '#ef4444' }} />
 
-                        <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 flex-wrap">
-                            <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                              {a.agent_name?.trim() || 'CentinelIA'}
-                            </span>
-                            {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
-                              <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-                                style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
-                                {PLAN_LABELS[a.plan] ?? a.plan}
+                        {/* Info: status dot + name/badges */}
+                        <div className="flex items-start gap-2.5 flex-1 min-w-0">
+                          <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-[5px] ${a.active && !isClientPaused && !isBillingPaused ? 'animate-pulse' : ''}`}
+                            style={{ background: a.active && !isClientPaused && !isBillingPaused ? '#22c55e' : '#ef4444' }} />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-1.5 flex-wrap">
+                              <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                                {a.agent_name?.trim() || 'CentinelIA'}
                               </span>
-                            ); })()}
-                            <span className="text-xs px-2 py-0.5 rounded-full font-medium"
-                              style={{ background: statusBg, color: statusColor }}>
-                              {statusLabel}
-                            </span>
+                              {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
+                                <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                                  style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
+                                  {PLAN_LABELS[a.plan] ?? a.plan}
+                                </span>
+                              ); })()}
+                              <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                                style={{ background: statusBg, color: statusColor }}>
+                                {statusLabel}
+                              </span>
+                            </div>
+                            {a.phone_number && (
+                              <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                                <Phone size={10} /> {a.phone_number}
+                              </p>
+                            )}
                           </div>
-                          {a.phone_number && (
-                            <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
-                              <Phone size={10} /> {a.phone_number}
-                            </p>
-                          )}
                         </div>
 
-                        <div className="flex items-center gap-1.5 flex-shrink-0">
+                        {/* Action buttons — right-aligned on mobile, inline on desktop */}
+                        <div className="flex items-center gap-1.5 self-end sm:self-center flex-shrink-0">
                           <Link
                             href={`/portal/${a.portal_token}/configurar`}
                             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
@@ -444,7 +449,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <div className="flex items-center justify-between mb-4">
                   <h2 className="text-xs font-semibold tracking-widest uppercase flex items-center gap-1.5" style={{ color: 'var(--c-text-3)' }}>
-                    <PhoneCall size={13} /> Llamadas recientes {calls.length > 0 && `(${calls.length})`}
+                    <PhoneCall size={13} /> Llamadas recientes
                   </h2>
                   <DownloadCallsCSV calls={calls} filename={`llamadas-${agent.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />
                 </div>
@@ -458,10 +463,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                       <p className="text-sm" style={{ color: 'var(--c-text-3)' }}>Sin llamadas en este período</p>
                     </div>
                   )
-                  : <div className="flex flex-col gap-2">
-                      {calls.slice(0, 30).map(call => <CallCard key={call.id} call={call as any} isPro={agent.plan === 'pro'} />)}
-                      {calls.length > 30 && <p className="text-xs text-center pt-1" style={{ color: 'var(--c-text-4)' }}>Mostrando 30 de {calls.length}</p>}
-                    </div>
+                  : <CallsSearch calls={calls as any} isPro={agent.plan === 'pro'} />
                 }
               </div>
             </div>
@@ -616,11 +618,13 @@ function KpiCard({ icon, value, label, sub, valueColor = 'var(--c-text)', accent
     <div className="rounded-xl overflow-hidden"
       style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
       <div style={{ height: 3, background: `linear-gradient(90deg, ${accent}, ${accent}66)` }} />
-      <div className="p-4">
-        <div className="p-1.5 rounded-lg w-fit mb-2"
-          style={{ background: `${accent}15`, border: `1px solid ${accent}30` }}>{icon}</div>
-        <div className="text-2xl font-bold tabular-nums" style={{ color: valueColor }}>{value}</div>
-        <div className="text-xs font-semibold mt-0.5" style={{ color: 'var(--c-text-2)' }}>{label}</div>
+      <div className="p-3">
+        <div className="flex items-center gap-2 mb-1.5">
+          <div className="p-1.5 rounded-lg flex-shrink-0"
+            style={{ background: `${accent}15`, border: `1px solid ${accent}30` }}>{icon}</div>
+          <div className="text-xl font-bold tabular-nums leading-none" style={{ color: valueColor }}>{value}</div>
+        </div>
+        <div className="text-xs font-semibold" style={{ color: 'var(--c-text-2)' }}>{label}</div>
         {sub && <div className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>{sub}</div>}
       </div>
     </div>

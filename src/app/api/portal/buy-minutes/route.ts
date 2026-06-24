@@ -2,8 +2,8 @@ import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 
-const FIXED_PACKAGES: Record<number, number> = { 100: 999, 200: 1999 };
-const PRICE_PER_MIN = 10;
+const FIXED_PACKAGES: Record<number, number> = { 100: 1200, 200: 2400 };
+const PRICE_PER_MIN = 12;
 
 function calcPrice(minutes: number): number {
   return FIXED_PACKAGES[minutes] ?? minutes * PRICE_PER_MIN;

@@ -3,7 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe } from '@/lib/stripe';
 
 const VALID_PACKS = [100, 250, 500];
-const PRICE_PER_MIN = 1000; // $10 MXN = 1000 centavos
+const PRICE_PER_MIN = 1200; // $12 MXN = 1200 centavos
 
 interface Params { params: Promise<{ token: string }> }
 

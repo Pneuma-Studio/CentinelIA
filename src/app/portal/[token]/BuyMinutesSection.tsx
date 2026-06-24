@@ -3,11 +3,11 @@
 import { useState } from 'react';
 import { Zap } from 'lucide-react';
 
-const PRICE_PER_MIN = 10;
+const PRICE_PER_MIN = 12;
 
 const PACKAGES = [
-  { minutes: 100, label: '100 min', price: 999 },
-  { minutes: 200, label: '200 min', price: 1999 },
+  { minutes: 100, label: '100 min', price: 1200 },
+  { minutes: 200, label: '200 min', price: 2400 },
 ];
 
 function calcPrice(minutes: number): number {

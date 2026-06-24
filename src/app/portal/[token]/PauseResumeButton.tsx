@@ -36,7 +36,7 @@ export default function PauseResumeButton({ agentId, clientPaused }: {
     <button
       onClick={handleToggle}
       disabled={loading}
-      className="flex items-center gap-1.5 px-2.5 sm:px-4 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-80"
+      className="flex items-center gap-1 px-2.5 sm:px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
       style={clientPaused
         ? { background: 'rgba(34,197,94,0.1)', color: '#16a34a', border: '1px solid rgba(34,197,94,0.2)' }
         : { background: 'rgba(239,68,68,0.08)', color: '#dc2626', border: '1px solid rgba(239,68,68,0.15)' }
