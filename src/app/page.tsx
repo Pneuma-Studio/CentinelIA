@@ -290,9 +290,9 @@ export default function LandingPage() {
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
 
-          {/* Mobile: float layout — meerkat left, text wraps right, float contained so cards unaffected */}
-          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -80 }}>
-            <div style={{ float: 'left', width: 105, height: 285, marginRight: 14, position: 'relative' }}>
+          {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
+          <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
+            <div className="absolute" style={{ top: 0, left: -5, width: 105, height: 290, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image
                 src="/agent-money.png"
                 alt=""
@@ -301,19 +301,21 @@ export default function LandingPage() {
                 style={{ objectFit: 'contain', objectPosition: 'top center' }}
               />
             </div>
-            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
-              El problema
-            </p>
-            <h2
-              className="font-bold tracking-tight mb-3"
-              style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: '#fff', lineHeight: 1.25 }}
-            >
-              Cada llamada perdida<br />es dinero perdido
-            </h2>
-            <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: '0.875rem', lineHeight: 1.6 }}>
-              Mientras tu negocio está cerrado, tu competencia contesta.
-              Esto le pasa a un negocio promedio cada semana:
-            </p>
+            <div style={{ paddingLeft: 112 }}>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
+                El problema
+              </p>
+              <h2
+                className="font-bold tracking-tight mb-3"
+                style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: '#fff', lineHeight: 1.25 }}
+              >
+                Cada llamada perdida<br />es dinero perdido
+              </h2>
+              <p style={{ color: 'rgba(255,255,255,0.52)', fontSize: '0.875rem', lineHeight: 1.6 }}>
+                Mientras tu negocio está cerrado, tu competencia contesta.
+                Esto le pasa a un negocio promedio cada semana:
+              </p>
+            </div>
           </div>
 
           {/* Desktop: centered heading */}
@@ -419,29 +421,31 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Mobile: float layout — suricata derecha, texto wraps izquierda */}
-          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -130 }}>
-            <div className="agent-float" style={{ float: 'right', width: 115, height: 280, marginLeft: 14, position: 'relative' }}>
+          {/* Mobile: suricata absoluta derecha, desborda hacia tarjetas */}
+          <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
+            <div className="agent-float absolute" style={{ top: 0, right: -5, width: 115, height: 290, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image src="/agent-f2.png" alt="" fill sizes="115px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
             </div>
-            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-              Capacidades
-            </p>
-            <h2
-              className="font-bold tracking-tight mb-3"
-              style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: C.text, lineHeight: 1.25 }}
-            >
-              Todo lo que necesitas,<br />desde el primer día
-            </h2>
-            <p style={{ color: C.textSub, fontSize: '0.875rem', lineHeight: 1.6 }}>
-              Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
-            </p>
+            <div style={{ paddingRight: 122 }}>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
+                Capacidades
+              </p>
+              <h2
+                className="font-bold tracking-tight mb-3"
+                style={{ fontSize: 'clamp(1.3rem, 5.5vw, 1.7rem)', color: C.text, lineHeight: 1.25 }}
+              >
+                Todo lo que necesitas,<br />desde el primer día
+              </h2>
+              <p style={{ color: C.textSub, fontSize: '0.875rem', lineHeight: 1.6 }}>
+                Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
+              </p>
+            </div>
           </div>
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
-            style={{ position: 'relative', zIndex: 1, marginTop: 48 }}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:mt-12"
+            style={{ position: 'relative', zIndex: 1 }}>
             {FEATURES.map((f, i) => (
               <AnimatedSection key={f.title} delay={i * 0.07}>
                 <div
