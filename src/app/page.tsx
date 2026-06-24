@@ -517,8 +517,8 @@ export default function LandingPage() {
           zIndex:       0,
         }} />
 
-        {/* Centered text — large bottom padding lifts text above the duo */}
-        <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 420 }}>
+        {/* Centered text — bottom padding creates space for the duo below */}
+        <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 280 }}>
           <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
             Tu equipo te espera
           </p>
