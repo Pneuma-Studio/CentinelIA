@@ -264,11 +264,6 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* ── MARQUEE TICKER ───────────────────────────────────────────────── */}
-      <div style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, paddingTop: 14, paddingBottom: 14, background: C.bgAlt }}>
-        <Marquee />
-      </div>
-
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
       <section id="problema" style={{ background: '#0D0520', position: 'relative', overflow: 'hidden' }}>
         {/* Subtle orb in dark section */}
@@ -300,8 +295,7 @@ export default function LandingPage() {
             {PAINS.map((p, i) => (
               <AnimatedSection key={p.stat} delay={i * 0.1}>
                 <div
-                  className="rounded-2xl p-6 h-full"
-                  style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)` }}
+                  className="glass-card rounded-2xl p-6 h-full"
                 >
                   <div
                     className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
@@ -346,14 +340,16 @@ export default function LandingPage() {
 
       {/* ── FEATURES ─────────────────────────────────────────────────────── */}
       <section
-        className="py-20 sm:py-28"
+        className="py-20 sm:py-28 relative overflow-hidden"
         style={{
-          background: C.bgAlt,
+          background: `radial-gradient(ellipse at 10% 20%, rgba(108,59,255,0.09) 0%, transparent 55%),
+                       radial-gradient(ellipse at 90% 80%, rgba(155,109,255,0.07) 0%, transparent 50%),
+                       ${C.bgAlt}`,
           borderTop: `1px solid ${C.border}`,
           borderBottom: `1px solid ${C.border}`,
         }}
       >
-        <div className="max-w-5xl mx-auto px-5 sm:px-8">
+        <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
 
           {/* Desktop: 2-col — texto izquierda, suricata derecha asomándose sobre las tarjetas */}
           <div className="hidden lg:flex items-end gap-10 mb-0">
@@ -372,8 +368,8 @@ export default function LandingPage() {
               </p>
             </AnimatedSection>
 
-            {/* Suricata — marginBottom negativo la hace sobresalir encima de las tarjetas */}
-            <div className="relative flex-shrink-0 pointer-events-none select-none"
+            {/* Suricata flotante */}
+            <div className="agent-float relative flex-shrink-0 pointer-events-none select-none"
               style={{ width: 280, height: 360, marginBottom: -160 }}>
               <Image src="/agent-f2.png" alt="" fill sizes="280px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
@@ -381,7 +377,7 @@ export default function LandingPage() {
           </div>
 
           {/* Mobile: encabezado centrado */}
-          <AnimatedSection className="lg:hidden text-center mb-14">
+          <AnimatedSection className="lg:hidden text-center mb-10">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
             </p>
@@ -396,24 +392,34 @@ export default function LandingPage() {
             </p>
           </AnimatedSection>
 
+          {/* Marquee — entre heading y tarjetas */}
+          <div style={{ marginBottom: 32, marginLeft: -20, marginRight: -20 }}>
+            <Marquee />
+          </div>
+
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
             style={{ position: 'relative', zIndex: 1 }}>
-            {FEATURES.map(f => (
-              <div
-                key={f.title}
-                className="rounded-2xl p-6"
-                style={{ background: C.surface, border: `1px solid ${C.border}` }}
-              >
+            {FEATURES.map((f, i) => (
+              <AnimatedSection key={f.title} delay={i * 0.07}>
                 <div
-                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                  style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
+                  className="feature-card rounded-2xl p-6 h-full"
+                  style={{
+                    background:  C.surface,
+                    border:      `1px solid ${C.border}`,
+                    boxShadow:   '0 2px 16px rgba(108,59,255,0.05)',
+                  }}
                 >
-                  {f.icon}
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                    style={{ background: `${f.color}10`, border: `1px solid ${f.color}22` }}
+                  >
+                    {f.icon}
+                  </div>
+                  <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
+                  <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
                 </div>
-                <h3 className="font-semibold mb-2" style={{ color: C.text }}>{f.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.desc}</p>
-              </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -456,8 +462,8 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character — cover + objectPosition muestra cuerpo completo sin letterbox */}
-          <div className="hidden lg:block relative flex-shrink-0" style={{ width: 340, height: 450 }}>
+          {/* Character flotante */}
+          <div className="agent-float-slow hidden lg:block relative flex-shrink-0" style={{ width: 340, height: 450 }}>
             <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
               sizes="340px" style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
           </div>
@@ -651,8 +657,8 @@ export default function LandingPage() {
           </div>
         </div>
 
-        {/* Duo — peeking up from the bottom edge */}
-        <div className="absolute bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none" style={{ width: 580, height: 420, zIndex: 1 }}>
+        {/* Duo flotante — peeking up from the bottom edge */}
+        <div className="agent-sway absolute bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none" style={{ width: 580, height: 420, zIndex: 1 }}>
           <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
             sizes="580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </div>
