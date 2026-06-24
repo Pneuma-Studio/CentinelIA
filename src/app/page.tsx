@@ -281,7 +281,7 @@ export default function LandingPage() {
             alt=""
             fill
             sizes="(min-width: 1024px) 360px, 140px"
-            style={{ objectFit: 'contain', objectPosition: 'bottom center' }}
+            style={{ objectFit: 'contain', objectPosition: 'top center' }}
           />
         </div>
 
