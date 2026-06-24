@@ -323,7 +323,7 @@ export default function LandingPage() {
             <div className="hidden lg:block absolute pointer-events-none select-none"
               style={{ top: 0, right: 0, width: 260, height: 380, zIndex: 0 }}>
               <Image src="/agent-f2.png" alt="" fill sizes="260px"
-                style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+                style={{ objectFit: 'contain', objectPosition: 'top center' }} />
             </div>
 
             {/* Cards at zIndex:1 sit on top of the meerkat's body */}
@@ -365,7 +365,7 @@ export default function LandingPage() {
         </div>
 
         {/* Steps + character side by side */}
-        <div className="flex items-center gap-8 lg:gap-16">
+        <div className="flex items-start gap-8 lg:gap-16">
           <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-8 flex-1">
             {[
               { n: '01', title: 'Elige tu plan y paga',       desc: 'Selecciona el plan que se adapte a tu negocio y completa el pago en línea. Tarda menos de 5 minutos.' },
@@ -390,7 +390,7 @@ export default function LandingPage() {
           {/* Character — explicit height so fill image renders */}
           <div className="hidden lg:block relative flex-shrink-0" style={{ width: 280, height: 360 }}>
             <Image src="/agent-m3.png" alt="Agente CentinelIA" fill
-              sizes="280px" style={{ objectFit: 'contain', objectPosition: 'center bottom' }} />
+              sizes="280px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
           </div>
         </div>
       </section>
