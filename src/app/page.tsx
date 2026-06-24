@@ -120,10 +120,10 @@ export default function LandingPage() {
           alt=""
           fill
           priority
-          quality={90}
-          sizes="100vw"
+          quality={100}
+          sizes="(max-width: 640px) 200vw, (max-width: 1280px) 150vw, 100vw"
           className="hero-bg-img"
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'cover', objectPosition: 'center 72%' }}
         />
 
         {/* Base dark overlay — ensures readability on mobile */}
@@ -141,7 +141,7 @@ export default function LandingPage() {
           bottom:     0,
           left:       0,
           right:      0,
-          height:     80,
+          height:     36,
           background: `linear-gradient(to bottom, transparent, ${C.bg})`,
         }} />
 
