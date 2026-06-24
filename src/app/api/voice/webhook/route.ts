@@ -155,7 +155,7 @@ export async function POST(req: NextRequest) {
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, client_email, transfer_whatsapp, portal_token, notify_whatsapp, notify_email, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id')
+        .select('business_name, agent_name, client_email, transfer_whatsapp, portal_token, notify_whatsapp, notify_email, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id, missed_call_recovery')
         .eq('id', resolvedAgentId)
         .single();
 
@@ -228,6 +228,26 @@ export async function POST(req: NextRequest) {
       if (reviewUrl && callerWa && goodCall && durationSeconds >= 60) {
         const reviewMsg = `¡Hola! Gracias por contactar a *${agent?.business_name}*. Si le atendimos bien, nos ayudaría mucho dejar una reseña en Google 🙏\n\n${reviewUrl}`;
         await sendWhatsApp(callerWa, reviewMsg).catch(() => null);
+      }
+
+      // 9. Missed-call WhatsApp recovery — send one message per caller per hour
+      if (outcome === 'missed' && callerNumber && (agent as any)?.missed_call_recovery) {
+        const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+        const { count: recentMissed } = await supabase
+          .from('voice_calls')
+          .select('id', { count: 'exact', head: true })
+          .eq('agent_id', resolvedAgentId)
+          .eq('caller_number', callerNumber)
+          .eq('outcome', 'missed')
+          .gte('created_at', oneHourAgo);
+
+        // recentMissed includes the call we just inserted; > 1 means we already sent one this hour
+        if ((recentMissed ?? 0) <= 1) {
+          const bizName   = agent?.business_name ?? 'nosotros';
+          const agentName = (agent as any)?.agent_name?.trim() || 'Centinela';
+          const recoveryMsg = `Hola 👋 Vi que intentaste comunicarte con *${bizName}*. Soy ${agentName}, ¿en qué te puedo ayudar?`;
+          await sendWhatsApp(callerNumber, recoveryMsg).catch(() => null);
+        }
       }
 
       break;

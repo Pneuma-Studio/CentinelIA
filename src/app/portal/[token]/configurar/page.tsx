@@ -157,6 +157,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               token={token}
               initWhatsApp={(agent as any).notify_whatsapp ?? true}
               initEmail={(agent as any).notify_email ?? true}
+              initMissedCallRecovery={(agent as any).missed_call_recovery ?? false}
             />
           </div>
 

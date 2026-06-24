@@ -88,11 +88,12 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
   }
 
   if (agent.features.smart_transfer) {
+    // Step 1 — notify owner via WhatsApp before the transfer
     tools.push({
       type: 'function',
       function: {
         name: 'notificar_transferencia',
-        description: 'Notifica al equipo por WhatsApp antes de transferir la llamada a un humano.',
+        description: 'Notifica al equipo por WhatsApp que viene una transferencia. Llama a esta herramienta PRIMERO, luego usa transferir_llamada.',
         parameters: {
           type: 'object',
           properties: {
@@ -105,6 +106,27 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
       },
       server: { url: `${base}/notificar-transferencia?agent_id=${id}` },
     });
+
+    // Step 2 — native Vapi call transfer (only if a transfer number is configured)
+    if (agent.transfer_number) {
+      tools.push({
+        type: 'transferCall',
+        function: {
+          name: 'transferir_llamada',
+          description: 'Transfiere la llamada en tiempo real al equipo. Úsala DESPUÉS de notificar_transferencia cuando el cliente quiera hablar con un humano.',
+          parameters: { type: 'object', properties: {} },
+        },
+        destinations: [{
+          type: 'number',
+          number: agent.transfer_number,
+          message: 'Un momento por favor, te estoy comunicando con el equipo.',
+        }],
+        messages: [{
+          type: 'request-start',
+          content: 'Claro, con mucho gusto te comunico con el equipo ahora mismo.',
+        }],
+      });
+    }
   }
 
   const ids: string[] = [];
@@ -135,6 +157,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       messages: [{ role: 'system', content: buildSystemPrompt(agent) }],
       temperature: 0.4,
       maxTokens: 300,
+      ...(toolIds.length > 0 ? { toolIds } : {}),
     },
     voice: {
       provider: '11labs',
