@@ -292,7 +292,8 @@ export default function LandingPage() {
 
           {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4">
-            <div className="absolute" style={{ bottom: -50, left: -5, width: 105, height: 188, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
+            {/* Suricata — ancla su bottom justo en el top de las tarjetas */}
+            <div className="absolute" style={{ bottom: -16, left: -5, width: 105, height: 188, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image
                 src="/agent-money.png"
                 alt=""
@@ -301,6 +302,8 @@ export default function LandingPage() {
                 style={{ objectFit: 'contain', objectPosition: 'top center' }}
               />
             </div>
+            {/* Gradient fade que disuelve los pies en el fondo oscuro */}
+            <div className="absolute" style={{ bottom: -16, left: -5, width: 110, height: 70, background: 'linear-gradient(to bottom, transparent 0%, #0D0520 100%)', zIndex: 2, pointerEvents: 'none' }} />
             <div style={{ paddingLeft: 112 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
                 El problema
