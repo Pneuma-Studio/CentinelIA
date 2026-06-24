@@ -10,6 +10,9 @@ import LandingWidgets from './LandingWidgets';
 import RotatingNiche from './RotatingNiche';
 import FaqSection from './FaqSection';
 import DemoSelector from './DemoSelector';
+import AnimatedSection from './AnimatedSection';
+import AudioWaveform from './AudioWaveform';
+import Marquee from './Marquee';
 
 // ─── Demo agent ───────────────────────────────────────────────────────────────
 // Reemplaza con el número real del agente demo cuando esté configurado
@@ -120,7 +123,7 @@ export default function LandingPage() {
       <LandingNav />
 
       {/* ── HERO — full-screen cinematic image ───────────────────────────── */}
-      <section className="relative" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start' }}>
+      <section className="relative film-grain" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start' }}>
 
         {/* Background image */}
         <Image
@@ -143,6 +146,23 @@ export default function LandingPage() {
           background: 'linear-gradient(95deg, rgba(5,1,18,0.5) 0%, rgba(5,1,18,0.3) 45%, transparent 75%)',
         }} />
 
+        {/* Animated orbs */}
+        <div className="orb" style={{
+          width: 480, height: 480,
+          top: -60, left: -120,
+          background: 'radial-gradient(circle, rgba(108,59,255,0.35) 0%, transparent 65%)',
+          ['--orb-dur' as string]: '9s',
+          zIndex: 1,
+        }} />
+        <div className="orb" style={{
+          width: 320, height: 320,
+          top: 80, right: '15%',
+          background: 'radial-gradient(circle, rgba(155,109,255,0.2) 0%, transparent 65%)',
+          ['--orb-dur' as string]: '12s',
+          animationDelay: '-4s',
+          zIndex: 1,
+        }} />
+
         {/* Bottom fade → blends into light page */}
         <div style={{
           position:   'absolute',
@@ -151,11 +171,24 @@ export default function LandingPage() {
           right:      0,
           height:     36,
           background: `linear-gradient(to bottom, transparent, ${C.bg})`,
+          zIndex:     2,
         }} />
 
         {/* Content — centered on mobile, left-aligned on sm+ */}
-        <div className="relative w-full max-w-6xl mx-auto px-5 sm:px-8 text-center sm:text-left" style={{ paddingTop: 100, paddingBottom: 80 }}>
+        <div className="relative w-full max-w-6xl mx-auto px-5 sm:px-8 text-center sm:text-left" style={{ paddingTop: 100, paddingBottom: 80, zIndex: 3 }}>
           <div className="mx-auto sm:mx-0" style={{ maxWidth: 560 }}>
+
+            {/* Live waveform indicator */}
+            <div className="inline-flex items-center gap-3 mb-5">
+              <span
+                className="flex items-center gap-1.5 text-xs font-semibold"
+                style={{ color: '#4ade80' }}
+              >
+                <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
+                AGENTE EN LÍNEA
+              </span>
+              <AudioWaveform barCount={22} />
+            </div>
 
             {/* Badge */}
             <div
@@ -204,11 +237,10 @@ export default function LandingPage() {
             <div className="flex flex-col sm:flex-row items-center sm:items-start gap-3 mb-10">
               <Link
                 href="/registro"
-                className="flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+                className="cta-pulse flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
                 style={{
                   background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
                   color:      '#fff',
-                  boxShadow:  '0 8px 32px rgba(108,59,255,0.55)',
                 }}
               >
                 Contratar ahora <ArrowRight size={15} />
@@ -242,7 +274,7 @@ export default function LandingPage() {
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
       <section id="demo" style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-24">
-          <div className="text-center mb-12">
+          <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Demo en vivo
             </p>
@@ -256,73 +288,87 @@ export default function LandingPage() {
               Llama al agente demo y pruébalo en vivo. Invéntate el negocio que quieras
               o pídele que elija un escenario por ti — él lleva la conversación.
             </p>
-          </div>
+          </AnimatedSection>
 
           <DemoSelector demoPhone={DEMO_PHONE} demoPhoneHref={DEMO_PHONE_HREF} />
         </div>
       </section>
 
+      {/* ── MARQUEE TICKER ───────────────────────────────────────────────── */}
+      <div style={{ borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}`, paddingTop: 14, paddingBottom: 14, background: C.bgAlt }}>
+        <Marquee />
+      </div>
+
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
-      <section
-        id="problema"
-        className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28"
-        style={{ borderTop: `1px solid ${C.border}` }}
-      >
-        <div className="text-center mb-14">
-          <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
-            El problema
-          </p>
-          <h2
-            className="font-bold tracking-tight mb-4"
-            style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: C.text }}
-          >
-            Cada llamada perdida<br />es dinero perdido
-          </h2>
-          <p className="max-w-lg mx-auto" style={{ color: C.textSub }}>
-            Mientras tu negocio está cerrado, tu competencia contesta.
-            Esto le pasa a un negocio promedio cada semana:
-          </p>
-        </div>
+      <section id="problema" style={{ background: '#0D0520', position: 'relative', overflow: 'hidden' }}>
+        {/* Subtle orb in dark section */}
+        <div className="orb" style={{
+          width: 560, height: 560,
+          top: -80, left: '50%', transform: 'translateX(-50%)',
+          background: 'radial-gradient(circle, rgba(108,59,255,0.18) 0%, transparent 65%)',
+          ['--orb-dur' as string]: '11s',
+        }} />
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-          {PAINS.map(p => (
-            <div
-              key={p.stat}
-              className="rounded-2xl p-6"
-              style={{ background: C.surface, border: `1px solid ${C.border}` }}
+        <div className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
+          <AnimatedSection className="text-center mb-14">
+            <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
+              El problema
+            </p>
+            <h2
+              className="font-bold tracking-tight mb-4"
+              style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}
             >
-              <div
-                className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                style={{ background: `${p.color}12`, border: `1px solid ${p.color}25` }}
-              >
-                {p.icon}
-              </div>
-              <span className="text-4xl font-bold tabular-nums block mb-2" style={{ color: p.color }}>
-                {p.stat}
-              </span>
-              <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{p.label}</p>
-            </div>
-          ))}
-        </div>
+              Cada llamada perdida<br />es dinero perdido
+            </h2>
+            <p className="max-w-lg mx-auto" style={{ color: 'rgba(255,255,255,0.52)' }}>
+              Mientras tu negocio está cerrado, tu competencia contesta.
+              Esto le pasa a un negocio promedio cada semana:
+            </p>
+          </AnimatedSection>
 
-        {/* Bridge */}
-        <div
-          className="mt-8 rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
-          style={{
-            background: 'rgba(108,59,255,0.06)',
-            border:     `1px solid rgba(108,59,255,0.18)`,
-          }}
-        >
-          <div className="text-2xl flex-shrink-0">🎯</div>
-          <div>
-            <p className="font-semibold mb-1" style={{ color: C.text }}>
-              Centinelia resuelve los tres problemas a la vez.
-            </p>
-            <p className="text-sm" style={{ color: C.textSub }}>
-              Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda —
-              sin que tú tengas que estar presente.
-            </p>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            {PAINS.map((p, i) => (
+              <AnimatedSection key={p.stat} delay={i * 0.1}>
+                <div
+                  className="rounded-2xl p-6 h-full"
+                  style={{ background: 'rgba(255,255,255,0.04)', border: `1px solid rgba(255,255,255,0.08)` }}
+                >
+                  <div
+                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                    style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}
+                  >
+                    {p.icon}
+                  </div>
+                  <span className="text-4xl font-bold tabular-nums block mb-2" style={{ color: p.color }}>
+                    {p.stat}
+                  </span>
+                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>{p.label}</p>
+                </div>
+              </AnimatedSection>
+            ))}
           </div>
+
+          {/* Bridge */}
+          <AnimatedSection delay={0.3}>
+            <div
+              className="mt-8 rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
+              style={{
+                background: 'rgba(108,59,255,0.12)',
+                border:     `1px solid rgba(108,59,255,0.28)`,
+              }}
+            >
+              <div className="text-2xl flex-shrink-0">🎯</div>
+              <div>
+                <p className="font-semibold mb-1" style={{ color: '#fff' }}>
+                  Centinelia resuelve los tres problemas a la vez.
+                </p>
+                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.52)' }}>
+                  Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda —
+                  sin que tú tengas que estar presente.
+                </p>
+              </div>
+            </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -339,7 +385,7 @@ export default function LandingPage() {
 
           {/* Desktop: 2-col — texto izquierda, suricata derecha asomándose sobre las tarjetas */}
           <div className="hidden lg:flex items-end gap-10 mb-0">
-            <div className="flex-1">
+            <AnimatedSection className="flex-1">
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
                 Capacidades
               </p>
@@ -352,7 +398,7 @@ export default function LandingPage() {
               <p style={{ color: C.textSub }}>
                 Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
               </p>
-            </div>
+            </AnimatedSection>
 
             {/* Suricata — marginBottom negativo la hace sobresalir encima de las tarjetas */}
             <div className="relative flex-shrink-0 pointer-events-none select-none"
@@ -363,7 +409,7 @@ export default function LandingPage() {
           </div>
 
           {/* Mobile: encabezado centrado */}
-          <div className="lg:hidden text-center mb-14">
+          <AnimatedSection className="lg:hidden text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
               Capacidades
             </p>
@@ -376,7 +422,7 @@ export default function LandingPage() {
             <p className="max-w-md mx-auto" style={{ color: C.textSub }}>
               Tu agente aprende sobre tu negocio y comienza a atender llamadas en menos de 24 horas.
             </p>
-          </div>
+          </AnimatedSection>
 
           {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"
@@ -403,7 +449,7 @@ export default function LandingPage() {
 
       {/* ── CÓMO FUNCIONA ────────────────────────────────────────────────── */}
       <section className="max-w-5xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
-        <div className="text-center mb-14">
+        <AnimatedSection className="text-center mb-14">
           <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
             Cómo funciona
           </p>
@@ -413,7 +459,7 @@ export default function LandingPage() {
           >
             En línea en 3 pasos
           </h2>
-        </div>
+        </AnimatedSection>
 
         {/* Steps + character side by side */}
         <div className="flex items-start gap-8 lg:gap-16">
@@ -488,7 +534,7 @@ export default function LandingPage() {
         style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, borderBottom: `1px solid ${C.border}` }}
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8">
-          <div className="text-center mb-14">
+          <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
               style={{ background: 'rgba(108,59,255,0.08)', border: '1px solid rgba(108,59,255,0.2)', color: C.accent }}>
               🚀 Precio de lanzamiento · Primeros 20 clientes
@@ -500,7 +546,7 @@ export default function LandingPage() {
               El precio correcto<br />para tu negocio
             </h2>
             <p style={{ color: C.textSub }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
-          </div>
+          </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
             {PLANS.map(p => (
@@ -623,11 +669,10 @@ export default function LandingPage() {
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
               href="/registro"
-              className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+              className="cta-pulse inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
               style={{
                 background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)',
                 color:      '#fff',
-                boxShadow:  '0 8px 40px rgba(108,59,255,0.55)',
               }}
             >
               Contratar ahora <ArrowRight size={15} />
