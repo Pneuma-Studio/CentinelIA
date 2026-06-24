@@ -195,17 +195,19 @@ body {
 /* ── Meerkat responsive positioning ────────────────────────────────────── */
 .meerkat-money {
   position: absolute;
-  bottom: 0;
-  right: 0;
+  top: 320px;
+  right: -50px;
+  bottom: auto;
   left: auto;
-  width: 140px;
-  height: 220px;
-  z-index: 0;
+  width: 170px;
+  height: 280px;
+  z-index: 2;
   pointer-events: none;
   user-select: none;
 }
 @media (min-width: 1024px) {
   .meerkat-money {
+    top: auto;
     bottom: -110px;
     left: -10px;
     right: auto;
