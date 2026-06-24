@@ -185,7 +185,7 @@ export default function LandingPage() {
                 style={{ color: '#C4A8FF' }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
-                AGENTE EN LÍNEA
+                CENTINELIA EN LÍNEA
               </span>
               <AudioWaveform barCount={22} />
             </div>
