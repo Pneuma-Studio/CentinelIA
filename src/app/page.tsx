@@ -290,8 +290,8 @@ export default function LandingPage() {
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
 
-          {/* Mobile: float layout — meerkat left, text wraps right */}
-          <div className="lg:hidden mb-8" style={{ overflow: 'visible' }}>
+          {/* Mobile: float layout — meerkat left, text wraps right, float contained so cards unaffected */}
+          <div className="lg:hidden" style={{ overflow: 'hidden', marginBottom: -130 }}>
             <div style={{ float: 'left', width: 105, height: 285, marginRight: 14, position: 'relative' }}>
               <Image
                 src="/agent-money.png"
@@ -333,7 +333,7 @@ export default function LandingPage() {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5" style={{ position: 'relative', zIndex: 1 }}>
             {PAINS.map((p, i) => (
               <AnimatedSection key={p.stat} delay={i * 0.1}>
                 <div
