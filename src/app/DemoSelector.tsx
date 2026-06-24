@@ -1,11 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Phone, ChevronRight } from 'lucide-react';
+import { Phone, ChevronRight, Stethoscope, UtensilsCrossed, Briefcase, Building2, ShoppingBag, Sparkles, Lightbulb } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 
 interface Giro {
   id:    string;
-  emoji: string;
+  icon:  LucideIcon;
   label: string;
   sub:   string;
   hint:  string;
@@ -14,40 +15,48 @@ interface Giro {
 const GIROS: Giro[] = [
   {
     id:    'clinica',
-    emoji: '🏥',
+    icon:  Stethoscope,
     label: 'Clínica / Consultorio',
     sub:   'Médicos, dentistas, psicólogos...',
     hint:  'El agente se presenta como recepcionista. Pregúntale por citas, costos o disponibilidad de doctores.',
   },
   {
     id:    'restaurante',
-    emoji: '🍽️',
+    icon:  UtensilsCrossed,
     label: 'Restaurante / Café',
     sub:   'Comida, bebidas, reservaciones...',
     hint:  'El agente tomará tu orden, responderá sobre el menú y podrá agendar una reservación para ti.',
   },
   {
     id:    'despacho',
-    emoji: '📋',
+    icon:  Briefcase,
     label: 'Despacho / Consultoría',
     sub:   'Contadores, abogados, agencias...',
     hint:  'El agente calificará tu consulta, tomará tus datos y te explicará los servicios de la firma.',
   },
   {
     id:    'inmobiliaria',
-    emoji: '🏠',
+    icon:  Building2,
     label: 'Inmobiliaria',
     sub:   'Rentas, ventas, propiedades...',
     hint:  'El agente atenderá tu búsqueda, filtrará opciones según tu presupuesto y agendará una visita.',
   },
   {
     id:    'tienda',
-    emoji: '🛍️',
+    icon:  ShoppingBag,
     label: 'Tienda / Servicio',
     sub:   'Retail, entregas, pedidos...',
     hint:  'El agente tomará tu pedido, verificará disponibilidad y coordinará la entrega o recolección.',
   },
 ];
+
+const OTRO: Giro = {
+  id:    'otro',
+  icon:  Sparkles,
+  label: 'Otro giro',
+  sub:   'El agente se adapta a cualquier negocio',
+  hint:  'Dile al agente qué tipo de negocio quieres que simule. Él se adapta a cualquier escenario y llevará la conversación desde ahí.',
+};
 
 interface Props {
   demoPhone:     string;
@@ -58,6 +67,7 @@ export default function DemoSelector({ demoPhone, demoPhoneHref }: Props) {
   const [selected, setSelected] = useState<Giro | null>(null);
 
   if (selected) {
+    const SelectedIcon = selected.icon;
     return (
       <div style={{ animation: 'fadeUp 0.35s ease both' }}>
         <style>{`@keyframes fadeUp { from { opacity:0; transform:translateY(12px) } to { opacity:1; transform:none } }`}</style>
@@ -74,7 +84,8 @@ export default function DemoSelector({ demoPhone, demoPhoneHref }: Props) {
               cursor:     'pointer',
             }}
           >
-            {selected.emoji} {selected.label}
+            <SelectedIcon size={12} />
+            {selected.label}
             <span style={{ opacity: 0.5 }}>· cambiar</span>
           </button>
         </div>
@@ -114,8 +125,8 @@ export default function DemoSelector({ demoPhone, demoPhoneHref }: Props) {
           className="max-w-md mx-auto rounded-xl px-5 py-4 text-center"
           style={{ background: 'rgba(108,59,255,0.06)', border: '1px solid rgba(108,59,255,0.15)' }}
         >
-          <p className="text-xs font-semibold mb-1" style={{ color: '#6C3BFF' }}>
-            💡 Qué decir cuando contesten
+          <p className="flex items-center justify-center gap-1.5 text-xs font-semibold mb-1" style={{ color: '#6C3BFF' }}>
+            <Lightbulb size={12} /> Qué decir cuando contesten
           </p>
           <p className="text-sm leading-relaxed" style={{ color: 'rgba(26,10,59,0.65)' }}>
             {selected.hint}
@@ -131,49 +142,34 @@ export default function DemoSelector({ demoPhone, demoPhoneHref }: Props) {
         ¿Qué tipo de negocio quieres probar?
       </p>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-w-3xl mx-auto">
-        {GIROS.map(g => (
-          <button
-            key={g.id}
-            onClick={() => setSelected(g)}
-            className="flex items-center gap-4 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:border-purple-400"
-            style={{
-              background: '#FFFFFF',
-              border:     '1px solid rgba(108,59,255,0.12)',
-              cursor:     'pointer',
-            }}
-          >
-            <span style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0 }}>{g.emoji}</span>
-            <div style={{ flex: 1, minWidth: 0 }}>
-              <p className="font-semibold text-sm" style={{ color: '#1A0A3B' }}>{g.label}</p>
-              <p className="text-xs" style={{ color: 'rgba(26,10,59,0.45)', marginTop: 1 }}>{g.sub}</p>
-            </div>
-            <ChevronRight size={14} style={{ color: 'rgba(108,59,255,0.4)', flexShrink: 0 }} />
-          </button>
-        ))}
-
-        {/* "Otro" catch-all */}
-        <button
-          onClick={() => setSelected({
-            id:    'otro',
-            emoji: '✨',
-            label: 'Otro giro',
-            sub:   '',
-            hint:  'Dile al agente qué tipo de negocio quieres que simule. Él se adapta a cualquier escenario y llevará la conversación desde ahí.',
-          })}
-          className="flex items-center gap-4 rounded-xl p-4 text-left transition-all hover:scale-[1.02]"
-          style={{
-            background: 'rgba(108,59,255,0.04)',
-            border:     '1px dashed rgba(108,59,255,0.25)',
-            cursor:     'pointer',
-          }}
-        >
-          <span style={{ fontSize: '1.6rem', lineHeight: 1, flexShrink: 0 }}>✨</span>
-          <div style={{ flex: 1, minWidth: 0 }}>
-            <p className="font-semibold text-sm" style={{ color: '#1A0A3B' }}>Otro giro</p>
-            <p className="text-xs" style={{ color: 'rgba(26,10,59,0.45)', marginTop: 1 }}>El agente se adapta a cualquier negocio</p>
-          </div>
-          <ChevronRight size={14} style={{ color: 'rgba(108,59,255,0.4)', flexShrink: 0 }} />
-        </button>
+        {[...GIROS, OTRO].map((g, idx) => {
+          const Icon = g.icon;
+          const isOtro = g.id === 'otro';
+          return (
+            <button
+              key={g.id}
+              onClick={() => setSelected(g)}
+              className="flex items-center gap-4 rounded-xl p-4 text-left transition-all hover:scale-[1.02] hover:border-purple-400"
+              style={{
+                background: isOtro ? 'rgba(108,59,255,0.04)' : '#FFFFFF',
+                border:     isOtro ? '1px dashed rgba(108,59,255,0.25)' : '1px solid rgba(108,59,255,0.12)',
+                cursor:     'pointer',
+              }}
+            >
+              <div
+                className="flex items-center justify-center rounded-xl flex-shrink-0"
+                style={{ width: 40, height: 40, background: 'rgba(108,59,255,0.08)' }}
+              >
+                <Icon size={18} color="#6C3BFF" strokeWidth={1.75} />
+              </div>
+              <div style={{ flex: 1, minWidth: 0 }}>
+                <p className="font-semibold text-sm" style={{ color: '#1A0A3B' }}>{g.label}</p>
+                <p className="text-xs" style={{ color: 'rgba(26,10,59,0.45)', marginTop: 1 }}>{g.sub}</p>
+              </div>
+              <ChevronRight size={14} style={{ color: 'rgba(108,59,255,0.4)', flexShrink: 0 }} />
+            </button>
+          );
+        })}
       </div>
     </div>
   );
