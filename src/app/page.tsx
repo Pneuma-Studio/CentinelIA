@@ -83,22 +83,22 @@ const PAINS = [
 
 const PLANS: {
   name: string; price: number; origPrice: number; setup: number; origSetup: number;
-  minutes: number; color: string; popular?: boolean; includes: string[]; meerkat: string;
+  minutes: number; color: string; popular?: boolean; includes: string[]; meerkat: string; meerkatBottom: number;
 }[] = [
   {
     name: 'Recepcionista', price: 1990, origPrice: 2490, setup: 4990, origSetup: 6990, minutes: 200, color: '#6b7280',
     includes: ['Recepcionista 24/7', 'Agenda de citas', 'Resúmenes WhatsApp + Email', 'Portal con horas pico', '200 min/mes incluidos'],
-    meerkat: '/agent-plan-basico.png',
+    meerkat: '/agent-plan-basico.png', meerkatBottom: 66,
   },
   {
     name: 'Comercial', price: 3490, origPrice: 4490, setup: 7990, origSetup: 9990, minutes: 500, color: '#6C3BFF', popular: true,
     includes: ['Todo Recepcionista', 'Captura de leads', 'Toma de pedidos', 'Escalación a WhatsApp', 'Reporte semanal', '500 min/mes incluidos'],
-    meerkat: '/agent-plan-estandar.png',
+    meerkat: '/agent-plan-estandar.png', meerkatBottom: 64,
   },
   {
     name: 'Pro', price: 6490, origPrice: 8490, setup: 12990, origSetup: 16990, minutes: 1000, color: '#7c3aed',
     includes: ['Todo Comercial', 'Transferencia inteligente', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Grabaciones 7 días', '1,000 min/mes incluidos'],
-    meerkat: '/agent-plan-pro.png',
+    meerkat: '/agent-plan-pro.png', meerkatBottom: 66,
   },
 ];
 
@@ -675,7 +675,7 @@ export default function LandingPage() {
 
                 {/* Mobile peeking meerkat — right side of button */}
                 <div className="block sm:hidden" style={{
-                  position: 'absolute', bottom: 64, right: -20,
+                  position: 'absolute', bottom: p.meerkatBottom, right: 10,
                   width: 88, height: 88, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
                 }}>
                   <Image src={p.meerkat} alt="" fill sizes="88px"
