@@ -732,7 +732,7 @@ export default function LandingPage() {
         }} />
 
         {/* Centered text — bottom padding creates space for the duo below */}
-        <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 280 }}>
+        <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 'clamp(160px, 30vw, 280px)' }}>
           <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
             Tu equipo te espera
           </p>
@@ -772,9 +772,9 @@ export default function LandingPage() {
         </div>
 
         {/* Duo flotante — peeking up from the bottom edge */}
-        <div className="agent-sway absolute bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none" style={{ width: 580, height: 420, zIndex: 1 }}>
+        <div className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]" style={{ zIndex: 1 }}>
           <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
-            sizes="580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+            sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </div>
       </section>
 
