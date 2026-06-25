@@ -129,7 +129,7 @@ export async function POST(req: NextRequest) {
             subject: '¡Bienvenido a Centinelia! Tu agente de voz está listo',
             html:    welcomeHtml({
               businessName: agent.business_name,
-              setupUrl:     `${appUrl}/portal/${portalToken}/setup`,
+              setupUrl:     `${appUrl}/portal/${portalToken}/configurar`,
             }),
           }).catch(console.error);
         }
