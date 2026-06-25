@@ -28,7 +28,8 @@ function fmtTime(iso: string) {
   return new Date(iso).toLocaleTimeString('es-MX', { hour: '2-digit', minute: '2-digit' });
 }
 function fmtMonth(iso: string) {
-  return new Date(iso).toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+  const s = new Date(iso).toLocaleDateString('es-MX', { month: 'long', year: 'numeric' });
+  return s.charAt(0).toUpperCase() + s.slice(1).toLowerCase();
 }
 
 export default async function MinutesLedgerSection({
@@ -122,7 +123,7 @@ export default async function MinutesLedgerSection({
       {Array.from(groups.entries()).map(([month, rows]) => (
         <div key={month} className="flex flex-col">
           {/* Month header */}
-          <div className="text-xs font-semibold py-2 capitalize" style={{ color: 'var(--c-text-4)' }}>
+          <div className="text-xs font-semibold py-2" style={{ color: 'var(--c-text-4)' }}>
             {month}
           </div>
 

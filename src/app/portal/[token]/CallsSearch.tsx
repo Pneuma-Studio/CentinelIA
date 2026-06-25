@@ -43,7 +43,7 @@ export default function CallsSearch({ calls, isPro }: { calls: VoiceCall[]; isPr
         )}
       </div>
 
-      <div className="flex flex-col gap-2 overflow-y-auto pr-0.5" style={{ maxHeight: 340 }}>
+      <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: 340, padding: '1px 2px 4px' }}>
         {filtered.length === 0
           ? (
             <p className="text-xs text-center py-6" style={{ color: 'var(--c-text-4)' }}>
