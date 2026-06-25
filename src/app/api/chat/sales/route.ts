@@ -49,7 +49,7 @@ Negocios medianos y pequeños en México que reciben llamadas y pierden clientes
 - Enterprise: 500 min extra — $1,690
 
 ## Cómo funciona el proceso de compra
-1. El cliente elige su plan en centinel-ia.vercel.app/registro y llena un formulario de 3 pasos (plan, datos del negocio, datos de contacto)
+1. El cliente elige su plan en centinelia.mx/registro y llena un formulario de 3 pasos (plan, datos del negocio, datos de contacto)
 2. Paga de forma segura por Stripe (tarjeta de crédito/débito)
 3. El agente se configura automáticamente con la info del negocio y queda activo en menos de 24 horas
 4. El cliente accede a su portal para ver llamadas, leads, estadísticas y configurar el agente

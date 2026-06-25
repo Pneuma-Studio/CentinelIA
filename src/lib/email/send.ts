@@ -126,7 +126,7 @@ export function weeklyReportHtml(opts: {
   <div style="max-width:520px;margin:0 auto">
 
     <div style="text-align:center;padding:32px 0 24px">
-      <img src="https://centinel-ia.vercel.app/logo.png" alt="Centinelia" height="38"
+      <img src="https://centinelia.mx/logo.png" alt="Centinelia" height="38"
         style="height:38px;width:auto;display:inline-block;border-radius:6px" />
     </div>
 
@@ -225,7 +225,7 @@ export function newLeadHtml(opts: {
   <div style="max-width:520px;margin:0 auto">
 
     <div style="text-align:center;padding:32px 0 24px">
-      <img src="https://centinel-ia.vercel.app/logo.png" alt="Centinelia" height="38"
+      <img src="https://centinelia.mx/logo.png" alt="Centinelia" height="38"
         style="height:38px;width:auto;display:inline-block;border-radius:6px" />
     </div>
 
