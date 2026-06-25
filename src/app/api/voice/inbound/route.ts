@@ -56,9 +56,9 @@ export async function POST(req: NextRequest) {
         voice: {
           provider: '11labs',
           voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
-          stability: 0.25,
+          stability: 0.30,
           similarityBoost: 0.70,
-          style: 0.55,
+          style: 0.30,
           speed: 1.1,
           useSpeakerBoost: true,
           optimizeStreamingLatency: 3,
@@ -85,9 +85,9 @@ export async function POST(req: NextRequest) {
       voice: {
         provider: '11labs',
         voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
-        stability: 0.25,
+        stability: 0.30,
         similarityBoost: 0.70,
-        style: 0.55,
+        style: 0.30,
         speed: 1.1,
         useSpeakerBoost: true,
         optimizeStreamingLatency: 3,
