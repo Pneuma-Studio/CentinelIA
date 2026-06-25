@@ -330,6 +330,24 @@ h1, h2, h3, h4, h5, h6 {
 .agent-float-slow { animation: agent-float-slow  5.2s ease-in-out infinite; }
 .agent-sway       { animation: agent-sway        6s   ease-in-out infinite; }
 
+/* ── FAQ duo meerkat ────────────────────────────────────────────────────── */
+.meerkat-faq-desk {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .meerkat-faq-desk {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 360px;
+    height: 400px;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 /* ── Glass card (dark sections) ─────────────────────────────────────────── */
 .glass-card {
   background:    rgba(255,255,255,0.05);

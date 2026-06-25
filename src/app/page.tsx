@@ -700,7 +700,12 @@ export default function LandingPage() {
       </section>
 
       {/* ── FAQ ──────────────────────────────────────────────────────────── */}
-      <section className="max-w-3xl mx-auto px-5 sm:px-8 py-20 sm:py-28">
+      <section className="relative overflow-hidden" style={{ padding: '0' }}>
+        <MeerkatReveal className="agent-float-slow meerkat-faq-desk">
+          <Image src="/agent-duo-phones.png" alt="" fill sizes="360px"
+            style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+        </MeerkatReveal>
+      <div className="max-w-3xl mx-auto px-5 sm:px-8 py-20 sm:py-28" style={{ position: 'relative', zIndex: 2 }}>
         <div className="text-center mb-12">
           <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
             Preguntas frecuentes
@@ -713,6 +718,7 @@ export default function LandingPage() {
           </h2>
         </div>
         <FaqSection />
+      </div>
       </section>
 
       {/* ── BOTTOM CTA ───────────────────────────────────────────────────── */}
