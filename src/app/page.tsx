@@ -137,7 +137,7 @@ export default function LandingPage() {
           quality={100}
           sizes="(max-width: 640px) 200vw, (max-width: 1280px) 150vw, 100vw"
           className="hero-bg-img"
-          style={{ objectFit: 'cover', objectPosition: 'center 72%' }}
+          style={{ objectFit: 'cover' }}
         />
 
         {/* Base dark overlay — ensures readability on mobile */}
