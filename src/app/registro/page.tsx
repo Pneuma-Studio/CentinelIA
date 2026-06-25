@@ -378,29 +378,41 @@ function RegistroInner() {
         {/* ── Steps indicator ─────────────────────────────────────────────── */}
         <div className="flex items-center justify-center gap-0 mb-10">
           {(['Plan', 'Negocio', 'Contacto'] as const).map((label, i) => {
-            const n      = i + 1;
-            const done   = step > n;
-            const active = step === n;
+            const n       = i + 1 as 1 | 2 | 3;
+            const done    = step > n;
+            const active  = step === n;
+            const canNav  = done;
             return (
               <div key={label} className="flex items-center">
-                <div className="flex flex-col items-center">
+                <button
+                  type="button"
+                  onClick={() => { if (canNav) { setError(''); setStep(n); } }}
+                  className="flex flex-col items-center"
+                  style={{ cursor: canNav ? 'pointer' : 'default', background: 'none', border: 'none', padding: 0 }}
+                >
                   <div
                     className="w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all"
                     style={{
                       background: done ? '#6C3BFF' : active ? 'rgba(108,59,255,0.3)' : 'rgba(255,255,255,0.05)',
                       border:     `2px solid ${done || active ? '#6C3BFF' : 'rgba(255,255,255,0.1)'}`,
                       color:      done || active ? '#fff' : 'rgba(255,255,255,0.3)',
+                      boxShadow:  canNav ? '0 0 0 0 rgba(108,59,255,0)' : 'none',
+                      transition: 'opacity 0.15s',
                     }}
                   >
                     {done ? <Check size={13} /> : n}
                   </div>
                   <span
                     className="text-xs mt-1.5 font-medium"
-                    style={{ color: active ? '#9B6DFF' : done ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)' }}
+                    style={{
+                      color:           active ? '#9B6DFF' : done ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.25)',
+                      textDecoration:  canNav ? 'underline' : 'none',
+                      textUnderlineOffset: 2,
+                    }}
                   >
                     {label}
                   </span>
-                </div>
+                </button>
                 {i < 2 && (
                   <div
                     className="w-16 h-px mx-2 mb-4"
