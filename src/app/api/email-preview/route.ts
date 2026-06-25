@@ -41,6 +41,7 @@ const templates: Record<string, string> = {
     used:         166,
     included:     200,
     resetDate:    '1 de julio',
+    portalUrl:    'https://centinelia.mx/portal/demo-token',
   }),
   minutes_paused: minutesAlertHtml({
     businessName: 'Restaurante El Portón',
@@ -48,6 +49,7 @@ const templates: Record<string, string> = {
     used:         200,
     included:     200,
     resetDate:    '1 de julio',
+    portalUrl:    'https://centinelia.mx/portal/demo-token',
   }),
   payment_failed: paymentFailedHtml('Restaurante El Portón'),
 };

@@ -202,7 +202,7 @@ export async function POST(req: NextRequest) {
           await sendEmail({
             to: agent.client_email,
             subject: `⚠️ Agente pausado — ${agent.business_name}`,
-            html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr }),
+            html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }
         break;
@@ -216,7 +216,7 @@ export async function POST(req: NextRequest) {
           await sendEmail({
             to: agent.client_email,
             subject: `📊 Aviso: ${Math.round(pct)}% de minutos usados — ${agent.business_name}`,
-            html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr }),
+            html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }
       }

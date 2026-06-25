@@ -41,13 +41,26 @@ export function minutesAlertHtml(opts: {
   used: number;
   included: number;
   resetDate: string;
+  portalUrl: string;
 }) {
-  const isPaused = opts.pct >= 100;
+  const isPaused    = opts.pct >= 100;
   const accentColor = isPaused ? '#ef4444' : '#f59e0b';
-  const badge = isPaused ? '⚠️ Agente pausado' : `📊 ${Math.round(opts.pct)}% de minutos usados`;
-  const bodyText = isPaused
-    ? `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha sido <strong style="color:#ef4444">pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Contacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`
-    : `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha usado <strong style="color:#f59e0b">${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si necesitas ampliar tu plan, contacta a tu asesor antes de que el agente se pause automáticamente.<br><br>Reinicio del contador: <strong style="color:#fff">${opts.resetDate}</strong>.`;
+  const badge       = isPaused ? '⚠️ Agente pausado' : `📊 ${Math.round(opts.pct)}% de minutos usados`;
+  const bodyText    = isPaused
+    ? `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha sido <strong style="color:#ef4444">pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Puedes reactivarlo comprando minutos adicionales o contactando a tu asesor para cambiar de plan.`
+    : `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha usado <strong style="color:#f59e0b">${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si crees que necesitarás más minutos antes del ${opts.resetDate}, puedes comprar minutos adicionales ahora o ampliar tu plan.`;
+
+  const buttons = `
+    <div style="text-align:center;margin-bottom:28px;display:flex;flex-direction:column;gap:12px;align-items:center">
+      <a href="${opts.portalUrl}?tab=minutos"
+        style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px;width:220px;text-align:center">
+        Compra más minutos →
+      </a>
+      <a href="mailto:hola@centinelia.mx"
+        style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px;width:220px;text-align:center">
+        Amplía tu plan →
+      </a>
+    </div>`;
 
   return `<!DOCTYPE html>
 <html>
@@ -63,6 +76,7 @@ export function minutesAlertHtml(opts: {
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px">
       <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.7;margin:0">${bodyText}</p>
     </div>
+    ${buttons}
     ${FOOTER}
   </div>
 </body>
