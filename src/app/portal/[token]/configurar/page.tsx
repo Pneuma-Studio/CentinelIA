@@ -17,6 +17,7 @@ import WebsiteSyncButton      from '../WebsiteSyncButton';
 import PortalVoiceSelector    from '../PortalVoiceSelector';
 import NotificationsToggle    from '../NotificationsToggle';
 import AgentCustomization     from '../AgentCustomization';
+import AgentNameEditor        from '../AgentNameEditor';
 import ResyncButton           from '../ResyncButton';
 import SupportChat            from '../SupportChat';
 
@@ -78,9 +79,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 flex-wrap">
-                <p className="text-sm font-semibold" style={{ color: 'var(--c-text)' }}>
-                  {agentName}
-                </p>
+                <AgentNameEditor token={token} initialName={agentName} />
                 <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
                   style={{ background: `${planColor}18`, color: planColor, border: `1px solid ${planColor}30` }}>
                   {planLabel}
@@ -117,7 +116,6 @@ export default async function ConfigurarAgentePage({ params }: Props) {
             </p>
             <AgentCustomization
               token={token}
-              initAgentName={(agent as any).agent_name ?? ''}
               initGreeting={(agent as any).first_message ?? ''}
               initTransferRules={(agent as any).transfer_rules ?? ''}
             />
