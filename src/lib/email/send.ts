@@ -280,6 +280,31 @@ export function newLeadHtml(opts: {
 </html>`;
 }
 
+export function agentPausedHtml(businessName: string) {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:20px;padding:5px 16px;color:#f87171;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">📴 Agente pausado</span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">${businessName}</h1>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.7;margin:0">
+        El período de gracia de 3 días venció sin recibir el pago de tu suscripción Centinelia.<br><br>
+        Tu agente de voz ha sido <strong style="color:#fff">pausado</strong>. Para reactivarlo, actualiza tu método de pago o contáctanos a <a href="mailto:hola@centinelia.mx" style="color:#9B6DFF;text-decoration:none">hola@centinelia.mx</a>.
+      </p>
+    </div>
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
+}
+
 export function empresarialConfirmationHtml(opts: {
   clientName:   string;
   businessName: string;
