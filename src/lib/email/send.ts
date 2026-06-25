@@ -280,6 +280,52 @@ export function newLeadHtml(opts: {
 </html>`;
 }
 
+export function empresarialConfirmationHtml(opts: {
+  clientName:   string;
+  businessName: string;
+  contactEmail: string;
+}) {
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.4);border-radius:20px;padding:5px 16px;color:#fbbf24;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">🎯 Solicitud recibida</span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">Hola, ${opts.clientName}</h1>
+      <p style="color:rgba(255,255,255,0.38);font-size:13px;margin:0">${opts.businessName}</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0 0 16px">
+        Recibimos tu solicitud para el plan Empresarial de Centinelia. Nuestro equipo revisará los requerimientos de integración de <strong style="color:#fff">${opts.businessName}</strong> y te contactará en menos de 24 horas con una propuesta personalizada.
+      </p>
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0">
+        Te escribiremos a este correo y también por WhatsApp al número que nos diste.
+      </p>
+    </div>
+    <div style="background:rgba(245,158,11,0.08);border:1px solid rgba(245,158,11,0.2);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.38);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 10px">Lo que sigue</p>
+      <p style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8;margin:0">
+        1. Revisión de tus necesidades de integración<br>
+        2. Propuesta personalizada con precio final<br>
+        3. Llamada de onboarding con el equipo de Centinelia
+      </p>
+    </div>
+    <div style="text-align:center;margin-bottom:28px">
+      <a href="mailto:${opts.contactEmail}"
+        style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px">
+        Responder este correo →
+      </a>
+    </div>
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
+}
+
 export function paymentFailedHtml(businessName: string) {
   return `<!DOCTYPE html>
 <html>

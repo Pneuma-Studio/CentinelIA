@@ -7,6 +7,7 @@ import {
   weeklyReportHtml,
   minutesAlertHtml,
   paymentFailedHtml,
+  empresarialConfirmationHtml,
 } from '@/lib/email/send';
 
 export async function GET(req: NextRequest) {
@@ -55,6 +56,11 @@ export async function GET(req: NextRequest) {
       portalUrl:    'https://centinelia.mx/portal/demo-token',
     }),
     payment_failed: paymentFailedHtml('Restaurante El Portón'),
+    empresarial: empresarialConfirmationHtml({
+      clientName:   'Carlos Mendoza',
+      businessName: 'Grupo Portón Franquicias',
+      contactEmail: 'hola@centinelia.mx',
+    }),
   };
 
   const t = req.nextUrl.searchParams.get('t') ?? 'welcome';

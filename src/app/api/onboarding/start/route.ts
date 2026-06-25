@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { stripe } from '@/lib/stripe';
 import { PLAN_FEATURES } from '@/types/agent';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
+import { sendEmail, empresarialConfirmationHtml } from '@/lib/email/send';
 import type { Plan } from '@/types/agent';
 
 const PLAN_MINUTES_COUNT: Record<Plan, number> = {
@@ -90,13 +91,26 @@ export async function POST(req: NextRequest) {
       billing_status:         'pendiente',
     });
 
-    const adminWa = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP ?? process.env.SUPPORT_WHATSAPP ?? '';
-    if (adminWa) {
-      await sendWhatsApp(
-        adminWa,
-        `🏢 *Nueva solicitud Empresarial — Centinelia*\n\nNegocio: *${business_name.trim()}*\nGiro: ${giro_template ?? 'general'}\nCiudad lada: ${area_code ?? '—'}\n\nContacto: ${client_name.trim()}\nEmail: ${email}\nWA: ${transfer_whatsapp.trim()}\n\nRequiere cotización e integración con sistema existente.`
-      ).catch(console.error);
-    }
+    const adminWa     = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP ?? process.env.SUPPORT_WHATSAPP ?? '';
+    const contactEmail = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? 'hola@centinelia.mx';
+
+    await Promise.all([
+      adminWa
+        ? sendWhatsApp(
+            adminWa,
+            `🏢 *Nueva solicitud Empresarial — Centinelia*\n\nNegocio: *${business_name.trim()}*\nGiro: ${giro_template ?? 'general'}\nCiudad lada: ${area_code ?? '—'}\n\nContacto: ${client_name.trim()}\nEmail: ${email}\nWA: ${transfer_whatsapp.trim()}\n\nRequiere cotización e integración con sistema existente.`
+          ).catch(console.error)
+        : Promise.resolve(),
+      sendEmail({
+        to:      email,
+        subject: 'Recibimos tu solicitud — Centinelia Empresarial',
+        html:    empresarialConfirmationHtml({
+          clientName:   client_name.trim(),
+          businessName: business_name.trim(),
+          contactEmail,
+        }),
+      }).catch(console.error),
+    ]);
 
     return NextResponse.json({ empresarial: true });
   }
