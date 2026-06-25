@@ -538,8 +538,8 @@ export default function LandingPage() {
               style={{ objectFit: 'contain', objectPosition: 'top center' }} />
           </MeerkatReveal>
         </div>
-        {/* Desktop: right side */}
-        <MeerkatReveal className="agent-sway meerkat-headset-desk">
+        {/* Desktop: left side */}
+        <MeerkatReveal className="agent-sway meerkat-headset-desk-left">
           <Image src="/agent-headset.png" alt="" fill sizes="260px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>

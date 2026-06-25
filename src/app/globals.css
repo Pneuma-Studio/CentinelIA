@@ -292,6 +292,23 @@ h1, h2, h3, h4, h5, h6 {
   }
 }
 
+.meerkat-headset-desk-left {
+  display: none;
+}
+@media (min-width: 1024px) {
+  .meerkat-headset-desk-left {
+    display: block;
+    position: absolute;
+    bottom: -30px;
+    left: 60px;
+    width: 260px;
+    height: 260px;
+    z-index: 1;
+    pointer-events: none;
+    user-select: none;
+  }
+}
+
 /* ── Agent / meerkat animations ─────────────────────────────────────────── */
 @keyframes agent-float {
   0%, 100% { transform: translateY(0px); }
