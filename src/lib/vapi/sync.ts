@@ -170,8 +170,8 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       optimizeStreamingLatency: 3,
       chunkPlan: {
         enabled: true,
-        minCharacters: 100,
-        punctuationBoundaries: ['.', '!', '?', ',', ';', ':', '—'],
+        minCharacters: 80,
+        punctuationBoundaries: ['.', '!', '?', ',', ';', ':'],
       },
     },
     firstMessage: agent.first_message?.trim() || `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
