@@ -446,7 +446,7 @@ function RegistroInner() {
                     <div className="p-5">
                       {/* Row 1: Radio + Name + Recommended | Lanzamiento */}
                       <div className="flex items-center gap-3 mb-4">
-                        <div className="flex items-center gap-3 flex-1 min-w-0">
+                        <div className="flex items-center gap-2 flex-1 min-w-0 flex-wrap">
                           <div
                             className="w-5 h-5 rounded-full border-2 flex items-center justify-center flex-shrink-0 transition-all"
                             style={{
@@ -459,19 +459,19 @@ function RegistroInner() {
                           <span className="text-base font-bold text-white">{p.label}</span>
                           {p.recommended && (
                             <span
-                              className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                              className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
                               style={{ background: p.color, color: '#fff' }}
                             >
                               Recomendado
                             </span>
                           )}
+                          {!p.custom && (
+                            <span className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
+                              style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
+                              Lanzamiento
+                            </span>
+                          )}
                         </div>
-                        {!p.custom && (
-                          <span className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
-                            style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
-                            Lanzamiento
-                          </span>
-                        )}
                       </div>
 
                       {/* Row 2: Price — hero element */}
