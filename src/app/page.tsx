@@ -431,7 +431,7 @@ export default function LandingPage() {
               <Image src="/agent-f2.png" alt="" fill sizes="145px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
             </div>
-            <div style={{ paddingRight: 152 }}>
+            <div style={{ paddingRight: 122 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
                 Capacidades
               </p>
