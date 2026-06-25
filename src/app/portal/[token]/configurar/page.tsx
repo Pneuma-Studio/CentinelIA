@@ -43,7 +43,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
     redirect('/portal/login');
   }
 
-  const agentName  = agent.agent_name?.trim() || 'CentinelIA';
+  const agentName  = agent.agent_name?.trim() || 'Centinelia';
   const planColor  = PLAN_COLORS[agent.plan] ?? '#6b7280';
   const planLabel  = PLAN_LABELS[agent.plan] ?? agent.plan;
 

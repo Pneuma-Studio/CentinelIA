@@ -201,7 +201,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
           <Section title="Identidad del agente">
             <div className="p-3 rounded-lg" style={{ background: 'rgba(168,85,247,0.08)', border: '1px solid rgba(168,85,247,0.2)' }}>
               <p className="text-xs" style={{ color: 'var(--c-text-2)' }}>
-                <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>CentinelIA</strong>. Con Pro puedes darle un nombre propio.
+                <span style={{ color: '#a855f7', fontWeight: 600 }}>Plan Pro</span> — En planes Básico y Estándar el agente se llama <strong style={{ color: 'var(--c-text)' }}>Centinelia</strong>. Con Pro puedes darle un nombre propio.
               </p>
             </div>
             <Field label="Nombre del agente" name="agent_name"
@@ -328,7 +328,7 @@ export default function EditAgentForm({ agent }: { agent: VoiceAgent }) {
               name="contract_text"
               textarea
               rows={16}
-              placeholder={"Escribe el contrato personalizado aquí...\n\nSi lo dejas vacío se usa el template automático de CentinelIA."}
+              placeholder={"Escribe el contrato personalizado aquí...\n\nSi lo dejas vacío se usa el template automático de Centinelia."}
               defaultValue={(agent as any).contract_text ?? ''}
             />
             {agent.portal_token && (

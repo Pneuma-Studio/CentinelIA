@@ -1,10 +1,10 @@
-import type { VoiceAgent } from '@/types/agent';
+﻿import type { VoiceAgent } from '@/types/agent';
 import { TEMPLATE_MAP } from '@/lib/voice/templates';
 
 export function buildSystemPrompt(agent: VoiceAgent): string {
   const { features, business_hours, timezone } = agent;
   const f = features;
-  const agentName = agent.agent_name?.trim() || 'CentinelIA';
+  const agentName = agent.agent_name?.trim() || 'Centinelia';
   const tpl = agent.giro_template ? TEMPLATE_MAP[agent.giro_template as keyof typeof TEMPLATE_MAP] : null;
   const orderLabel      = tpl?.orderLabel      ?? 'producto';
   const appointmentLabel = tpl?.appointmentLabel ?? 'cita';

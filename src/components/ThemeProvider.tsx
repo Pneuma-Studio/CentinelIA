@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { createContext, useContext, useEffect, useState } from 'react';
 
@@ -9,7 +9,7 @@ const ThemeContext = createContext<{ theme: Theme; toggle: () => void }>({
   toggle: () => {},
 });
 
-export function ThemeProvider({ children, storageKey = 'centinelia-theme', defaultTheme = 'dark' }: {
+export function ThemeProvider({ children, storageKey = 'Centinelia-theme', defaultTheme = 'dark' }: {
   children: React.ReactNode;
   storageKey?: string;
   defaultTheme?: Theme;

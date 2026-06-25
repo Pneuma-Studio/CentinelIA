@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 
@@ -48,7 +48,7 @@ export async function POST(req: NextRequest) {
         currency:     'mxn',
         unit_amount:  priceMxn * 100,
         product_data: {
-          name:        `${minutes} minutos extra — CentinelIA`,
+          name:        `${minutes} minutos extra — Centinelia`,
           description: `Se suman inmediatamente al saldo de ${agent.business_name}`,
         },
       },

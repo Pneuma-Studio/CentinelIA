@@ -1,8 +1,8 @@
-export async function scrapeWebsite(url: string): Promise<string | null> {
+﻿export async function scrapeWebsite(url: string): Promise<string | null> {
   try {
     const res = await fetch(url, {
       signal: AbortSignal.timeout(8000),
-      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; CentinelIA-Bot/1.0)' },
+      headers: { 'User-Agent': 'Mozilla/5.0 (compatible; Centinelia-Bot/1.0)' },
     });
     if (!res.ok) return null;
     const html = await res.text();

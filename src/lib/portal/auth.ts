@@ -1,4 +1,4 @@
-export const PORTAL_COOKIE = 'centinelia_portal';
+﻿export const PORTAL_COOKIE = 'Centinelia_portal';
 const SESSION_TTL_MS = 7 * 24 * 60 * 60 * 1000; // 7 days
 
 // ── Base64url helpers (Edge-compatible, no Buffer) ────────────────────────

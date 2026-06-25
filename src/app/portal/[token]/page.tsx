@@ -94,7 +94,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const showOrders = !!features.order_taking;
   const showAppts  = !!features.appointment_booking;
   const hasStripe  = !!agent.stripe_customer_id;
-  const agentName  = agent.agent_name?.trim() || 'CentinelIA';
+  const agentName  = agent.agent_name?.trim() || 'Centinelia';
 
   const minutesIncluded = agent.minutes_included ?? 0;
   const minutesUsed     = agent.minutes_used ?? 0;
@@ -248,7 +248,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)' }}>
                 <AlertTriangle size={15} color="#f87171" className="flex-shrink-0" />
                 <p className="text-sm" style={{ color: 'var(--c-text)' }}>
-                  Tu agente está pausado por falta de pago. Actualiza tu método de pago o contacta a CentinelIA.
+                  Tu agente está pausado por falta de pago. Actualiza tu método de pago o contacta a Centinelia.
                 </p>
               </div>
             )}
@@ -362,7 +362,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 flex-wrap">
                             <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                              {a.agent_name?.trim() || 'CentinelIA'}
+                              {a.agent_name?.trim() || 'Centinelia'}
                             </span>
                             {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
                               <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"

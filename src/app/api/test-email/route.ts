@@ -4,7 +4,7 @@ import { sendEmail } from '@/lib/email/send';
 export async function GET() {
   const ok = await sendEmail({
     to: 'nazre20@gmail.com',
-    subject: '✅ Email de prueba — CentinelIA',
+    subject: '✅ Email de prueba — Centinelia',
     html: `<!DOCTYPE html><html><body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
   <div style="max-width:520px;margin:0 auto">
     <div style="text-align:center;padding:32px 0 24px">
@@ -14,12 +14,12 @@ export async function GET() {
       <div style="font-size:32px;margin-bottom:16px">⚡</div>
       <h1 style="color:#ffffff;font-size:20px;font-weight:700;margin:0 0 12px">Email de prueba</h1>
       <p style="color:rgba(255,255,255,0.6);font-size:14px;line-height:1.6;margin:0">
-        Si estás leyendo esto, los correos de CentinelIA llegan correctamente desde
+        Si estás leyendo esto, los correos de Centinelia llegan correctamente desde
         <strong style="color:#9B6DFF">notificaciones@centinelia.mx</strong>
       </p>
     </div>
     <div style="text-align:center;padding:24px 0 0">
-      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0">CentinelIA · Pneuma Studio<br>
+      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0">Centinelia · Pneuma Studio<br>
       <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a></p>
     </div>
   </div>

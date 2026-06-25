@@ -1,12 +1,12 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 
 export const dynamic = 'force-dynamic';
 
-const SYSTEM_PROMPT = `Eres el asistente de soporte de CentinelIA. Ayudas a los clientes a entender y aprovechar su agente de voz al máximo.
+const SYSTEM_PROMPT = `Eres el asistente de soporte de Centinelia. Ayudas a los clientes a entender y aprovechar su agente de voz al máximo.
 
-**Sobre CentinelIA:**
-CentinelIA es una plataforma de agentes de voz con inteligencia artificial para negocios en México. Los agentes atienden llamadas telefónicas de forma automática las 24 horas, los 7 días de la semana.
+**Sobre Centinelia:**
+Centinelia es una plataforma de agentes de voz con inteligencia artificial para negocios en México. Los agentes atienden llamadas telefónicas de forma automática las 24 horas, los 7 días de la semana.
 
 **Planes disponibles:**
 - Básico: Atención de llamadas, información del negocio, escalamiento a WhatsApp
@@ -36,7 +36,7 @@ CentinelIA es una plataforma de agentes de voz con inteligencia artificial para 
 
 **Pausar y reanudar el agente:**
 - El cliente puede pausar y reanudar voluntariamente desde la pestaña Agentes
-- Si el agente se pausa por falta de minutos o pago, se requiere intervención del equipo de CentinelIA
+- Si el agente se pausa por falta de minutos o pago, se requiere intervención del equipo de Centinelia
 
 **Respuestas de audio y llamadas:**
 - Las llamadas se registran automáticamente en la pestaña Resumen

@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { FEATURE_PLAN_CONFIG, MINUTES_PLAN_CONFIG, minutesPlanFromPriceId, nextResetDate } from '@/lib/billing/plans';
@@ -126,7 +126,7 @@ export async function POST(req: NextRequest) {
         if (agent.client_email && portalToken) {
           await sendEmail({
             to:      agent.client_email,
-            subject: '¡Bienvenido a CentinelIA! Tu agente de voz está listo',
+            subject: '¡Bienvenido a Centinelia! Tu agente de voz está listo',
             html:    welcomeHtml({
               businessName: agent.business_name,
               setupUrl:     `${appUrl}/portal/${portalToken}/setup`,
@@ -141,7 +141,7 @@ export async function POST(req: NextRequest) {
             : `⚠️ Pendiente: asignar número de teléfono manualmente`;
           await sendWhatsApp(
             adminWa,
-            `🎉 *Nuevo cliente — CentinelIA*\n\nNegocio: *${agent.business_name}*\nPlan: ${planLabels[featurePlan ?? ''] ?? featurePlan}\nEmail: ${agent.client_email}\nWA: ${(agent as any).transfer_whatsapp ?? '—'}\n${phoneInfo}`
+            `🎉 *Nuevo cliente — Centinelia*\n\nNegocio: *${agent.business_name}*\nPlan: ${planLabels[featurePlan ?? ''] ?? featurePlan}\nEmail: ${agent.client_email}\nWA: ${(agent as any).transfer_whatsapp ?? '—'}\n${phoneInfo}`
           ).catch(console.error);
         }
       }
@@ -237,7 +237,7 @@ export async function POST(req: NextRequest) {
       if (agent?.transfer_whatsapp) {
         await sendWhatsApp(
           agent.transfer_whatsapp,
-          `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción CentinelIA. Tienes *3 días* para regularizar el pago antes de que el agente sea pausado automáticamente.\n\nActualiza tu método de pago para continuar el servicio sin interrupciones.`
+          `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción Centinelia. Tienes *3 días* para regularizar el pago antes de que el agente sea pausado automáticamente.\n\nActualiza tu método de pago para continuar el servicio sin interrupciones.`
         );
       }
       if (agent?.client_email) {

@@ -189,7 +189,7 @@ export default function LandingPage() {
                 style={{ color: '#C4A8FF' }}
               >
                 <span style={{ width: 7, height: 7, borderRadius: '50%', background: '#4ade80', display: 'inline-block', boxShadow: '0 0 8px #4ade80' }} />
-                CENTINELIA EN LÍNEA
+                Centinelia EN LÍNEA
               </span>
               <AudioWaveform barCount={22} />
             </div>
@@ -520,7 +520,7 @@ export default function LandingPage() {
 
           {/* Character — desktop: lateral en el flex, mobile: oculto aquí */}
           <MeerkatReveal className="agent-float-slow meerkat-duo-stand overflow-hidden">
-            <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
+            <Image src="/agent-duo-stand2.png" alt="Agentes Centinelia" fill
               sizes="340px"
               style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
           </MeerkatReveal>
@@ -778,7 +778,7 @@ export default function LandingPage() {
 
         {/* Duo flotante — peeking up from the bottom edge */}
         <MeerkatReveal className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]" style={{ zIndex: 1 }}>
-          <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
+          <Image src="/agent-duo-call.png" alt="Equipo Centinelia" fill
             sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </MeerkatReveal>
       </section>

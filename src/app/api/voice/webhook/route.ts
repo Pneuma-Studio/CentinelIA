@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
       if (agent?.active && used >= included) {
         await supabase.from('voice_agents').update({ active: false }).eq('id', agentId);
         if (agent.phone_number) await pauseVapiAgent(agent.phone_number);
-        const pauseMsg = `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de CentinelIA para reactivar el servicio o adquirir minutos adicionales.`;
+        const pauseMsg = `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`;
         if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, pauseMsg);
         if (agent.client_email) {
           await sendEmail({
@@ -210,7 +210,7 @@ export async function POST(req: NextRequest) {
 
       // 7. Warning at 80%
       if (agent?.active && pct >= 80 && (pct - (minutes / included) * 100) < 80) {
-        const warnMsg = `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de CentinelIA si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`;
+        const warnMsg = `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de Centinelia si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`;
         if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, warnMsg);
         if (agent.client_email) {
           await sendEmail({

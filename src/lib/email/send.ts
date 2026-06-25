@@ -1,4 +1,4 @@
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'CentinelIA <notificaciones@centinelia.mx>';
+const FROM = process.env.RESEND_FROM_EMAIL ?? 'Centinelia <notificaciones@centinelia.mx>';
 
 export async function sendEmail(opts: {
   to: string;
@@ -39,7 +39,7 @@ export function minutesAlertHtml(opts: {
     ? `⚠️ Agente pausado — minutos agotados`
     : `📊 Aviso: ${Math.round(opts.pct)}% de minutos usados`;
   const body = opts.pct >= 100
-    ? `Tu agente de voz <strong>${opts.businessName}</strong> ha sido <strong>pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Contacta a tu asesor de CentinelIA para reactivar el servicio o adquirir minutos adicionales.`
+    ? `Tu agente de voz <strong>${opts.businessName}</strong> ha sido <strong>pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Contacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`
     : `Tu agente de voz <strong>${opts.businessName}</strong> ha usado <strong>${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si necesitas ampliar tu plan, contacta a tu asesor antes de que el agente se pause automáticamente.<br><br>Reinicio del contador: <strong>${opts.resetDate}</strong>.`;
 
   return `<!DOCTYPE html><html><body style="font-family:sans-serif;background:#f9fafb;padding:24px">
@@ -47,7 +47,7 @@ export function minutesAlertHtml(opts: {
       <div style="color:${color};font-size:18px;font-weight:700;margin-bottom:16px">${title}</div>
       <p style="color:#374151;font-size:14px;line-height:1.6;margin:0">${body}</p>
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:12px">
-        CentinelIA · Pneuma Studio
+        Centinelia · Pneuma Studio
       </div>
     </div>
   </body></html>`;
@@ -59,7 +59,7 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
       <div style="text-align:center;padding:32px 0 24px">
         <div style="display:inline-flex;width:52px;height:52px;border-radius:16px;background:rgba(108,59,255,0.25);border:1px solid rgba(108,59,255,0.4);align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">⚡</div>
         <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 8px">¡Tu agente de voz está listo!</h1>
-        <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:0">Bienvenido a CentinelIA · ${opts.businessName}</p>
+        <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:0">Bienvenido a Centinelia · ${opts.businessName}</p>
       </div>
 
       <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;margin-bottom:20px">
@@ -88,7 +88,7 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
 
       <div style="text-align:center;padding:24px 0 0">
         <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0">
-          CentinelIA · Pneuma Studio<br>
+          Centinelia · Pneuma Studio<br>
           <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.7);text-decoration:none">hola@centinelia.mx</a>
         </p>
       </div>
@@ -269,12 +269,12 @@ export function paymentFailedHtml(businessName: string) {
     <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;border:1px solid #e5e7eb">
       <div style="color:#ef4444;font-size:18px;font-weight:700;margin-bottom:16px">💳 Pago fallido — ${businessName}</div>
       <p style="color:#374151;font-size:14px;line-height:1.6;margin:0">
-        No pudimos procesar el pago de tu suscripción CentinelIA.<br><br>
+        No pudimos procesar el pago de tu suscripción Centinelia.<br><br>
         Tienes <strong>3 días</strong> para actualizar tu método de pago antes de que el agente de voz sea pausado automáticamente.<br><br>
         Actualiza tu método de pago en el portal del cliente o contáctanos para regularizar tu cuenta.
       </p>
       <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:12px">
-        CentinelIA · Pneuma Studio
+        Centinelia · Pneuma Studio
       </div>
     </div>
   </body></html>`;

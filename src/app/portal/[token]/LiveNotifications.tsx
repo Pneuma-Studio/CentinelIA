@@ -53,7 +53,7 @@ export default function LiveNotifications({ token }: { token: string }) {
     setTimeout(() => dismiss(call.id), 7000);
 
     if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
-      new Notification('CentinelIA · Nueva actividad', {
+      new Notification('Centinelia · Nueva actividad', {
         body: toast.message,
         icon: '/logo.png',
         tag:  call.id,

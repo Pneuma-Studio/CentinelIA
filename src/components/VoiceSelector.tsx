@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect, useRef } from 'react';
 import { Play, Square, Check, Loader, ChevronDown } from 'lucide-react';
@@ -54,7 +54,7 @@ const VOICE_DESC_OVERRIDE: Record<string, string> = {
 const VOICE_NAME_OVERRIDE: Record<string, string> = {
   // Female
   'j7e3J6ksqsziQcIGyAWI': 'Valentina',   // Valentina
-  'jUxkp8eMgszgJX3XU2pV': 'CentinelIA', // Annie KPasa — voz oficial
+  'jUxkp8eMgszgJX3XU2pV': 'Centinelia', // Annie KPasa — voz oficial
   'hrlCBOGwBPZYViXHeZjS': 'Sofía',      // "Sofía Juliette - ..."
   'cAvMBIZ0VNTU8XdsUpEq': 'Susana',     // "Susana Elizabeth - ..."
   'nTkjq09AuYgsNR8E4sDe': 'Cristina',   // "Cristina Campos - ..."

@@ -7,7 +7,7 @@ type Message = { role: 'user' | 'assistant'; content: string };
 
 const WELCOME: Message = {
   role: 'assistant',
-  content: '¡Hola! Soy el asistente de CentinelIA. Puedo ayudarte con dudas sobre tu portal, minutos, configuración del agente o cualquier otra pregunta. ¿En qué te puedo ayudar?',
+  content: '¡Hola! Soy el asistente de Centinelia. Puedo ayudarte con dudas sobre tu portal, minutos, configuración del agente o cualquier otra pregunta. ¿En qué te puedo ayudar?',
 };
 
 export default function SupportChat() {
@@ -114,7 +114,7 @@ export default function SupportChat() {
               <Bot size={15} color="#A07CFF" />
             </div>
             <div className="flex-1">
-              <p className="text-sm font-semibold" style={{ color: '#E2D9FF' }}>Soporte CentinelIA</p>
+              <p className="text-sm font-semibold" style={{ color: '#E2D9FF' }}>Soporte Centinelia</p>
               <div className="flex items-center gap-1.5 mt-0.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-green-400 inline-block" />
                 <p className="text-xs" style={{ color: 'rgba(255,255,255,0.45)' }}>En línea</p>

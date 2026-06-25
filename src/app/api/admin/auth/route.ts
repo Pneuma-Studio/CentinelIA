@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 
 export async function POST(req: NextRequest) {
   const { password } = await req.json();
@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   }
 
   const res = NextResponse.json({ ok: true });
-  res.cookies.set('centinelia_admin', process.env.ADMIN_SECRET!, {
+  res.cookies.set('Centinelia_admin', process.env.ADMIN_SECRET!, {
     httpOnly: true,
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'lax',

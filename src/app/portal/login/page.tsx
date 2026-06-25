@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, Suspense } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
@@ -50,9 +50,9 @@ function LoginForm() {
       <div className="w-full max-w-sm" style={{ position: 'relative', zIndex: 1 }}>
         <div className="text-center mb-8">
           <div className="flex justify-center mb-5">
-            <Image src="/logo-icon.png" alt="CentinelIA" width={68} height={68} style={{ width: 68, height: 68, objectFit: 'contain' }} />
+            <Image src="/logo-icon.png" alt="Centinelia" width={68} height={68} style={{ width: 68, height: 68, objectFit: 'contain' }} />
           </div>
-          <h1 className="text-2xl font-bold" style={{ color: '#FAFBFF', fontFamily: 'var(--font-sora)' }}>CentinelIA</h1>
+          <h1 className="text-2xl font-bold" style={{ color: '#FAFBFF', fontFamily: 'var(--font-sora)' }}>Centinelia</h1>
           <p className="text-sm mt-1.5" style={{ color: 'rgba(255,255,255,0.38)' }}>Portal del cliente</p>
         </div>
 
@@ -127,7 +127,7 @@ function LoginForm() {
         </form>
 
         <p className="text-center text-xs mt-6" style={{ color: 'rgba(255,255,255,0.2)' }}>
-          ¿Problemas para entrar? Contacta a tu asesor de CentinelIA.
+          ¿Problemas para entrar? Contacta a tu asesor de Centinelia.
         </p>
       </div>
     </div>

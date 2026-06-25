@@ -1,4 +1,4 @@
-'use client';
+﻿'use client';
 
 import { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
@@ -33,7 +33,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
       >
         <div className="px-5 py-4 border-b flex items-center justify-between" style={{ borderColor: 'rgba(255,255,255,0.07)' }}>
           <Link href="/admin/dashboard" className="flex items-baseline gap-2">
-            <span className="text-lg font-bold" style={{ color: '#9B6DFF' }}>CentinelIA</span>
+            <span className="text-lg font-bold" style={{ color: '#9B6DFF' }}>Centinelia</span>
             <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>admin</span>
           </Link>
           <div className="flex items-center gap-1">
@@ -80,7 +80,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
             <Menu size={20} />
           </button>
           <Link href="/admin/dashboard" className="flex items-baseline gap-1.5">
-            <span className="text-sm font-bold" style={{ color: '#9B6DFF' }}>CentinelIA</span>
+            <span className="text-sm font-bold" style={{ color: '#9B6DFF' }}>Centinelia</span>
             <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>admin</span>
           </Link>
         </div>

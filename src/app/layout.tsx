@@ -20,19 +20,19 @@ export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
 
   title: {
-    default: 'CentinelIA — Tu negocio nunca pierde una llamada',
-    template: '%s | CentinelIA',
+    default: 'Centinelia — Tu negocio nunca pierde una llamada',
+    template: '%s | Centinelia',
   },
   description:
     'Agentes de voz con IA que atienden las llamadas de tu negocio 24/7. Agenda citas, captura leads y toma pedidos — sin que tú estés presente. Desde $1,990/mes.',
   keywords: [
     'agente de voz IA', 'inteligencia artificial para negocios', 'recepcionista virtual',
     'atención telefónica automatizada', 'chatbot de voz', 'agenda citas automática',
-    'captura de leads por teléfono', 'CentinelIA', 'México',
+    'captura de leads por teléfono', 'Centinelia', 'México',
   ],
-  authors: [{ name: 'CentinelIA', url: BASE_URL }],
-  creator: 'CentinelIA',
-  publisher: 'CentinelIA',
+  authors: [{ name: 'Centinelia', url: BASE_URL }],
+  creator: 'Centinelia',
+  publisher: 'Centinelia',
   robots: {
     index: true,
     follow: true,
@@ -45,8 +45,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_MX',
     url: BASE_URL,
-    siteName: 'CentinelIA',
-    title: 'CentinelIA — Tu negocio nunca pierde una llamada',
+    siteName: 'Centinelia',
+    title: 'Centinelia — Tu negocio nunca pierde una llamada',
     description:
       'Agentes de voz con IA que atienden las llamadas de tu negocio 24/7. Agenda citas, captura leads y toma pedidos — desde $1,990/mes.',
     images: [
@@ -54,13 +54,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'CentinelIA — Agentes de voz con IA para tu negocio',
+        alt: 'Centinelia — Agentes de voz con IA para tu negocio',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'CentinelIA — Tu negocio nunca pierde una llamada',
+    title: 'Centinelia — Tu negocio nunca pierde una llamada',
     description:
       'Agentes de voz con IA que atienden las llamadas de tu negocio 24/7. Desde $1,990/mes.',
     images: ['/og-image.png'],

@@ -87,7 +87,7 @@ export default function ContractSection({ token, businessName, signedAt, contrac
             /* Unsigned state */
             <div className="flex flex-col gap-4 pt-4">
               <p className="text-sm" style={{ color: 'var(--c-text-2)' }}>
-                Por favor revisa tu contrato de servicios CentinelIA antes de firmar.
+                Por favor revisa tu contrato de servicios Centinelia antes de firmar.
                 El contrato detalla los servicios incluidos y no incluidos en tu plan, precio mensual y términos generales.
               </p>
 
@@ -110,7 +110,7 @@ export default function ContractSection({ token, businessName, signedAt, contrac
                   className="mt-0.5 w-4 h-4 rounded accent-purple-600 flex-shrink-0"
                 />
                 <span className="text-xs leading-relaxed" style={{ color: 'var(--c-text-2)' }}>
-                  He leído y acepto los términos y condiciones del contrato de servicios CentinelIA para <strong style={{ color: 'var(--c-text)' }}>{businessName}</strong>.
+                  He leído y acepto los términos y condiciones del contrato de servicios Centinelia para <strong style={{ color: 'var(--c-text)' }}>{businessName}</strong>.
                 </span>
               </label>
 

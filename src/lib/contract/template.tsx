@@ -1,4 +1,4 @@
-import { FEATURE_LABELS, PLAN_LABELS } from '@/types/agent';
+﻿import { FEATURE_LABELS, PLAN_LABELS } from '@/types/agent';
 import type { VoiceAgent } from '@/types/agent';
 import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
 import type { MinutesPlan } from '@/lib/billing/plans';
@@ -42,12 +42,12 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
         <div style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Contrato de Servicios de Agente de Voz IA
         </div>
-        <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.6 }}>CentinelIA — Pneuma Studio</div>
+        <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.6 }}>Centinelia — Pneuma Studio</div>
       </div>
 
       <Clause title="1. PARTES">
         <p>
-          <strong>Prestador de servicios:</strong> Pneuma Studio, desarrollador de la plataforma CentinelIA, en adelante &ldquo;CentinelIA&rdquo;.
+          <strong>Prestador de servicios:</strong> Pneuma Studio, desarrollador de la plataforma Centinelia, en adelante &ldquo;Centinelia&rdquo;.
         </p>
         <p style={{ marginTop: '0.5rem' }}>
           <strong>Cliente:</strong> {agent.business_name}, representado por {agent.client_name}, en adelante &ldquo;el Cliente&rdquo;.
@@ -56,7 +56,7 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
 
       <Clause title="2. OBJETO DEL CONTRATO">
         <p>
-          CentinelIA se compromete a proporcionar al Cliente un agente de voz impulsado por inteligencia artificial bajo el
+          Centinelia se compromete a proporcionar al Cliente un agente de voz impulsado por inteligencia artificial bajo el
           plan <strong>{planLabel}</strong>, configurado específicamente para el negocio <strong>{agent.business_name}</strong>.
           El agente operará en el número telefónico asignado{agent.phone_number ? ` (${agent.phone_number})` : ''} y
           atenderá llamadas entrantes de acuerdo con la configuración acordada.
@@ -99,21 +99,21 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
       <Clause title={`${excluded.length > 0 ? '6' : '5'}. DURACIÓN Y TERMINACIÓN`}>
         <p>
           El contrato tiene vigencia mensual con renovación automática. Para cancelar el servicio, el Cliente deberá
-          contactar al equipo de CentinelIA con al menos 5 días naturales de anticipación a la fecha de renovación.
+          contactar al equipo de Centinelia con al menos 5 días naturales de anticipación a la fecha de renovación.
           No se realizan reembolsos de períodos parciales.
-          CentinelIA se reserva el derecho de dar de baja el servicio con previo aviso de 15 días naturales.
+          Centinelia se reserva el derecho de dar de baja el servicio con previo aviso de 15 días naturales.
         </p>
         <p style={{ marginTop: '0.5rem' }}>
           Si el agente permanece pausado por un período continuo superior a 3 meses consecutivos sin que el Cliente
-          regularice el servicio, CentinelIA se reserva el derecho de reasignar el número telefónico asignado a otro
+          regularice el servicio, Centinelia se reserva el derecho de reasignar el número telefónico asignado a otro
           cliente. Esta reasignación se notificará al Cliente con al menos 15 días naturales de anticipación.
         </p>
       </Clause>
 
       <Clause title={`${excluded.length > 0 ? '7' : '6'}. LIMITACIONES DE RESPONSABILIDAD`}>
         <p>
-          CentinelIA es un agente de voz automatizado. No sustituye la asesoría profesional legal, médica o financiera.
-          CentinelIA no se hace responsable de decisiones tomadas por terceros basadas en información proporcionada por el agente.
+          Centinelia es un agente de voz automatizado. No sustituye la asesoría profesional legal, médica o financiera.
+          Centinelia no se hace responsable de decisiones tomadas por terceros basadas en información proporcionada por el agente.
           El Cliente es responsable de mantener actualizada la base de conocimiento del agente y de verificar la exactitud
           de la información compartida con sus clientes finales.
         </p>
@@ -147,7 +147,7 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
       }
 
       <p style={{ marginTop: '1.5rem', fontSize: '0.75rem', opacity: 0.4, textAlign: 'center' }}>
-        Documento generado el {today} · CentinelIA by Pneuma Studio
+        Documento generado el {today} · Centinelia by Pneuma Studio
       </p>
     </div>
   );
@@ -169,7 +169,7 @@ function SignatureBlock({ name, date, ip }: { name: string; date: string; ip?: s
     <div style={{ marginTop: '2.5rem', paddingTop: '1.5rem', borderTop: '2px solid currentColor', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '2rem' }}>
       <div>
         <div style={{ fontWeight: 700, fontSize: '0.75rem', textTransform: 'uppercase', opacity: 0.5, marginBottom: '0.75rem' }}>Prestador</div>
-        <div style={{ fontSize: '0.85rem' }}>CentinelIA / Pneuma Studio</div>
+        <div style={{ fontSize: '0.85rem' }}>Centinelia / Pneuma Studio</div>
         <div style={{ fontSize: '0.75rem', opacity: 0.6, marginTop: '0.25rem' }}>Firmado digitalmente</div>
       </div>
       <div>

@@ -35,7 +35,7 @@ export async function POST(req: NextRequest, { params }: Params) {
         unit_amount: minutes * PRICE_PER_MIN,
         product_data: {
           name: `${minutes} minutos extra · ${agent.business_name}`,
-          description: `Paquete adicional de ${minutes} minutos para tu agente de voz CentinelIA`,
+          description: `Paquete adicional de ${minutes} minutos para tu agente de voz Centinelia`,
         },
       },
       quantity: 1,

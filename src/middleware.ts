@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from 'next/server';
+﻿import { NextRequest, NextResponse } from 'next/server';
 import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
-const ADMIN_COOKIE = 'centinelia_admin';
+const ADMIN_COOKIE = 'Centinelia_admin';
 
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;

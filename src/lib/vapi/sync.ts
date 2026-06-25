@@ -1,4 +1,4 @@
-import { buildSystemPrompt } from '@/lib/voice/prompt-builder';
+﻿import { buildSystemPrompt } from '@/lib/voice/prompt-builder';
 import type { VoiceAgent } from '@/types/agent';
 
 const VAPI_URL = 'https://api.vapi.ai';
@@ -147,7 +147,7 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
 }
 
 function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
-  const agentName = agent.agent_name?.trim() || 'CentinelIA';
+  const agentName = agent.agent_name?.trim() || 'Centinelia';
 
   return {
     name: `${agentName} — ${agent.business_name}`,
