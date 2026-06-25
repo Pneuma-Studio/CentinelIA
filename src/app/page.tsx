@@ -325,7 +325,7 @@ export default function LandingPage() {
           </div>
 
           {/* Desktop: centered heading */}
-          <AnimatedSection className="hidden lg:block text-center mb-14" y={0}>
+          <div className="hidden lg:block text-center mb-14">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
               El problema
             </p>
@@ -339,53 +339,46 @@ export default function LandingPage() {
               Mientras tu negocio no contesta, tu competencia sí lo hace.
               Esto le pasa a un negocio promedio cada semana:
             </p>
-          </AnimatedSection>
+          </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5" style={{ position: 'relative', zIndex: 1 }}>
-            {PAINS.map((p, i) => (
-              <AnimatedSection key={p.stat} delay={i * 0.1}>
+            {PAINS.map((p) => (
+              <div key={p.stat}
+                className="rounded-2xl p-6 h-full"
+                style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)' }}
+              >
                 <div
-                  className="rounded-2xl p-6 h-full"
-                  style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)' }}
+                  className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
+                  style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}
                 >
-                  <div
-                    className="w-10 h-10 rounded-xl flex items-center justify-center mb-4"
-                    style={{ background: `${p.color}18`, border: `1px solid ${p.color}30` }}
-                  >
-                    {p.icon}
-                  </div>
-                  <span className="text-4xl font-bold tabular-nums block mb-2" style={{ color: p.color }}>
-                    {p.stat}
-                  </span>
-                  <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>{p.label}</p>
+                  {p.icon}
                 </div>
-              </AnimatedSection>
+                <span className="text-4xl font-bold tabular-nums block mb-2" style={{ color: p.color }}>
+                  {p.stat}
+                </span>
+                <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>{p.label}</p>
+              </div>
             ))}
           </div>
 
           {/* Bridge */}
-          <AnimatedSection delay={0.3}>
-            <div
-              className="mt-8 rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
-              style={{
-                background: 'rgba(108,59,255,0.12)',
-                border:     `1px solid rgba(108,59,255,0.28)`,
-              }}
-            >
-              <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(108,59,255,0.25)', border: '1px solid rgba(108,59,255,0.4)' }}>
-                <Target size={18} color="#C4A8FF" />
-              </div>
-              <div>
-                <p className="font-semibold mb-1" style={{ color: '#fff' }}>
-                  Centinelia resuelve los tres problemas a la vez.
-                </p>
-                <p className="text-sm" style={{ color: 'rgba(255,255,255,0.52)' }}>
-                  Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda —
-                  sin que tú tengas que estar presente.
-                </p>
-              </div>
+          <div
+            className="mt-8 rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
+            style={{ background: 'rgba(108,59,255,0.12)', border: `1px solid rgba(108,59,255,0.28)` }}
+          >
+            <div className="flex-shrink-0 w-10 h-10 rounded-xl flex items-center justify-center" style={{ background: 'rgba(108,59,255,0.25)', border: '1px solid rgba(108,59,255,0.4)' }}>
+              <Target size={18} color="#C4A8FF" />
             </div>
-          </AnimatedSection>
+            <div>
+              <p className="font-semibold mb-1" style={{ color: '#fff' }}>
+                Centinelia resuelve los tres problemas a la vez.
+              </p>
+              <p className="text-sm" style={{ color: 'rgba(255,255,255,0.52)' }}>
+                Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda —
+                sin que tú tengas que estar presente.
+              </p>
+            </div>
+          </div>
         </div>
       </section>
 
