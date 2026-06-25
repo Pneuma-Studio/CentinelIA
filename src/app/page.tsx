@@ -11,6 +11,7 @@ import RotatingNiche from './RotatingNiche';
 import FaqSection from './FaqSection';
 import DemoSelector from './DemoSelector';
 import AnimatedSection from './AnimatedSection';
+import MeerkatReveal from './MeerkatReveal';
 import AudioWaveform from './AudioWaveform';
 import Marquee from './Marquee';
 
@@ -281,7 +282,7 @@ export default function LandingPage() {
         }} />
 
         {/* Suricata — dinero volando, cortada por el borde inferior */}
-        <AnimatedSection className="meerkat-money" y={0}>
+        <MeerkatReveal className="meerkat-money">
           <Image
             src="/agent-money.png"
             alt=""
@@ -289,14 +290,14 @@ export default function LandingPage() {
             sizes="(min-width: 1024px) 360px, 140px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }}
           />
-        </AnimatedSection>
+        </MeerkatReveal>
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
 
           {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4">
             {/* Suricata — ancla su bottom justo en el top de las tarjetas */}
-            <AnimatedSection className="absolute" style={{ bottom: -16, left: -5, width: 105, height: 188, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }} y={0}>
+            <MeerkatReveal className="absolute" style={{ bottom: -16, left: -5, width: 105, height: 188, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image
                 src="/agent-money.png"
                 alt=""
@@ -304,7 +305,7 @@ export default function LandingPage() {
                 sizes="105px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }}
               />
-            </AnimatedSection>
+            </MeerkatReveal>
             <div style={{ paddingLeft: 112 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
                 El problema
@@ -518,19 +519,19 @@ export default function LandingPage() {
           </div>
 
           {/* Character — desktop: lateral en el flex, mobile: oculto aquí */}
-          <AnimatedSection className="agent-float-slow meerkat-duo-stand overflow-hidden" y={0}>
+          <MeerkatReveal className="agent-float-slow meerkat-duo-stand overflow-hidden">
             <Image src="/agent-duo-stand2.png" alt="Agentes CentinelIA" fill
               sizes="340px"
               style={{ objectFit: 'cover', objectPosition: 'center 85%' }} />
-          </AnimatedSection>
+          </MeerkatReveal>
         </div>
 
         {/* Duo mobile — asomándose desde el borde inferior de la sección */}
         <div className="agent-float-slow meerkat-duo-mob">
-          <AnimatedSection y={0} style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <MeerkatReveal style={{ position: 'relative', width: '100%', height: '100%' }}>
             <Image src="/agent-duo-stand2.png" alt="" fill sizes="220px"
               style={{ objectFit: 'cover', objectPosition: 'center 20%' }} />
-          </AnimatedSection>
+          </MeerkatReveal>
         </div>
       </section>
 
@@ -538,16 +539,16 @@ export default function LandingPage() {
       <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, position: 'relative', overflow: 'hidden' }}>
         {/* Headset meerkat — mobile: overflows from Demo into Planes section below */}
         <div className="meerkat-headset-mob">
-          <AnimatedSection y={0} style={{ position: 'relative', width: '100%', height: '100%' }}>
+          <MeerkatReveal style={{ position: 'relative', width: '100%', height: '100%' }}>
             <Image src="/agent-headset.png" alt="" fill sizes="170px"
               style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-          </AnimatedSection>
+          </MeerkatReveal>
         </div>
         {/* Desktop: right side */}
-        <AnimatedSection className="agent-sway meerkat-headset-desk" y={0}>
+        <MeerkatReveal className="agent-sway meerkat-headset-desk">
           <Image src="/agent-headset.png" alt="" fill sizes="260px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-        </AnimatedSection>
+        </MeerkatReveal>
         <div className="max-w-5xl mx-auto px-5 sm:px-8 pt-20 pb-44 sm:py-24">
           <AnimatedSection className="text-center mb-12">
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
@@ -583,10 +584,10 @@ export default function LandingPage() {
         }} />
 
         {/* Headset meerkat desktop — right side of Planes section */}
-        <AnimatedSection className="agent-sway meerkat-headset-desk" y={0}>
+        <MeerkatReveal className="agent-sway meerkat-headset-desk">
           <Image src="/agent-headset.png" alt="" fill sizes="260px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-        </AnimatedSection>
+        </MeerkatReveal>
 
         <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection className="text-center mb-14">
@@ -678,13 +679,13 @@ export default function LandingPage() {
                 </ul>
 
                 {/* Mobile peeking meerkat — right side of button */}
-                <AnimatedSection className="block sm:hidden" style={{
+                <MeerkatReveal className="block sm:hidden" style={{
                   position: 'absolute', bottom: p.meerkatBottom, right: 10,
                   width: 108, height: 108, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
-                }} y={0}>
+                }}>
                   <Image src={p.meerkat} alt="" fill sizes="88px"
                     style={{ objectFit: 'cover', objectPosition: 'top center' }} />
-                </AnimatedSection>
+                </MeerkatReveal>
                 <Link
                   href="/registro"
                   className="block text-center py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.02]"
@@ -776,10 +777,10 @@ export default function LandingPage() {
         </div>
 
         {/* Duo flotante — peeking up from the bottom edge */}
-        <AnimatedSection className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]" style={{ zIndex: 1 }} y={0}>
+        <MeerkatReveal className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]" style={{ zIndex: 1 }}>
           <Image src="/agent-duo-call.png" alt="Equipo CentinelIA" fill
             sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
-        </AnimatedSection>
+        </MeerkatReveal>
       </section>
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
