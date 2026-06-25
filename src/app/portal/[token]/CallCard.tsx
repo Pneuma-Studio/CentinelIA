@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, Play, Download, Clock } from 'lucide-react';
+import { Download, Clock, X } from 'lucide-react';
 
 const OUTCOME_LABELS: Record<string, { label: string; color: string; bg: string }> = {
   lead_created:       { label: 'Lead',        color: '#6C3BFF', bg: 'rgba(108,59,255,0.1)'  },
@@ -39,17 +39,8 @@ function RecordingPlayer({ url, createdAt }: { url: string; createdAt: string })
 
   if (expired) {
     return (
-      <div style={{
-        display:      'flex',
-        alignItems:   'center',
-        gap:          6,
-        padding:      '8px 12px',
-        borderRadius: 8,
-        background:   'var(--c-surface)',
-        border:       '1px solid var(--c-border)',
-        color:        'var(--c-text-3)',
-        fontSize:     12,
-      }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 6, padding: '8px 12px', borderRadius: 8,
+        background: 'var(--c-surface)', border: '1px solid var(--c-border)', color: 'var(--c-text-3)', fontSize: 12 }}>
         <Clock size={13} />
         Grabación expirada
       </div>
@@ -76,50 +67,24 @@ function RecordingPlayer({ url, createdAt }: { url: string; createdAt: string })
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: 8, flexWrap: 'wrap' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
-          <Play size={11} style={{ color: 'var(--c-text-3)' }} />
-          <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--c-text-3)' }}>Grabación</span>
-        </div>
+        <span style={{ fontSize: 12, fontWeight: 600, color: 'var(--c-text-3)' }}>Grabación</span>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          <span style={{
-            display:      'flex',
-            alignItems:   'center',
-            gap:          4,
-            fontSize:     11,
-            color:        daysLeft <= 2 ? '#f59e0b' : 'var(--c-text-3)',
-          }}>
+          <span style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 11,
+            color: daysLeft <= 2 ? '#f59e0b' : 'var(--c-text-3)' }}>
             <Clock size={10} />
             Hasta {expiresLabel}
           </span>
-          <button
-            onClick={handleDownload}
-            disabled={downloading}
-            style={{
-              display:      'flex',
-              alignItems:   'center',
-              gap:          4,
-              padding:      '4px 10px',
-              borderRadius: 7,
-              background:   'var(--c-surface)',
-              border:       '1px solid var(--c-border)',
-              color:        'var(--c-text-2)',
-              fontSize:     11,
-              fontWeight:   600,
-              cursor:       downloading ? 'default' : 'pointer',
-              opacity:      downloading ? 0.6 : 1,
-              transition:   'opacity 0.15s',
-            }}
-          >
+          <button onClick={handleDownload} disabled={downloading}
+            style={{ display: 'flex', alignItems: 'center', gap: 4, padding: '4px 10px', borderRadius: 7,
+              background: 'var(--c-surface)', border: '1px solid var(--c-border)', color: 'var(--c-text-2)',
+              fontSize: 11, fontWeight: 600, cursor: downloading ? 'default' : 'pointer',
+              opacity: downloading ? 0.6 : 1, transition: 'opacity 0.15s' }}>
             <Download size={11} />
             {downloading ? 'Descargando…' : 'Descargar'}
           </button>
         </div>
       </div>
-      <audio
-        controls
-        src={url}
-        style={{ width: '100%', height: 36, accentColor: '#6C3BFF' }}
-      />
+      <audio controls src={url} style={{ width: '100%', height: 36, accentColor: '#6C3BFF' }} />
     </div>
   );
 }
@@ -128,17 +93,30 @@ export default function CallCard({ call, isPro, clientName }: { call: Call; isPr
   const [open, setOpen] = useState(false);
   const outcome    = OUTCOME_LABELS[call.outcome] ?? OUTCOME_LABELS.other;
   const showRec    = isPro && !!call.recording_url;
-  const hasDetails = !!(call.transcript || showRec);
+  const hasDetails = !!(call.summary || call.transcript || showRec);
+
+  const formattedDate = new Date(call.created_at).toLocaleDateString('es-MX', {
+    day: 'numeric', month: 'short',
+  });
+  const formattedDateLong = new Date(call.created_at).toLocaleDateString('es-MX', {
+    day: 'numeric', month: 'long', year: 'numeric', hour: '2-digit', minute: '2-digit',
+  });
+  const duration = Math.max(1, Math.ceil(call.duration_seconds / 60));
 
   return (
-    <div className="rounded-xl overflow-hidden flex"
-      style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
-      {/* Left accent stripe */}
-      <div style={{ width: 3, background: outcome.color, flexShrink: 0, opacity: 0.65 }} />
+    <>
+      {/* Card — compact, fully clickable when has details */}
+      <div
+        className={`rounded-xl flex transition-opacity ${hasDetails ? 'cursor-pointer hover:opacity-80' : ''}`}
+        style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}
+        onClick={() => hasDetails && setOpen(true)}
+      >
+        {/* Left accent stripe */}
+        <div style={{ width: 3, background: outcome.color, flexShrink: 0, opacity: 0.65,
+          borderRadius: '10px 0 0 10px' }} />
 
-      {/* Content column */}
-      <div className="flex-1 min-w-0">
-        <div className="px-4 py-3">
+        {/* Content */}
+        <div className="flex-1 min-w-0 px-4 py-3">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
               <div className="min-w-0">
@@ -155,48 +133,86 @@ export default function CallCard({ call, isPro, clientName }: { call: Call; isPr
               </span>
             </div>
             <div className="flex items-center gap-2 flex-shrink-0">
-              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                {Math.max(1, Math.ceil(call.duration_seconds / 60))} min
-              </span>
-              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                {new Date(call.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
-              </span>
-              {hasDetails && (
-                <button onClick={() => setOpen(v => !v)}
-                  className="flex items-center gap-1 text-xs px-2 py-1 rounded-lg transition-colors"
-                  style={{ background: 'var(--c-surface)', color: 'var(--c-text-3)', border: '1px solid var(--c-border)' }}>
-                  <ChevronDown size={12} style={{ transform: open ? 'rotate(180deg)' : 'none', transition: 'transform 0.2s' }} />
-                  {open ? 'Cerrar' : 'Ver más'}
-                </button>
-              )}
+              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>{duration} min</span>
+              <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>{formattedDate}</span>
             </div>
           </div>
           {call.summary && (
-            <p className="text-xs mt-2 leading-relaxed" style={{ color: 'var(--c-text-2)' }}>{call.summary}</p>
+            <p className="text-xs mt-1.5 leading-relaxed line-clamp-2" style={{ color: 'var(--c-text-2)' }}>
+              {call.summary}
+            </p>
           )}
         </div>
-
-        {open && hasDetails && (
-          <div className="px-4 pb-4 flex flex-col gap-3" style={{ borderTop: '1px solid var(--c-border)' }}>
-
-            {showRec && (
-              <div className="pt-3">
-                <RecordingPlayer url={call.recording_url!} createdAt={call.created_at} />
-              </div>
-            )}
-
-            {call.transcript && (
-              <div>
-                <div className="text-xs font-medium mb-2" style={{ color: 'var(--c-text-3)' }}>Transcripción</div>
-                <div className="max-h-48 overflow-y-auto rounded-lg p-3 text-xs leading-relaxed whitespace-pre-wrap"
-                  style={{ background: 'var(--c-surface)', color: 'var(--c-text-2)', border: '1px solid var(--c-border)' }}>
-                  {call.transcript}
-                </div>
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </div>
+
+      {/* Detail modal */}
+      {open && (
+        <div
+          className="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-0 sm:p-4"
+          style={{ background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)' }}
+          onClick={e => { if (e.target === e.currentTarget) setOpen(false); }}
+        >
+          <div className="w-full sm:max-w-lg rounded-t-2xl sm:rounded-2xl overflow-hidden shadow-2xl"
+            style={{ background: 'var(--c-modal)', border: '1px solid var(--c-border)' }}>
+
+            {/* Header */}
+            <div className="flex items-start justify-between px-5 py-4"
+              style={{ borderBottom: '1px solid var(--c-border)' }}>
+              <div>
+                <div className="flex items-center gap-2 flex-wrap">
+                  <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                    {call.caller_number || 'Número desconocido'}
+                  </span>
+                  {clientName && (
+                    <span className="text-xs font-medium" style={{ color: '#9B6DFF' }}>{clientName}</span>
+                  )}
+                  <span className="text-xs px-2 py-0.5 rounded-full font-medium"
+                    style={{ background: outcome.bg, color: outcome.color }}>
+                    {outcome.label}
+                  </span>
+                </div>
+                <p className="text-xs mt-1" style={{ color: 'var(--c-text-3)' }}>
+                  {duration} min · {formattedDateLong}
+                </p>
+              </div>
+              <button
+                onClick={() => setOpen(false)}
+                className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors flex-shrink-0 ml-3"
+                style={{ color: 'var(--c-text-2)' }}
+              >
+                <X size={16} />
+              </button>
+            </div>
+
+            {/* Body */}
+            <div className="p-5 flex flex-col gap-5 overflow-y-auto" style={{ maxHeight: '65vh' }}>
+              {call.summary && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--c-text-3)' }}>
+                    Resumen
+                  </p>
+                  <p className="text-sm leading-relaxed" style={{ color: 'var(--c-text)' }}>{call.summary}</p>
+                </div>
+              )}
+
+              {showRec && <RecordingPlayer url={call.recording_url!} createdAt={call.created_at} />}
+
+              {call.transcript && (
+                <div>
+                  <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: 'var(--c-text-3)' }}>
+                    Transcripción
+                  </p>
+                  <div className="rounded-lg p-3 text-xs leading-relaxed whitespace-pre-wrap overflow-y-auto"
+                    style={{ background: 'var(--c-surface)', color: 'var(--c-text-2)',
+                      border: '1px solid var(--c-border)', maxHeight: 220 }}>
+                    {call.transcript}
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

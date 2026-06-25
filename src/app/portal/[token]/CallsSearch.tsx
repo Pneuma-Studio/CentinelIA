@@ -47,22 +47,25 @@ export default function CallsSearch({ calls, isPro, callerNames = {} }: {
         )}
       </div>
 
-      <div className="flex flex-col gap-2 overflow-y-auto" style={{ maxHeight: 340, padding: '1px 2px 4px' }}>
-        {filtered.length === 0
-          ? (
-            <p className="text-xs text-center py-6" style={{ color: 'var(--c-text-4)' }}>
-              {q ? 'Sin resultados para esta búsqueda' : 'Sin llamadas en este período'}
-            </p>
-          )
-          : filtered.map(call => (
-              <CallCard
-                key={call.id}
-                call={call}
-                isPro={isPro}
-                clientName={callerNames[(call.caller_number ?? '').replace(/\D/g, '')]}
-              />
-            ))
-        }
+      {/* Scroll wrapper separated from flex layout — prevents overflow-y from clipping flex gaps/borders */}
+      <div style={{ maxHeight: 340, overflowY: 'auto' }}>
+        <div className="flex flex-col gap-2" style={{ padding: '1px 1px 6px' }}>
+          {filtered.length === 0
+            ? (
+              <p className="text-xs text-center py-6" style={{ color: 'var(--c-text-4)' }}>
+                {q ? 'Sin resultados para esta búsqueda' : 'Sin llamadas en este período'}
+              </p>
+            )
+            : filtered.map(call => (
+                <CallCard
+                  key={call.id}
+                  call={call}
+                  isPro={isPro}
+                  clientName={callerNames[(call.caller_number ?? '').replace(/\D/g, '')]}
+                />
+              ))
+          }
+        </div>
       </div>
 
       {filtered.length > 0 && (
