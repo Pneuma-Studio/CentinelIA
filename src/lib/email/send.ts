@@ -56,7 +56,7 @@ export function minutesAlertHtml(opts: {
         style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px;width:220px;text-align:center">
         Compra más minutos →
       </a>
-      <a href="mailto:hola@centinelia.mx"
+      <a href="${opts.portalUrl}?tab=minutos#suscripcion"
         style="display:inline-block;background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.12);color:rgba(255,255,255,0.7);font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px;width:220px;text-align:center">
         Amplía tu plan →
       </a>
