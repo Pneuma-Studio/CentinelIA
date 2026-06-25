@@ -105,12 +105,12 @@ const PLANS: PlanDef[] = [
 ];
 
 const GIROS: { id: Giro; label: string; icon: React.FC<LucideProps> }[] = [
-  { id: 'general',     label: 'General',               icon: Building2   },
-  { id: 'restaurante', label: 'Restaurante / Café',    icon: Utensils    },
-  { id: 'consultorio', label: 'Consultorio / Clínica', icon: Stethoscope },
-  { id: 'estetica',    label: 'Estética / Spa',        icon: Sparkles    },
-  { id: 'agencia',     label: 'Agencia / Servicios',   icon: Smartphone  },
-  { id: 'retail',      label: 'Tienda / Comercio',     icon: ShoppingBag },
+  { id: 'retail',      label: 'Tienda / Comercio',    icon: ShoppingBag },
+  { id: 'restaurante', label: 'Restaurante / Café',   icon: Utensils    },
+  { id: 'consultorio', label: 'Consultorio / Clínica',icon: Stethoscope },
+  { id: 'estetica',    label: 'Estética / Spa',       icon: Sparkles    },
+  { id: 'agencia',     label: 'Agencia / Servicios',  icon: Smartphone  },
+  { id: 'general',     label: 'General / Otro',       icon: Building2   },
 ];
 
 const priceFmt = (n: number) =>
