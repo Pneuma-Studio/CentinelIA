@@ -221,13 +221,17 @@ function RegistroInner() {
   const canceled = params.get('canceled') === '1';
   const backUrl  = params.get('back') ?? null;
 
-  const [step,         setStep]         = useState<1 | 2 | 3>(1);
+  const validPlans: FormPlan[] = ['basico', 'estandar', 'pro', 'empresarial'];
+  const rawPlan = params.get('plan') as FormPlan | null;
+  const initPlan: FormPlan = rawPlan && validPlans.includes(rawPlan) ? rawPlan : 'estandar';
+
+  const [step,         setStep]         = useState<1 | 2 | 3>(rawPlan && validPlans.includes(rawPlan) ? 2 : 1);
   const [loading,      setLoading]      = useState(false);
   const [error,        setError]        = useState('');
   const [submitted,    setSubmitted]    = useState(false);
 
   // Form state
-  const [plan,          setPlan]         = useState<FormPlan>('estandar'); // Comercial — default recommended
+  const [plan,          setPlan]         = useState<FormPlan>(initPlan);
   const [businessName,  setBusinessName] = useState('');
   const [businessDesc,  setBusinessDesc] = useState('');
   const [businessPhone, setBusinessPhone]= useState('');
