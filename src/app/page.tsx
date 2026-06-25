@@ -419,19 +419,19 @@ export default function LandingPage() {
             </AnimatedSection>
 
             {/* Suricata flotante */}
-            <div className="agent-float relative flex-shrink-0 pointer-events-none select-none"
+            <MeerkatReveal className="agent-float relative flex-shrink-0 pointer-events-none select-none"
               style={{ width: 280, height: 360, marginBottom: -160 }}>
               <Image src="/agent-f2.png" alt="" fill sizes="280px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-            </div>
+            </MeerkatReveal>
           </div>
 
           {/* Mobile: suricata absoluta derecha, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
-            <div className="agent-float absolute" style={{ bottom: -50, right: -5, width: 145, height: 145, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
+            <MeerkatReveal className="agent-float absolute" style={{ bottom: -50, right: -5, width: 145, height: 145, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image src="/agent-f2.png" alt="" fill sizes="145px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-            </div>
+            </MeerkatReveal>
             <div style={{ paddingRight: 122 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
                 Capacidades
