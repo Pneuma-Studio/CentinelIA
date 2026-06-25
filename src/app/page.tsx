@@ -427,11 +427,11 @@ export default function LandingPage() {
 
           {/* Mobile: suricata absoluta derecha, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4" style={{ minHeight: 160 }}>
-            <div className="agent-float absolute" style={{ bottom: -50, right: -5, width: 115, height: 115, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
-              <Image src="/agent-f2.png" alt="" fill sizes="115px"
+            <div className="agent-float absolute" style={{ bottom: -50, right: -5, width: 145, height: 145, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
+              <Image src="/agent-f2.png" alt="" fill sizes="145px"
                 style={{ objectFit: 'contain', objectPosition: 'top center' }} />
             </div>
-            <div style={{ paddingRight: 122 }}>
+            <div style={{ paddingRight: 152 }}>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
                 Capacidades
               </p>
