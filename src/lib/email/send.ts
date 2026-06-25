@@ -80,7 +80,7 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
     </div>
     <div style="text-align:center;margin-bottom:24px">
       <span style="display:inline-block;background:rgba(108,59,255,0.2);border:1px solid rgba(108,59,255,0.45);border-radius:20px;padding:5px 16px;color:#C4A8FF;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">🎉 ¡Bienvenido a Centinelia!</span>
-      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">Tu agente de voz está listo</h1>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">Tu agente de voz estará listo pronto</h1>
       <p style="color:rgba(255,255,255,0.38);font-size:13px;margin:0">${opts.businessName}</p>
     </div>
     <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;margin-bottom:20px">
