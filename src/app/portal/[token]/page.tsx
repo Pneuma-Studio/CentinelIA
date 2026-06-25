@@ -348,42 +348,42 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                     else if (isClientPaused){ statusLabel = 'Pausado';        statusColor = '#f59e0b'; statusBg = 'rgba(245,158,11,0.1)'; }
 
                     return (
-                      <div key={a.id} className="flex flex-col gap-2 px-4 py-3 sm:flex-row sm:items-center sm:gap-3"
+                      <div key={a.id} className="flex items-center gap-3 px-4 py-2.5"
                         style={{
                           background: 'var(--c-surface-2)',
                           borderTop: i > 0 ? '1px solid var(--c-divider)' : undefined,
                         }}>
 
-                        {/* Info: status dot + name/badges */}
-                        <div className="flex items-start gap-2.5 flex-1 min-w-0">
-                          <div className={`w-2 h-2 rounded-full flex-shrink-0 mt-[5px] ${a.active && !isClientPaused && !isBillingPaused ? 'animate-pulse' : ''}`}
-                            style={{ background: a.active && !isClientPaused && !isBillingPaused ? '#22c55e' : '#ef4444' }} />
-                          <div className="flex-1 min-w-0">
-                            <div className="flex items-center gap-1.5 flex-wrap">
-                              <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                                {a.agent_name?.trim() || 'CentinelIA'}
-                              </span>
-                              {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
-                                <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-                                  style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
-                                  {PLAN_LABELS[a.plan] ?? a.plan}
-                                </span>
-                              ); })()}
+                        {/* Status dot */}
+                        <div className={`w-2 h-2 rounded-full flex-shrink-0 ${a.active && !isClientPaused && !isBillingPaused ? 'animate-pulse' : ''}`}
+                          style={{ background: a.active && !isClientPaused && !isBillingPaused ? '#22c55e' : '#ef4444' }} />
+
+                        {/* Info */}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-1.5 flex-wrap">
+                            <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                              {a.agent_name?.trim() || 'CentinelIA'}
+                            </span>
+                            {(() => { const pc = PLAN_COLORS[a.plan] ?? '#6b7280'; return (
                               <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
-                                style={{ background: statusBg, color: statusColor }}>
-                                {statusLabel}
+                                style={{ background: `${pc}18`, color: pc, border: `1px solid ${pc}30` }}>
+                                {PLAN_LABELS[a.plan] ?? a.plan}
                               </span>
-                            </div>
-                            {a.phone_number && (
-                              <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
-                                <Phone size={10} /> {a.phone_number}
-                              </p>
-                            )}
+                            ); })()}
+                            <span className="text-xs px-1.5 py-0.5 rounded-full font-medium"
+                              style={{ background: statusBg, color: statusColor }}>
+                              {statusLabel}
+                            </span>
                           </div>
+                          {a.phone_number && (
+                            <p className="text-xs mt-0.5 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                              <Phone size={10} /> {a.phone_number}
+                            </p>
+                          )}
                         </div>
 
-                        {/* Action buttons — right-aligned on mobile, inline on desktop */}
-                        <div className="flex items-center gap-1.5 self-end sm:self-center flex-shrink-0">
+                        {/* Action buttons */}
+                        <div className="flex items-center gap-1.5 flex-shrink-0">
                           <Link
                             href={`/portal/${a.portal_token}/configurar`}
                             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
