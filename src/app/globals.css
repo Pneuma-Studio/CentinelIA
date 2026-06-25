@@ -245,11 +245,11 @@ h1, h2, h3, h4, h5, h6 {
 .meerkat-duo-mob {
   display: block;
   position: absolute;
-  bottom: -35px;
+  bottom: -25px;
   left: 50%;
   transform: translateX(-50%);
-  width: 220px;
-  height: 260px;
+  width: 160px;
+  height: 190px;
   z-index: 2;
   pointer-events: none;
   user-select: none;
