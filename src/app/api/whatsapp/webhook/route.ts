@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import crypto from 'crypto';
 import Anthropic from '@anthropic-ai/sdk';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { sendWhatsApp } from '@/lib/whatsapp/send';
@@ -6,6 +7,28 @@ import { buildWASystemPrompt } from '@/lib/whatsapp/prompt-builder';
 import type { WAAgent, WAMessage, WACapturedLead } from '@/types/whatsapp-agent';
 
 export const dynamic = 'force-dynamic';
+
+function validateTwilioSignature(rawBody: string, signature: string): boolean {
+  const authToken = process.env.TWILIO_AUTH_TOKEN;
+  const appUrl    = process.env.NEXT_PUBLIC_APP_URL ?? '';
+  if (!authToken || !signature || !appUrl) return false;
+
+  const url = `${appUrl}/api/whatsapp/webhook`;
+  const params = new URLSearchParams(rawBody);
+  const sorted = [...params.keys()].sort();
+  const paramStr = sorted.map(k => `${k}${params.get(k)}`).join('');
+
+  const expected = crypto
+    .createHmac('sha1', authToken)
+    .update(url + paramStr)
+    .digest('base64');
+
+  try {
+    return crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  } catch {
+    return false;
+  }
+}
 
 const anthropic = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
@@ -31,6 +54,12 @@ const LEAD_TOOL: Anthropic.Tool = {
 
 export async function POST(req: NextRequest) {
   const text = await req.text();
+
+  const signature = req.headers.get('x-twilio-signature') ?? '';
+  if (!validateTwilioSignature(text, signature)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 403 });
+  }
+
   const params = new URLSearchParams(text);
 
   const fromRaw  = params.get('From') ?? '';  // 'whatsapp:+521234567890'

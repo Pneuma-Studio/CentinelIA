@@ -6,7 +6,17 @@ const ADMIN_COOKIE = 'Centinelia_admin';
 export async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
-  // ── Admin routes ──────────────────────────────────────────────────────────
+  // ── Admin API routes (return JSON, no redirect) ───────────────────────────
+  if (pathname.startsWith('/api/admin')) {
+    if (pathname === '/api/admin/auth') return NextResponse.next();
+    const token = req.cookies.get(ADMIN_COOKIE)?.value;
+    if (token !== process.env.ADMIN_SECRET) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+    return NextResponse.next();
+  }
+
+  // ── Admin UI routes ────────────────────────────────────────────────────────
   if (pathname.startsWith('/admin')) {
     if (pathname === '/admin/login') return NextResponse.next();
     const token = req.cookies.get(ADMIN_COOKIE)?.value;
@@ -47,5 +57,5 @@ export async function middleware(req: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/admin/:path*', '/portal/:path*'],
+  matcher: ['/admin/:path*', '/api/admin/:path*', '/portal/:path*'],
 };

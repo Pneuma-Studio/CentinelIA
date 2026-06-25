@@ -1,8 +1,12 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from '@/lib/auth/require-auth';
 
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(req: NextRequest) {
+  if (!await isAuthenticated(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
   const apiKey = (process.env.ELEVENLABS_API_KEY ?? '').trim();
   if (!apiKey) return NextResponse.json({ voices: [], error: 'missing_key' });
 

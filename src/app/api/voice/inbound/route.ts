@@ -7,6 +7,11 @@ import type { VoiceAgent } from '@/types/agent';
 // Vapi calls this endpoint when a call comes in on an assigned phone number.
 // We respond with the agent configuration (system prompt + tools) for this caller.
 export async function POST(req: NextRequest) {
+  const vapiSecret = process.env.VAPI_SERVER_SECRET;
+  if (vapiSecret && req.nextUrl.searchParams.get('secret') !== vapiSecret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const body = await req.json();
   const { message } = body;
 
@@ -51,6 +56,11 @@ export async function POST(req: NextRequest) {
         voice: {
           provider: '11labs',
           voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
+          stability: 0.35,
+          similarityBoost: 0.65,
+          style: 0.4,
+          useSpeakerBoost: true,
+          optimizeStreamingLatency: 3,
         },
         firstMessage: closedMsg,
         endCallAfterSilenceSeconds: 5,
@@ -74,9 +84,11 @@ export async function POST(req: NextRequest) {
       voice: {
         provider: '11labs',
         voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
-        stability: 0.5,
-        similarityBoost: 0.75,
+        stability: 0.35,
+        similarityBoost: 0.65,
+        style: 0.4,
         useSpeakerBoost: true,
+        optimizeStreamingLatency: 3,
       },
       firstMessage: `Gracias por llamar a ${typedAgent.business_name}. ¿En qué le puedo ayudar?`,
       endCallMessage: 'Fue un placer atenderle. ¡Que tenga un excelente día!',

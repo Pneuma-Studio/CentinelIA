@@ -1,5 +1,6 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -51,6 +52,10 @@ Centinelia es una plataforma de agentes de voz con inteligencia artificial para 
 - Usa un tono profesional pero cercano, sin formalismos exagerados`;
 
 export async function POST(req: NextRequest) {
+  const cookie  = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
+  const session = await verifySession(cookie);
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return NextResponse.json({ error: 'API key not configured' }, { status: 500 });
   }

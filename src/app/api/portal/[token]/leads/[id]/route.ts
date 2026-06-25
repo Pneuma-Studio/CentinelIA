@@ -1,21 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 interface Params { params: Promise<{ token: string; id: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
+  const cookie  = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
+  const session = await verifySession(cookie);
+  if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+
   const { token, id } = await params;
   const body = await req.json();
   const supabase = createAdminClient();
 
-  // Verify token owns this lead
   const { data: agent } = await supabase
     .from('voice_agents')
     .select('id')
     .eq('portal_token', token)
+    .eq('portal_email', session.portalEmail)
     .single();
 
-  if (!agent) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
+  if (!agent) return NextResponse.json({ error: 'No autorizado' }, { status: 403 });
 
   const allowed = ['status', 'nombre', 'negocio', 'giro', 'servicio', 'presupuesto', 'timeline', 'whatsapp', 'email'];
   const update = Object.fromEntries(Object.entries(body).filter(([k]) => allowed.includes(k)));

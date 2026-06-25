@@ -5,6 +5,11 @@ import { sendEmail, minutesAlertHtml, newLeadHtml } from '@/lib/email/send';
 import { pauseVapiAgent } from '@/lib/vapi/control';
 
 export async function POST(req: NextRequest) {
+  const vapiSecret = process.env.VAPI_SERVER_SECRET;
+  if (vapiSecret && req.nextUrl.searchParams.get('secret') !== vapiSecret) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const body = await req.json();
   const { message } = body;
 
@@ -194,7 +199,7 @@ export async function POST(req: NextRequest) {
 
       // 6. Auto-pause at 100%
       if (agent?.active && used >= included) {
-        await supabase.from('voice_agents').update({ active: false }).eq('id', agentId);
+        await supabase.from('voice_agents').update({ active: false }).eq('id', resolvedAgentId);
         if (agent.phone_number) await pauseVapiAgent(agent.phone_number);
         const pauseMsg = `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`;
         if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, pauseMsg);

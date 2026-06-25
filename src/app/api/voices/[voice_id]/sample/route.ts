@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { isAuthenticated } from '@/lib/auth/require-auth';
 
 export const dynamic = 'force-dynamic';
 
@@ -9,7 +10,11 @@ const cache = new Map<string, ArrayBuffer>();
 
 const audioHeaders = { 'Content-Type': 'audio/mpeg', 'Cache-Control': 'public, max-age=86400' };
 
-export async function GET(_req: NextRequest, { params }: { params: Promise<{ voice_id: string }> }) {
+export async function GET(req: NextRequest, { params }: { params: Promise<{ voice_id: string }> }) {
+  if (!await isAuthenticated(req)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
   const { voice_id } = await params;
   const apiKey = (process.env.ELEVENLABS_API_KEY ?? '').trim();
   if (!apiKey) return NextResponse.json({ error: 'missing_key' }, { status: 500 });

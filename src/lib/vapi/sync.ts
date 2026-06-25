@@ -161,12 +161,18 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     },
     voice: {
       provider: '11labs',
-      voiceId: 'jUxkp8eMgszgJX3XU2pV',
-      model: 'eleven_flash_v2_5',
-      stability: 0.4,
-      similarityBoost: 0.8,
-      style: 0.0,
-      optimizeStreamingLatency: 4,
+      voiceId: agent.elevenlabs_voice_id || 'jUxkp8eMgszgJX3XU2pV',
+      model: 'eleven_multilingual_v2',
+      stability: 0.35,
+      similarityBoost: 0.65,
+      style: 0.4,
+      useSpeakerBoost: true,
+      optimizeStreamingLatency: 3,
+      chunkPlan: {
+        enabled: true,
+        minCharacters: 100,
+        punctuationBoundaries: ['.', '!', '?', ',', ';', ':', '—'],
+      },
     },
     firstMessage: agent.first_message?.trim() || `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Hasta luego, que tenga un excelente día.',
@@ -182,8 +188,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     backgroundDenoisingEnabled: true,
     silenceTimeoutSeconds: 10,
     maxDurationSeconds: 1800,
-    serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/webhook`,
-    serverUrlSecret: process.env.VAPI_WEBHOOK_SECRET,
+    serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/webhook?secret=${process.env.VAPI_SERVER_SECRET ?? ''}`,
     analysisPlan: {
       summaryPrompt: 'Resume esta llamada en 2-3 oraciones en texto plano, sin markdown, sin encabezados, sin negritas: qué quería el cliente y cómo terminó la llamada.',
       successEvaluationPrompt: '¿Se resolvió la solicitud del cliente satisfactoriamente?',
@@ -209,6 +214,14 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
         },
       },
     },
+    messagePlan: {
+      idleMessages: [
+        '¿Sigues ahí?',
+        '¿Hay algo más en lo que te pueda ayudar?',
+        'Estoy aquí si necesitas algo.',
+        'Tómate el tiempo que necesites.',
+      ],
+    },
     metadata: { agent_id: agent.id, plan: agent.plan },
   };
 }
@@ -229,11 +242,15 @@ export async function createVapiAssistant(agent: VoiceAgent): Promise<string | n
 }
 
 export async function updateVapiAssistant(vapiAssistantId: string, agent: VoiceAgent): Promise<boolean> {
-  const toolIds = await createVapiTools(agent);
+  // Fetch existing tool IDs to avoid recreating tools on every update
+  const existing = await fetch(`${VAPI_URL}/assistant/${vapiAssistantId}`, { headers: headers() });
+  const existingData = existing.ok ? await existing.json() : null;
+  const existingToolIds: string[] = existingData?.model?.toolIds ?? [];
+
   const res = await fetch(`${VAPI_URL}/assistant/${vapiAssistantId}`, {
     method: 'PATCH',
     headers: headers(),
-    body: JSON.stringify(buildVapiAssistant(agent, toolIds)),
+    body: JSON.stringify(buildVapiAssistant(agent, existingToolIds)),
   });
   if (!res.ok) {
     console.error('Vapi updateAssistant error:', await res.text());
