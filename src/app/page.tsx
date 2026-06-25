@@ -796,7 +796,7 @@ export default function LandingPage() {
             style={{ height: 36, width: 'auto', objectFit: 'contain' }}
           />
           <span className="text-xs" style={{ color: C.textMute }}>
-            · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: '#00f5ff' }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
+            · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
           </span>
         </div>
         <div className="flex items-center gap-5">

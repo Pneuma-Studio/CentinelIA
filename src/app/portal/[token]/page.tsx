@@ -593,7 +593,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 href="https://pneumastudio.mx"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ color: '#00f5ff' }}
+                style={{ color: 'var(--c-text-4)' }}
                 className="hover:opacity-80 transition-opacity"
               >
                 Pneuma Studio

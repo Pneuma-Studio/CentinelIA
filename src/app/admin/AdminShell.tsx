@@ -55,7 +55,7 @@ export default function AdminShell({ children }: { children: React.ReactNode }) 
               href="https://pneumastudio.mx"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ color: '#00f5ff' }}
+              style={{ color: 'rgba(255,255,255,0.2)' }}
               className="hover:opacity-80 transition-opacity"
             >
               Pneuma Studio
