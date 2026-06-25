@@ -269,16 +269,18 @@ export default function LandingPage() {
       </section>
 
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
-      <section id="problema" style={{ background: '#0D0520', position: 'relative', overflow: 'hidden' }}>
-        {/* Pure gradient orb — no filter:blur to avoid repaint flicker with animated children */}
-        <div style={{
-          position: 'absolute',
-          width: 700, height: 700,
-          top: -120, left: '50%', transform: 'translateX(-50%)',
-          background: 'radial-gradient(circle, rgba(108,59,255,0.14) 0%, rgba(108,59,255,0.06) 40%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-        }} />
+      <section id="problema" style={{ background: '#0D0520', position: 'relative' }}>
+        {/* Clip layer separate from animated content — prevents Framer Motion repaint flicker */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          {/* Pure gradient orb */}
+          <div style={{
+            position: 'absolute',
+            width: 700, height: 700,
+            top: -120, left: '50%', transform: 'translateX(-50%)',
+            background: 'radial-gradient(circle, rgba(108,59,255,0.14) 0%, rgba(108,59,255,0.06) 40%, transparent 70%)',
+            borderRadius: '50%',
+          }} />
+        </div>
 
         {/* Suricata — dinero volando, cortada por el borde inferior */}
         <MeerkatReveal className="meerkat-money">
