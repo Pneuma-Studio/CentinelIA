@@ -127,7 +127,7 @@ export default function LandingPage() {
       <LandingNav />
 
       {/* ── HERO — full-screen cinematic image ───────────────────────────── */}
-      <section className="relative film-grain" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start' }}>
+      <section className="relative film-grain" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start', overflow: 'hidden' }}>
 
         {/* Background image */}
         <Image
