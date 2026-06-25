@@ -11,7 +11,7 @@ export async function GET(req: NextRequest) {
   }
 
   const supabase = createAdminClient();
-  const appUrl   = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinel-ia.vercel.app';
+  const appUrl   = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx';
 
   const { data: agents } = await supabase
     .from('voice_agents')

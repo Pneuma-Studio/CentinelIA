@@ -117,7 +117,7 @@ export async function POST(req: NextRequest) {
           .single();
 
         if (agentForEmail?.client_email && (agentForEmail.notify_email ?? true)) {
-          const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinel-ia.vercel.app';
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx';
           const portalUrl = `${appUrl}/portal/${agentForEmail.portal_token}`;
           const outcomeSubjects: Record<string, string> = {
             lead_created:       '🎯 Nuevo lead capturado',
