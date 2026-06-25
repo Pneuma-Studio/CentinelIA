@@ -5,17 +5,19 @@ import { Check } from 'lucide-react';
 
 interface Props {
   token:             string;
+  initAgentName:     string;
   initGreeting:      string;
   initTransferRules: string;
 }
 
-export default function AgentCustomization({ token, initGreeting, initTransferRules }: Props) {
+export default function AgentCustomization({ token, initAgentName, initGreeting, initTransferRules }: Props) {
+  const [agentName,     setAgentName]     = useState(initAgentName);
   const [greeting,      setGreeting]      = useState(initGreeting);
   const [transferRules, setTransferRules] = useState(initTransferRules);
-  const [saved,         setSaved]         = useState<'greeting' | 'rules' | null>(null);
-  const [saving,        setSaving]        = useState<'greeting' | 'rules' | null>(null);
+  const [saved,         setSaved]         = useState<'name' | 'greeting' | 'rules' | null>(null);
+  const [saving,        setSaving]        = useState<'name' | 'greeting' | 'rules' | null>(null);
 
-  async function save(field: 'first_message' | 'transfer_rules', value: string, key: 'greeting' | 'rules') {
+  async function save(field: 'agent_name' | 'first_message' | 'transfer_rules', value: string, key: 'name' | 'greeting' | 'rules') {
     setSaving(key);
     try {
       await fetch(`/api/portal/${token}/settings`, {
@@ -32,6 +34,34 @@ export default function AgentCustomization({ token, initGreeting, initTransferRu
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', gap: 20 }}>
+      <div>
+        <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--c-text-3)', marginBottom: 6 }}>
+          Nombre del agente
+        </label>
+        <p style={{ fontSize: 12, color: 'var(--c-text-3)', margin: '0 0 10px' }}>
+          El nombre con el que el agente se presenta. Déjalo vacío para usar &ldquo;Centinelia&rdquo;.
+        </p>
+        <input
+          type="text"
+          value={agentName}
+          onChange={e => setAgentName(e.target.value)}
+          onBlur={() => save('agent_name', agentName, 'name')}
+          placeholder="Centinelia"
+          style={{
+            width:        '100%',
+            padding:      '10px 12px',
+            borderRadius: 10,
+            background:   'var(--c-surface-2)',
+            border:       '1px solid var(--c-border)',
+            color:        'var(--c-text)',
+            fontSize:     13,
+            outline:      'none',
+            boxSizing:    'border-box',
+          }}
+        />
+        <SaveIndicator active={saved === 'name'} saving={saving === 'name'} />
+      </div>
+
       <div>
         <label style={{ display: 'block', fontSize: 12, fontWeight: 600, color: 'var(--c-text-3)', marginBottom: 6 }}>
           Saludo de bienvenida

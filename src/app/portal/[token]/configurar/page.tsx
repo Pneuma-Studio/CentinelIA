@@ -117,6 +117,7 @@ export default async function ConfigurarAgentePage({ params }: Props) {
             </p>
             <AgentCustomization
               token={token}
+              initAgentName={(agent as any).agent_name ?? ''}
               initGreeting={(agent as any).first_message ?? ''}
               initTransferRules={(agent as any).transfer_rules ?? ''}
             />

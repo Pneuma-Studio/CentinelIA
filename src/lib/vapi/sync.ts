@@ -163,9 +163,10 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       provider: '11labs',
       voiceId: agent.elevenlabs_voice_id || 'jUxkp8eMgszgJX3XU2pV',
       model: 'eleven_multilingual_v2',
-      stability: 0.35,
-      similarityBoost: 0.65,
-      style: 0.4,
+      stability: 0.25,
+      similarityBoost: 0.70,
+      style: 0.55,
+      speed: 1.1,
       useSpeakerBoost: true,
       optimizeStreamingLatency: 3,
       chunkPlan: {
