@@ -577,9 +577,9 @@ export default function LandingPage() {
           ['--orb-dur' as string]: '13s',
         }} />
 
-        {/* Headset meerkat desktop — right side of Planes section */}
+        {/* Suit-phone meerkat — right side of Planes section */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk">
-          <Image src="/agent-headset.png" alt="" fill sizes="260px"
+          <Image src="/agent-suit-phone.png" alt="" fill sizes="260px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
 
