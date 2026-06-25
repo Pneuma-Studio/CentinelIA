@@ -498,22 +498,30 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 </div>
               ) : (
                 <>
-                  {showOrders && (
-                    <CollapsibleSection title="Pedidos" icon={<ShoppingBag size={14} />} defaultOpen={orders.length > 0} count={orders.length}>
-                      <PortalOrdersSection initialOrders={orders as any} token={token} isPro={agent.plan === 'pro'} />
-                    </CollapsibleSection>
-                  )}
-                  {showAppts && (
-                    <CollapsibleSection title="Citas" icon={<CalendarDays size={14} />} defaultOpen={appts.length > 0} count={appts.length}>
-                      <PortalAppointmentsSection initialAppointments={appts as any} token={token} label="cita" isPro={agent.plan === 'pro'} />
-                    </CollapsibleSection>
-                  )}
-                  {showLeads && (
-                    <CollapsibleSection title="Leads" icon={<Users size={14} />} defaultOpen={leads.length > 0} count={leads.length}>
-                      <PortalLeadsSection initialLeads={leads as any} token={token} isPro={agent.plan === 'pro'}
-                        filename={`leads-${agent.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />
-                    </CollapsibleSection>
-                  )}
+                  {(
+                    [
+                      showOrders && { count: orders.length, el: (
+                        <CollapsibleSection key="orders" title="Pedidos" icon={<ShoppingBag size={14} />} defaultOpen={orders.length > 0} count={orders.length}>
+                          <PortalOrdersSection initialOrders={orders as any} token={token} isPro={agent.plan === 'pro'} />
+                        </CollapsibleSection>
+                      )},
+                      showAppts && { count: appts.length, el: (
+                        <CollapsibleSection key="appts" title="Citas" icon={<CalendarDays size={14} />} defaultOpen={appts.length > 0} count={appts.length}>
+                          <PortalAppointmentsSection initialAppointments={appts as any} token={token} label="cita" isPro={agent.plan === 'pro'} />
+                        </CollapsibleSection>
+                      )},
+                      showLeads && { count: leads.length, el: (
+                        <CollapsibleSection key="leads" title="Leads" icon={<Users size={14} />} defaultOpen={leads.length > 0} count={leads.length}>
+                          <PortalLeadsSection initialLeads={leads as any} token={token} isPro={agent.plan === 'pro'}
+                            filename={`leads-${agent.business_name.replace(/\s+/g, '-').toLowerCase()}.csv`} />
+                        </CollapsibleSection>
+                      )},
+                    ] as ({ count: number; el: React.ReactNode } | false)[]
+                  )
+                    .filter((s): s is { count: number; el: React.ReactNode } => !!s)
+                    .sort((a, b) => b.count - a.count)
+                    .map(s => s.el)
+                  }
                 </>
               )}
             </div>
