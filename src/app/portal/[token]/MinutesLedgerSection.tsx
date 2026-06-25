@@ -36,10 +36,12 @@ export default async function MinutesLedgerSection({
   agentId,
   minutesIncluded,
   minutesUsed,
+  callerNames = {},
 }: {
   agentId: string;
   minutesIncluded: number;
   minutesUsed: number;
+  callerNames?: Record<string, string>;
 }) {
   const supabase = createAdminClient();
 
@@ -150,6 +152,13 @@ export default async function MinutesLedgerSection({
                   <p className="text-xs leading-snug truncate" style={{ color: 'var(--c-text)' }}>
                     {e.description}
                   </p>
+                  {e.source === 'llamada' && (() => {
+                    const raw = e.description.split(' · ')[0];
+                    const name = callerNames[raw.replace(/\D/g, '')];
+                    return name ? (
+                      <p className="text-xs leading-none mt-0.5" style={{ color: '#9B6DFF' }}>{name}</p>
+                    ) : null;
+                  })()}
                   <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-4)' }}>
                     {fmtDate(e.date)} · {fmtTime(e.date)}
                   </p>

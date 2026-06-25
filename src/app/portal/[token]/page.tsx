@@ -130,6 +130,19 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const appts    = apptsRes.data     ?? [];
   const allCalls = allCallsRes.data  ?? [];
 
+  // Build caller-number → client-name lookup from captured leads/appts/orders
+  const normPhone = (p: string) => (p ?? '').replace(/\D/g, '');
+  const callerNames: Record<string, string> = {};
+  for (const l of leads as any[]) {
+    if (l.whatsapp && l.nombre) { const k = normPhone(l.whatsapp); if (k && !callerNames[k]) callerNames[k] = l.nombre; }
+  }
+  for (const a of appts as any[]) {
+    if (a.telefono && a.nombre) { const k = normPhone(a.telefono); if (k && !callerNames[k]) callerNames[k] = a.nombre; }
+  }
+  for (const o of orders as any[]) {
+    if (o.telefono && o.nombre) { const k = normPhone(o.telefono); if (k && !callerNames[k]) callerNames[k] = o.nombre; }
+  }
+
   const totalDuration  = calls.reduce((s, c) => s + (c.duration_seconds ?? 0), 0);
   const totalHours     = (totalDuration / 3600).toFixed(1);
   const avgDuration    = calls.length > 0 ? Math.round(totalDuration / calls.length / 60) : 0;
@@ -463,7 +476,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                       <p className="text-sm" style={{ color: 'var(--c-text-3)' }}>Sin llamadas en este período</p>
                     </div>
                   )
-                  : <CallsSearch calls={calls as any} isPro={agent.plan === 'pro'} />
+                  : <CallsSearch calls={calls as any} isPro={agent.plan === 'pro'} callerNames={callerNames} />
                 }
               </div>
             </div>
@@ -554,7 +567,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Historial de minutos</h2>
                 <div className="overflow-y-auto" style={{ maxHeight: '420px' }}>
-                  <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} />
+                  <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} callerNames={callerNames} />
                 </div>
               </div>
             </div>

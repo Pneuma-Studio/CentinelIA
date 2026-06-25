@@ -124,7 +124,7 @@ function RecordingPlayer({ url, createdAt }: { url: string; createdAt: string })
   );
 }
 
-export default function CallCard({ call, isPro }: { call: Call; isPro?: boolean }) {
+export default function CallCard({ call, isPro, clientName }: { call: Call; isPro?: boolean; clientName?: string }) {
   const [open, setOpen] = useState(false);
   const outcome    = OUTCOME_LABELS[call.outcome] ?? OUTCOME_LABELS.other;
   const showRec    = isPro && !!call.recording_url;
@@ -141,9 +141,14 @@ export default function CallCard({ call, isPro }: { call: Call; isPro?: boolean 
         <div className="px-4 py-3">
           <div className="flex items-center justify-between gap-3 flex-wrap">
             <div className="flex items-center gap-2 min-w-0">
-              <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                {call.caller_number || 'Número desconocido'}
-              </span>
+              <div className="min-w-0">
+                <span className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
+                  {call.caller_number || 'Número desconocido'}
+                </span>
+                {clientName && (
+                  <p className="text-xs leading-none mt-0.5" style={{ color: 'var(--c-text-3)' }}>{clientName}</p>
+                )}
+              </div>
               <span className="text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
                 style={{ background: outcome.bg, color: outcome.color }}>
                 {outcome.label}

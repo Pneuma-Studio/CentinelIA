@@ -5,7 +5,11 @@ import { Search, X } from 'lucide-react';
 import CallCard from './CallCard';
 import type { VoiceCall } from '@/types/agent';
 
-export default function CallsSearch({ calls, isPro }: { calls: VoiceCall[]; isPro: boolean }) {
+export default function CallsSearch({ calls, isPro, callerNames = {} }: {
+  calls: VoiceCall[];
+  isPro: boolean;
+  callerNames?: Record<string, string>;
+}) {
   const [query, setQuery] = useState('');
 
   const q = query.trim().toLowerCase();
@@ -50,7 +54,14 @@ export default function CallsSearch({ calls, isPro }: { calls: VoiceCall[]; isPr
               {q ? 'Sin resultados para esta búsqueda' : 'Sin llamadas en este período'}
             </p>
           )
-          : filtered.map(call => <CallCard key={call.id} call={call} isPro={isPro} />)
+          : filtered.map(call => (
+              <CallCard
+                key={call.id}
+                call={call}
+                isPro={isPro}
+                clientName={callerNames[(call.caller_number ?? '').replace(/\D/g, '')]}
+              />
+            ))
         }
       </div>
 
