@@ -203,53 +203,52 @@ export default function PortalLeadsSection({ initialLeads, token, filename, isPr
               <div key={lead.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
                 style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
                 onClick={() => setDetailLead(lead)}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
-                        {lead.nombre ?? 'Sin nombre'}
-                      </span>
-                      {lead.negocio && (
-                        <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                          · {lead.negocio}{lead.giro ? ` (${lead.giro})` : ''}
+                <div className="flex flex-col gap-2.5">
+                  {/* Top: content + edit button */}
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                          {lead.nombre ?? 'Sin nombre'}
                         </span>
+                        {lead.negocio && (
+                          <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                            · {lead.negocio}{lead.giro ? ` (${lead.giro})` : ''}
+                          </span>
+                        )}
+                      </div>
+                      {lead.servicio && (
+                        <p className="text-xs mt-1 font-medium" style={{ color: '#6C3BFF' }}>{lead.servicio}</p>
                       )}
+                      <div className="flex flex-wrap gap-2 mt-2">
+                        {lead.presupuesto && <Chip icon={<DollarSign size={10} />}>{lead.presupuesto}</Chip>}
+                        {lead.timeline    && <Chip icon={<Calendar size={10} />}>{lead.timeline}</Chip>}
+                        {lead.whatsapp && (
+                          <a href={`https://wa.me/${lead.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
+                            <Chip icon={<MessageCircle size={10} />} highlight>{lead.whatsapp}</Chip>
+                          </a>
+                        )}
+                        {lead.email && (
+                          <a href={`mailto:${lead.email}`}>
+                            <Chip icon={<Mail size={10} />}>{lead.email}</Chip>
+                          </a>
+                        )}
+                      </div>
                     </div>
-
-                    {lead.servicio && (
-                      <p className="text-xs mt-1 font-medium" style={{ color: '#6C3BFF' }}>{lead.servicio}</p>
-                    )}
-
-                    <div className="flex flex-wrap gap-2 mt-2">
-                      {lead.presupuesto && <Chip icon={<DollarSign size={10} />}>{lead.presupuesto}</Chip>}
-                      {lead.timeline    && <Chip icon={<Calendar size={10} />}>{lead.timeline}</Chip>}
-                      {lead.whatsapp && (
-                        <a href={`https://wa.me/${lead.whatsapp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer">
-                          <Chip icon={<MessageCircle size={10} />} highlight>{lead.whatsapp}</Chip>
-                        </a>
-                      )}
-                      {lead.email && (
-                        <a href={`mailto:${lead.email}`}>
-                          <Chip icon={<Mail size={10} />}>{lead.email}</Chip>
-                        </a>
-                      )}
-                    </div>
+                    <button
+                      onClick={e => { e.stopPropagation(); openEdit(lead); }}
+                      className="p-1.5 rounded-lg transition-colors hover:bg-[var(--c-surface-2)] flex-shrink-0"
+                      style={{ color: 'var(--c-text-3)' }}
+                      title="Editar datos del lead"
+                    >
+                      <Pencil size={13} />
+                    </button>
                   </div>
-
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        onClick={e => { e.stopPropagation(); openEdit(lead); }}
-                        className="p-1.5 rounded-lg transition-colors hover:bg-[var(--c-surface-2)]"
-                        style={{ color: 'var(--c-text-3)' }}
-                        title="Editar datos del lead"
-                      >
-                        <Pencil size={13} />
-                      </button>
-                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                        {new Date(lead.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
-                      </span>
-                    </div>
+                  {/* Bottom: date + status select */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                      {new Date(lead.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                    </span>
                     <select
                       value={status}
                       disabled={updatingStatus === lead.id}

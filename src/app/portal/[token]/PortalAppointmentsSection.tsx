@@ -153,34 +153,35 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
               <div key={appt.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
                 style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
                 onClick={() => setDetailAppt(appt)}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
-                        {appt.nombre ?? 'Sin nombre'}
-                      </span>
-                      {appt.telefono && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>· {appt.telefono}</span>}
+                <div className="flex flex-col gap-2.5">
+                  {/* Top: content + edit button */}
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                          {appt.nombre ?? 'Sin nombre'}
+                        </span>
+                        {appt.telefono && <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>· {appt.telefono}</span>}
+                      </div>
+                      {appt.servicio && <p className="text-xs mt-1 font-medium" style={{ color: '#6C3BFF' }}>{appt.servicio}</p>}
+                      {(appt.fecha || appt.hora) && (
+                        <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
+                          <CalendarDays size={11} />
+                          {appt.fecha ?? ''}{appt.hora ? ` · ${appt.hora}` : ''}
+                        </p>
+                      )}
                     </div>
-                    {appt.servicio && <p className="text-xs mt-1 font-medium" style={{ color: '#6C3BFF' }}>{appt.servicio}</p>}
-                    {(appt.fecha || appt.hora) && (
-                      <p className="text-xs mt-1 flex items-center gap-1" style={{ color: 'var(--c-text-3)' }}>
-                        <CalendarDays size={11} />
-                        {appt.fecha ?? ''}{appt.hora ? ` · ${appt.hora}` : ''}
-                      </p>
-                    )}
+                    <button onClick={e => { e.stopPropagation(); setEditing(appt); setEditForm({ ...appt }); }}
+                      className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors flex-shrink-0"
+                      style={{ color: 'var(--c-text-3)' }}>
+                      <Pencil size={13} />
+                    </button>
                   </div>
-
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={e => { e.stopPropagation(); setEditing(appt); setEditForm({ ...appt }); }}
-                        className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
-                        style={{ color: 'var(--c-text-3)' }}>
-                        <Pencil size={13} />
-                      </button>
-                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                        {new Date(appt.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
-                      </span>
-                    </div>
+                  {/* Bottom: date + status select */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                      {new Date(appt.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                    </span>
                     <select value={status} disabled={updatingStatus === appt.id}
                       onChange={e => updateStatus(appt.id, e.target.value as ApptStatus)}
                       onClick={e => e.stopPropagation()}

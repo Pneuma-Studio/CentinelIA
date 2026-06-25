@@ -154,37 +154,38 @@ export default function PortalOrdersSection({ initialOrders, token, isPro }: {
               <div key={order.id} className="rounded-xl p-4 cursor-pointer transition-all hover:border-[var(--c-border-2)]"
                 style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}
                 onClick={() => setDetailOrder(order)}>
-                <div className="flex items-start gap-3">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
-                        {order.nombre ?? 'Sin nombre'}
-                      </span>
-                      {order.telefono && (
-                        <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>· {order.telefono}</span>
-                      )}
-                      <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
-                        style={{ background: 'var(--c-input-bg)', color: 'var(--c-text-2)' }}>
-                        {order.tipo === 'entrega' ? <Truck size={9} /> : <Store size={9} />}
-                        {order.tipo === 'entrega' ? 'Entrega' : 'Recoger'}
-                      </span>
+                <div className="flex flex-col gap-2.5">
+                  {/* Top: content + edit button */}
+                  <div className="flex items-start gap-2">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="font-semibold text-sm" style={{ color: 'var(--c-text)' }}>
+                          {order.nombre ?? 'Sin nombre'}
+                        </span>
+                        {order.telefono && (
+                          <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>· {order.telefono}</span>
+                        )}
+                        <span className="inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full"
+                          style={{ background: 'var(--c-input-bg)', color: 'var(--c-text-2)' }}>
+                          {order.tipo === 'entrega' ? <Truck size={9} /> : <Store size={9} />}
+                          {order.tipo === 'entrega' ? 'Entrega' : 'Recoger'}
+                        </span>
+                      </div>
+                      <p className="text-sm mt-1.5 font-medium" style={{ color: 'var(--c-text)' }}>{order.items}</p>
+                      {order.direccion && <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>📍 {order.direccion}</p>}
+                      {order.notas    && <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>📝 {order.notas}</p>}
                     </div>
-                    <p className="text-sm mt-1.5 font-medium" style={{ color: 'var(--c-text)' }}>{order.items}</p>
-                    {order.direccion && <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>📍 {order.direccion}</p>}
-                    {order.notas    && <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>📝 {order.notas}</p>}
+                    <button onClick={e => { e.stopPropagation(); setEditingOrder(order); setEditForm({ ...order }); }}
+                      className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors flex-shrink-0"
+                      style={{ color: 'var(--c-text-3)' }}>
+                      <Pencil size={13} />
+                    </button>
                   </div>
-
-                  <div className="flex flex-col items-end gap-2 flex-shrink-0">
-                    <div className="flex items-center gap-1.5">
-                      <button onClick={e => { e.stopPropagation(); setEditingOrder(order); setEditForm({ ...order }); }}
-                        className="p-1.5 rounded-lg hover:bg-[var(--c-surface-2)] transition-colors"
-                        style={{ color: 'var(--c-text-3)' }}>
-                        <Pencil size={13} />
-                      </button>
-                      <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                        {new Date(order.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
-                      </span>
-                    </div>
+                  {/* Bottom: date + status select */}
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+                      {new Date(order.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                    </span>
                     <select value={status} disabled={updatingStatus === order.id}
                       onChange={e => updateStatus(order.id, e.target.value as OrderStatus)}
                       onClick={e => e.stopPropagation()}
