@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect, Suspense } from 'react';
 import { useSearchParams } from 'next/navigation';
-import { Check, ChevronRight, ChevronLeft, ChevronDown, Loader, Phone, Building2, User } from 'lucide-react';
+import { Check, ChevronRight, ChevronLeft, ChevronDown, Loader, Phone, Building2, User, Utensils, Stethoscope, Sparkles, Smartphone, ShoppingBag, type LucideProps } from 'lucide-react';
 import Image from 'next/image';
 
 type FormPlan = 'basico' | 'estandar' | 'pro' | 'empresarial';
@@ -104,13 +104,13 @@ const PLANS: PlanDef[] = [
   },
 ];
 
-const GIROS: { id: Giro; label: string; emoji: string }[] = [
-  { id: 'general',     label: 'General',               emoji: '🏢' },
-  { id: 'restaurante', label: 'Restaurante / Café',     emoji: '🍽️' },
-  { id: 'consultorio', label: 'Consultorio / Clínica',  emoji: '🏥' },
-  { id: 'estetica',    label: 'Estética / Spa',         emoji: '💅' },
-  { id: 'agencia',     label: 'Agencia / Servicios',    emoji: '📱' },
-  { id: 'retail',      label: 'Tienda / Comercio',      emoji: '🛍️' },
+const GIROS: { id: Giro; label: string; icon: React.FC<LucideProps> }[] = [
+  { id: 'general',     label: 'General',               icon: Building2   },
+  { id: 'restaurante', label: 'Restaurante / Café',    icon: Utensils    },
+  { id: 'consultorio', label: 'Consultorio / Clínica', icon: Stethoscope },
+  { id: 'estetica',    label: 'Estética / Spa',        icon: Sparkles    },
+  { id: 'agencia',     label: 'Agencia / Servicios',   icon: Smartphone  },
+  { id: 'retail',      label: 'Tienda / Comercio',     icon: ShoppingBag },
 ];
 
 const priceFmt = (n: number) =>
@@ -119,9 +119,10 @@ const priceFmt = (n: number) =>
 // ─── City custom dropdown ──────────────────────────────────────────────────────
 
 function CitySelect({ value, onChange }: { value: string; onChange: (v: string) => void }) {
-  const [open, setOpen]   = useState(false);
-  const ref               = useRef<HTMLDivElement>(null);
-  const selected          = CITIES.find(c => c.lada === value);
+  const [open, setOpen]       = useState(false);
+  const [openUp, setOpenUp]   = useState(false);
+  const ref                   = useRef<HTMLDivElement>(null);
+  const selected              = CITIES.find(c => c.lada === value);
 
   useEffect(() => {
     if (!open) return;
@@ -132,11 +133,19 @@ function CitySelect({ value, onChange }: { value: string; onChange: (v: string) 
     return () => document.removeEventListener('mousedown', handler);
   }, [open]);
 
+  function handleToggle() {
+    if (!open && ref.current) {
+      const rect = ref.current.getBoundingClientRect();
+      setOpenUp(rect.bottom + 240 > window.innerHeight);
+    }
+    setOpen(o => !o);
+  }
+
   return (
     <div ref={ref} style={{ position: 'relative' }}>
       <button
         type="button"
-        onClick={() => setOpen(o => !o)}
+        onClick={handleToggle}
         style={{
           background:    'rgba(255,255,255,0.05)',
           border:        '1px solid rgba(255,255,255,0.1)',
@@ -167,14 +176,14 @@ function CitySelect({ value, onChange }: { value: string; onChange: (v: string) 
       {open && (
         <div style={{
           position:     'absolute',
-          top:          'calc(100% + 4px)',
+          ...(openUp ? { bottom: 'calc(100% + 4px)' } : { top: 'calc(100% + 4px)' }),
           left:         0,
           right:        0,
           background:   '#1a0d3d',
           border:       '1px solid rgba(255,255,255,0.12)',
           borderRadius: 12,
           zIndex:       100,
-          maxHeight:    224,
+          maxHeight:    220,
           overflowY:    'auto',
           boxShadow:    '0 8px 32px rgba(0,0,0,0.6)',
         }}>
@@ -593,7 +602,7 @@ function RegistroInner() {
                         fontWeight: giro === g.id ? 600 : 400,
                       }}
                     >
-                      <span>{g.emoji}</span>
+                      <g.icon size={14} color={giro === g.id ? '#9B6DFF' : 'rgba(255,255,255,0.4)'} />
                       <span className="text-xs">{g.label}</span>
                     </button>
                   ))}
@@ -760,14 +769,14 @@ function RegistroInner() {
                       {selectedPlan.minutes} min/mes
                     </span>
                   </div>
-                  <div className="flex items-baseline gap-1.5">
+                  <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
+                    Próximamente: {priceFmt(selectedPlan.origMonthly)}/mes
+                  </p>
+                  <div className="flex items-baseline gap-1">
                     <span className="text-3xl font-bold tabular-nums" style={{ color: selectedPlan.color }}>
                       {priceFmt(selectedPlan.monthly)}
                     </span>
-                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
-                    <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
-                      {priceFmt(selectedPlan.origMonthly)}
-                    </span>
+                    <span className="text-sm" style={{ color: 'rgba(255,255,255,0.4)' }}>/mes</span>
                   </div>
                   <div className="flex items-center gap-2 mt-1">
                     <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
