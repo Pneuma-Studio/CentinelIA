@@ -435,7 +435,7 @@ function RegistroInner() {
                     )}
 
                     <div className="p-5">
-                      {/* Row 1: Radio + Name + Recommended | Ahorras % */}
+                      {/* Row 1: Radio + Name + Recommended | Lanzamiento */}
                       <div className="flex items-center gap-3 mb-4">
                         <div className="flex items-center gap-3 flex-1 min-w-0">
                           <div
@@ -459,8 +459,8 @@ function RegistroInner() {
                         </div>
                         {!p.custom && (
                           <span className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
-                            style={{ background: 'rgba(34,197,94,0.13)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.2)' }}>
-                            Ahorras {Math.round(((p.origMonthly - p.monthly) / p.origMonthly) * 100)}%
+                            style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
+                            Lanzamiento
                           </span>
                         )}
                       </div>
@@ -475,25 +475,28 @@ function RegistroInner() {
                         </div>
                       ) : (
                         <div className="ml-8 mb-4">
-                          <div className="flex items-baseline gap-2 flex-wrap">
-                            <span className="text-4xl font-extrabold tabular-nums" style={{ color: p.color }}>
+                          <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
+                            Próximamente: {priceFmt(p.origMonthly)}/mes
+                          </p>
+                          <div className="flex items-baseline gap-1 mb-3">
+                            <span className="text-4xl font-extrabold tabular-nums" style={{ color: p.recommended ? p.color : '#fff' }}>
                               {priceFmt(p.monthly)}
                             </span>
-                            <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.35)' }}>/mes</span>
-                            <span className="text-sm line-through" style={{ color: 'rgba(255,255,255,0.22)' }}>
-                              {priceFmt(p.origMonthly)}
-                            </span>
+                            <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>/mes</span>
                           </div>
-                          <div className="flex items-center gap-2 mt-2 flex-wrap">
-                            <span className="text-xs px-2.5 py-1 rounded-full font-semibold"
-                              style={{ background: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}>
-                              {p.minutes} min/mes
-                            </span>
-                            <span className="text-xs" style={{ color: 'rgba(255,255,255,0.3)' }}>
-                              + {priceFmt(p.price)}{' '}
-                              <span className="line-through" style={{ color: 'rgba(255,255,255,0.18)' }}>{priceFmt(p.origPrice)}</span>
-                              {' '}instalación única
-                            </span>
+                          <div className="rounded-xl px-3 py-2.5 flex flex-col gap-2"
+                            style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
+                            <div className="flex items-center justify-between text-xs">
+                              <span style={{ color: 'rgba(255,255,255,0.45)' }}>Instalación</span>
+                              <div className="flex items-center gap-2">
+                                <span className="line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>{priceFmt(p.origPrice)}</span>
+                                <span className="font-semibold text-white">{priceFmt(p.price)}</span>
+                              </div>
+                            </div>
+                            <div className="flex items-center justify-between text-xs">
+                              <span style={{ color: 'rgba(255,255,255,0.45)' }}>Minutos incluidos</span>
+                              <span className="font-semibold text-white">{p.minutes} min/mes</span>
+                            </div>
                           </div>
                         </div>
                       )}
