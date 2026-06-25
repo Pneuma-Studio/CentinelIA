@@ -1,4 +1,12 @@
-const FROM = process.env.RESEND_FROM_EMAIL ?? 'Centinelia <notificaciones@centinelia.mx>';
+const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Centinelia <notificaciones@centinelia.mx>';
+const LOGO    = 'https://centinelia.mx/logo-icon.png';
+const FOOTER  = `
+  <div style="text-align:center;padding:24px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
+    <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
+      Centinelia · Pneuma Studio<br>
+      <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
+    </p>
+  </div>`;
 
 export async function sendEmail(opts: {
   to: string;
@@ -34,66 +42,72 @@ export function minutesAlertHtml(opts: {
   included: number;
   resetDate: string;
 }) {
-  const color = opts.pct >= 100 ? '#ef4444' : '#f59e0b';
-  const title = opts.pct >= 100
-    ? `⚠️ Agente pausado — minutos agotados`
-    : `📊 Aviso: ${Math.round(opts.pct)}% de minutos usados`;
-  const body = opts.pct >= 100
-    ? `Tu agente de voz <strong>${opts.businessName}</strong> ha sido <strong>pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Contacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`
-    : `Tu agente de voz <strong>${opts.businessName}</strong> ha usado <strong>${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si necesitas ampliar tu plan, contacta a tu asesor antes de que el agente se pause automáticamente.<br><br>Reinicio del contador: <strong>${opts.resetDate}</strong>.`;
+  const isPaused = opts.pct >= 100;
+  const accentColor = isPaused ? '#ef4444' : '#f59e0b';
+  const badge = isPaused ? '⚠️ Agente pausado' : `📊 ${Math.round(opts.pct)}% de minutos usados`;
+  const bodyText = isPaused
+    ? `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha sido <strong style="color:#ef4444">pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Contacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`
+    : `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha usado <strong style="color:#f59e0b">${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si necesitas ampliar tu plan, contacta a tu asesor antes de que el agente se pause automáticamente.<br><br>Reinicio del contador: <strong style="color:#fff">${opts.resetDate}</strong>.`;
 
-  return `<!DOCTYPE html><html><body style="font-family:sans-serif;background:#f9fafb;padding:24px">
-    <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;border:1px solid #e5e7eb">
-      <div style="color:${color};font-size:18px;font-weight:700;margin-bottom:16px">${title}</div>
-      <p style="color:#374151;font-size:14px;line-height:1.6;margin:0">${body}</p>
-      <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:12px">
-        Centinelia · Pneuma Studio
-      </div>
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
     </div>
-  </body></html>`;
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(108,59,255,0.2);border:1px solid ${accentColor}55;border-radius:20px;padding:5px 16px;color:${accentColor};font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">${badge}</span>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.7;margin:0">${bodyText}</p>
+    </div>
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
 }
 
 export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
-  return `<!DOCTYPE html><html><body style="font-family:sans-serif;background:#0D0621;padding:24px;margin:0">
-    <div style="max-width:520px;margin:0 auto">
-      <div style="text-align:center;padding:32px 0 24px">
-        <div style="display:inline-flex;width:52px;height:52px;border-radius:16px;background:rgba(108,59,255,0.25);border:1px solid rgba(108,59,255,0.4);align-items:center;justify-content:center;font-size:22px;margin-bottom:16px">⚡</div>
-        <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 8px">¡Tu agente de voz está listo!</h1>
-        <p style="color:rgba(255,255,255,0.5);font-size:14px;margin:0">Bienvenido a Centinelia · ${opts.businessName}</p>
-      </div>
-
-      <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;margin-bottom:20px">
-        <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0 0 20px">
-          Tu pago fue procesado exitosamente. En las próximas horas asignaremos tu número de teléfono dedicado y te avisaremos por WhatsApp cuando tu agente esté en línea.
-        </p>
-        <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0 0 24px">
-          Mientras tanto, configura tu acceso al portal del cliente para monitorear tus llamadas, leads y minutos:
-        </p>
-        <div style="text-align:center">
-          <a href="${opts.setupUrl}"
-            style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px">
-            Acceder a mi portal →
-          </a>
-        </div>
-      </div>
-
-      <div style="background:rgba(108,59,255,0.08);border:1px solid rgba(108,59,255,0.2);border-radius:12px;padding:16px 20px">
-        <p style="color:rgba(255,255,255,0.5);font-size:12px;margin:0 0 8px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase">¿Qué sigue?</p>
-        <p style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.6;margin:0">
-          1. Configura tu contraseña en el portal<br>
-          2. Recibe tu número de teléfono (próximas horas)<br>
-          3. Comparte el número con tus clientes y empieza a recibir llamadas 24/7
-        </p>
-      </div>
-
-      <div style="text-align:center;padding:24px 0 0">
-        <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0">
-          Centinelia · Pneuma Studio<br>
-          <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.7);text-decoration:none">hola@centinelia.mx</a>
-        </p>
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(108,59,255,0.2);border:1px solid rgba(108,59,255,0.45);border-radius:20px;padding:5px 16px;color:#C4A8FF;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">🎉 ¡Bienvenido a Centinelia!</span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">Tu agente de voz está listo</h1>
+      <p style="color:rgba(255,255,255,0.38);font-size:13px;margin:0">${opts.businessName}</p>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:28px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0 0 20px">
+        Tu pago fue procesado exitosamente. En las próximas horas asignaremos tu número de teléfono dedicado y te avisaremos por WhatsApp cuando tu agente esté en línea.
+      </p>
+      <p style="color:rgba(255,255,255,0.8);font-size:14px;line-height:1.7;margin:0 0 24px">
+        Mientras tanto, configura tu acceso al portal para monitorear tus llamadas, leads y minutos:
+      </p>
+      <div style="text-align:center">
+        <a href="${opts.setupUrl}" style="display:inline-block;background:linear-gradient(135deg,#6C3BFF,#9B6DFF);color:#ffffff;font-size:14px;font-weight:600;text-decoration:none;padding:14px 32px;border-radius:12px">
+          Acceder a mi portal →
+        </a>
       </div>
     </div>
-  </body></html>`;
+    <div style="background:rgba(108,59,255,0.08);border:1px solid rgba(108,59,255,0.2);border-radius:12px;padding:16px 20px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.38);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin:0 0 8px">¿Qué sigue?</p>
+      <p style="color:rgba(255,255,255,0.6);font-size:13px;line-height:1.7;margin:0">
+        1. Configura tu contraseña en el portal<br>
+        2. Recibe tu número de teléfono (próximas horas)<br>
+        3. Comparte el número con tus clientes y empieza a recibir llamadas 24/7
+      </p>
+    </div>
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
 }
 
 export function weeklyReportHtml(opts: {
@@ -126,8 +140,7 @@ export function weeklyReportHtml(opts: {
   <div style="max-width:520px;margin:0 auto">
 
     <div style="text-align:center;padding:32px 0 24px">
-      <img src="https://centinelia.mx/logo.png" alt="Centinelia" height="38"
-        style="height:38px;width:auto;display:inline-block;border-radius:6px" />
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
     </div>
 
     <div style="text-align:center;margin-bottom:24px">
@@ -162,12 +175,7 @@ export function weeklyReportHtml(opts: {
       </a>
     </div>
 
-    <div style="text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
-      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
-        Centinelia · Pneuma Studio<br>
-        <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
-      </p>
-    </div>
+    ${FOOTER}
 
   </div>
 </body>
@@ -225,8 +233,7 @@ export function newLeadHtml(opts: {
   <div style="max-width:520px;margin:0 auto">
 
     <div style="text-align:center;padding:32px 0 24px">
-      <img src="https://centinelia.mx/logo.png" alt="Centinelia" height="38"
-        style="height:38px;width:auto;display:inline-block;border-radius:6px" />
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
     </div>
 
     <div style="text-align:center;margin-bottom:24px">
@@ -252,12 +259,7 @@ export function newLeadHtml(opts: {
       </a>
     </div>
 
-    <div style="text-align:center;padding:20px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
-      <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
-        Centinelia · Pneuma Studio<br>
-        <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
-      </p>
-    </div>
+    ${FOOTER}
 
   </div>
 </body>
@@ -265,17 +267,27 @@ export function newLeadHtml(opts: {
 }
 
 export function paymentFailedHtml(businessName: string) {
-  return `<!DOCTYPE html><html><body style="font-family:sans-serif;background:#f9fafb;padding:24px">
-    <div style="max-width:480px;margin:0 auto;background:#fff;border-radius:12px;padding:32px;border:1px solid #e5e7eb">
-      <div style="color:#ef4444;font-size:18px;font-weight:700;margin-bottom:16px">💳 Pago fallido — ${businessName}</div>
-      <p style="color:#374151;font-size:14px;line-height:1.6;margin:0">
+  return `<!DOCTYPE html>
+<html>
+<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="font-family:Arial,Helvetica,sans-serif;background:#0D0621;padding:24px;margin:0">
+  <div style="max-width:520px;margin:0 auto">
+    <div style="text-align:center;padding:32px 0 24px">
+      <img src="${LOGO}" alt="Centinelia" width="64" height="64" style="width:64px;height:64px;border-radius:16px;display:inline-block" />
+    </div>
+    <div style="text-align:center;margin-bottom:24px">
+      <span style="display:inline-block;background:rgba(239,68,68,0.15);border:1px solid rgba(239,68,68,0.4);border-radius:20px;padding:5px 16px;color:#f87171;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;margin-bottom:14px">💳 Pago fallido</span>
+      <h1 style="color:#ffffff;font-size:22px;font-weight:700;margin:0 0 6px">${businessName}</h1>
+    </div>
+    <div style="background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:16px;padding:24px;margin-bottom:20px">
+      <p style="color:rgba(255,255,255,0.7);font-size:14px;line-height:1.7;margin:0">
         No pudimos procesar el pago de tu suscripción Centinelia.<br><br>
-        Tienes <strong>3 días</strong> para actualizar tu método de pago antes de que el agente de voz sea pausado automáticamente.<br><br>
+        Tienes <strong style="color:#fff">3 días</strong> para actualizar tu método de pago antes de que el agente de voz sea pausado automáticamente.<br><br>
         Actualiza tu método de pago en el portal del cliente o contáctanos para regularizar tu cuenta.
       </p>
-      <div style="margin-top:24px;padding-top:16px;border-top:1px solid #f3f4f6;color:#9ca3af;font-size:12px">
-        Centinelia · Pneuma Studio
-      </div>
     </div>
-  </body></html>`;
+    ${FOOTER}
+  </div>
+</body>
+</html>`;
 }
