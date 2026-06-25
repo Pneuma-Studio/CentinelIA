@@ -14,6 +14,16 @@ export default function KnowledgeBaseEditor({
   const [saving, setSaving] = useState(false);
   const [saved, setSaved]   = useState(false);
 
+  const SOFT_LIMIT = 5_000;
+  const HARD_LIMIT = 10_000;
+  const chars = value.length;
+  const pct   = Math.min((chars / HARD_LIMIT) * 100, 100);
+  const barColor = chars <= SOFT_LIMIT ? '#22c55e' : chars <= HARD_LIMIT ? '#f59e0b' : '#ef4444';
+  const hint =
+    chars <= SOFT_LIMIT ? 'Ideal' :
+    chars <= HARD_LIMIT ? 'Largo pero aceptable — considera resumir' :
+    'Muy extenso — el agente puede tener dificultad usando toda esta información';
+
   const handleSave = async () => {
     setSaving(true);
     setSaved(false);
@@ -44,10 +54,21 @@ export default function KnowledgeBaseEditor({
           minHeight: 180,
         }}
       />
+      <div className="flex flex-col gap-1.5">
+        <div className="flex items-center justify-between text-xs">
+          <span style={{ color: barColor, fontWeight: 500 }}>
+            {chars.toLocaleString('es-MX')} / {HARD_LIMIT.toLocaleString('es-MX')} caracteres
+          </span>
+          <span style={{ color: 'var(--c-text-4)' }}>{hint}</span>
+        </div>
+        <div className="w-full rounded-full overflow-hidden" style={{ height: 4, background: 'var(--c-input-border)' }}>
+          <div
+            className="h-full rounded-full transition-all duration-300"
+            style={{ width: `${pct}%`, background: barColor }}
+          />
+        </div>
+      </div>
       <div className="flex items-center justify-between">
-        <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
-          {value.length.toLocaleString('es-MX')} caracteres
-        </span>
         <button
           onClick={handleSave}
           disabled={saving}
