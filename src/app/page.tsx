@@ -526,19 +526,23 @@ export default function LandingPage() {
         </div>
 
         {/* Duo mobile — asomándose desde el borde inferior de la sección */}
-        <AnimatedSection className="agent-float-slow meerkat-duo-mob" y={0}>
-          <Image src="/agent-duo-stand2.png" alt="" fill sizes="220px"
-            style={{ objectFit: 'cover', objectPosition: 'center 20%' }} />
-        </AnimatedSection>
+        <div className="agent-float-slow meerkat-duo-mob">
+          <AnimatedSection y={0} style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <Image src="/agent-duo-stand2.png" alt="" fill sizes="220px"
+              style={{ objectFit: 'cover', objectPosition: 'center 20%' }} />
+          </AnimatedSection>
+        </div>
       </section>
 
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
       <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, position: 'relative', overflow: 'hidden' }}>
         {/* Headset meerkat — mobile: overflows from Demo into Planes section below */}
-        <AnimatedSection className="meerkat-headset-mob" y={0}>
-          <Image src="/agent-headset.png" alt="" fill sizes="170px"
-            style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-        </AnimatedSection>
+        <div className="meerkat-headset-mob">
+          <AnimatedSection y={0} style={{ position: 'relative', width: '100%', height: '100%' }}>
+            <Image src="/agent-headset.png" alt="" fill sizes="170px"
+              style={{ objectFit: 'contain', objectPosition: 'top center' }} />
+          </AnimatedSection>
+        </div>
         {/* Desktop: right side */}
         <AnimatedSection className="agent-sway meerkat-headset-desk" y={0}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px"
