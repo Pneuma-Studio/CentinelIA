@@ -171,7 +171,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       optimizeStreamingLatency: 3,
       chunkPlan: {
         enabled: true,
-        minCharacters: 80,
+        minCharacters: 40,
         punctuationBoundaries: ['.', '!', '?', ',', ';', ':'],
       },
     },
@@ -182,7 +182,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
       model: 'nova-2',
       language: agent.features.multilingual ? 'multi' : 'es',
       smartFormat: true,
-      endpointing: 200,
+      endpointing: 100,
     },
     backgroundSound: 'office',
     backchannelingEnabled: true,
