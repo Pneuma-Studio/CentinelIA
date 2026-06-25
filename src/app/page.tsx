@@ -269,7 +269,7 @@ export default function LandingPage() {
       </section>
 
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
-      <section id="problema" style={{ background: '#0D0520', position: 'relative' }}>
+      <section id="problema" style={{ background: '#0D0520', position: 'relative', transform: 'translateZ(0)' }}>
         {/* Clip layer separate from animated content — prevents Framer Motion repaint flicker */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           {/* Pure gradient orb */}
@@ -325,7 +325,7 @@ export default function LandingPage() {
           </div>
 
           {/* Desktop: centered heading */}
-          <AnimatedSection className="hidden lg:block text-center mb-14">
+          <AnimatedSection className="hidden lg:block text-center mb-14" y={0}>
             <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: '#9B6DFF' }}>
               El problema
             </p>
