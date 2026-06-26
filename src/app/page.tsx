@@ -794,23 +794,25 @@ export default function LandingPage() {
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer
-        className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-28 sm:py-10"
+        className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
-        {/* Mobile: icon | Contratar | Portal de clientes */}
-        <div className="flex sm:hidden items-center gap-3">
+        {/* Mobile: icon | Contratar (centered) | Portal de clientes (aligned with WA button) */}
+        <div className="flex sm:hidden items-center gap-2">
           <Image
             src="/logo-icon.png"
             alt="Centinelia"
-            width={64}
-            height={64}
-            style={{ width: 64, height: 64, objectFit: 'contain', flexShrink: 0 }}
+            width={52}
+            height={52}
+            style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }}
           />
-          <div className="flex flex-1 items-center justify-between">
-            <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
-              Contratar
-            </Link>
-            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+          <div className="flex flex-1 items-center">
+            <div className="flex-1 flex justify-center">
+              <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+                Contratar
+              </Link>
+            </div>
+            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70 flex-shrink-0" style={{ color: C.textMute, marginRight: 4 }}>
               Portal de clientes
             </Link>
           </div>
