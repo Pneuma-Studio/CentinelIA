@@ -804,9 +804,9 @@ export default function LandingPage() {
             <Image
               src="/logo-icon.png"
               alt="Centinelia"
-              width={52}
-              height={52}
-              style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }}
+              width={64}
+              height={64}
+              style={{ width: 64, height: 64, objectFit: 'contain', flexShrink: 0 }}
             />
             <div className="flex flex-1 items-center justify-between">
               <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
