@@ -3,6 +3,7 @@ import { createAdminClient } from '@/lib/supabase/admin';
 import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 import { scrapeWebsite } from '@/lib/scrape/website';
 import { updateVapiAssistant } from '@/lib/vapi/sync';
+import { rateLimit, limiters } from '@/lib/ratelimit';
 import type { VoiceAgent } from '@/types/agent';
 
 interface Params { params: Promise<{ token: string }> }
@@ -13,6 +14,9 @@ export async function POST(req: NextRequest, { params }: Params) {
   const cookie  = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
   const session = await verifySession(cookie);
   if (!session) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+
+  const limited = await rateLimit(req, limiters.scrape, `scrape:${token}`);
+  if (limited) return limited;
 
   const body = await req.json().catch(() => ({}));
   const supabase = createAdminClient();

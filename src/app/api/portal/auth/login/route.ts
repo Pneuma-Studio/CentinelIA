@@ -1,8 +1,12 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
 import { verifyPassword, createSession, PORTAL_COOKIE } from '@/lib/portal/auth';
+import { rateLimit, limiters } from '@/lib/ratelimit';
 
 export async function POST(req: NextRequest) {
+  const limited = await rateLimit(req, limiters.auth);
+  if (limited) return limited;
+
   const { email, password } = await req.json() as { email?: string; password?: string };
   if (!email || !password) return NextResponse.json({ error: 'Credenciales requeridas' }, { status: 400 });
 

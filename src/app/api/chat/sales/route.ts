@@ -1,5 +1,6 @@
-import { NextRequest } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
+import { rateLimit, limiters } from '@/lib/ratelimit';
 
 export const dynamic = 'force-dynamic';
 
@@ -82,6 +83,9 @@ Negocios medianos y pequeños en México que reciben llamadas y pierden clientes
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
 export async function POST(req: NextRequest) {
+  const limited = await rateLimit(req, limiters.chat);
+  if (limited) return limited;
+
   if (!process.env.ANTHROPIC_API_KEY) {
     return new Response('data: ' + JSON.stringify({ error: 'Not configured' }) + '\n\n', {
       headers: { 'Content-Type': 'text/event-stream' },
