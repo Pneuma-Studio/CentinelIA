@@ -247,26 +247,50 @@ function buildTools(agent: VoiceAgent) {
   }
 
   if (f.appointment_booking) {
-    tools.push({
-      type: 'function',
-      function: {
-        name: 'agendar_cita',
-        description: 'Agenda, modifica o cancela una cita.',
-        parameters: {
-          type: 'object',
-          properties: {
-            accion:  { type: 'string', enum: ['agendar', 'modificar', 'cancelar'] },
-            nombre:  { type: 'string', description: 'Nombre del cliente' },
-            servicio: { type: 'string', description: 'Servicio o tipo de cita' },
-            fecha:   { type: 'string', description: 'Fecha preferida (YYYY-MM-DD)' },
-            hora:    { type: 'string', description: 'Hora preferida (HH:MM)' },
-            telefono: { type: 'string', description: 'Teléfono de confirmación' },
+    const hasCalendar = !!(agent as any).calendar_type;
+    if (hasCalendar) {
+      tools.push({
+        type: 'function',
+        function: {
+          name: 'agendar_cita_externa',
+          description: 'Agenda una cita y la registra en el calendario del negocio. Solicita nombre, servicio, fecha y hora. Opcionalmente email y WhatsApp del cliente.',
+          parameters: {
+            type: 'object',
+            properties: {
+              nombre:           { type: 'string', description: 'Nombre completo del cliente' },
+              servicio:         { type: 'string', description: 'Servicio o tipo de cita' },
+              fecha:            { type: 'string', description: 'Fecha de la cita (YYYY-MM-DD)' },
+              hora:             { type: 'string', description: 'Hora de la cita (HH:MM, 24h)' },
+              email:            { type: 'string', description: 'Email del cliente (opcional)' },
+              whatsapp_cliente: { type: 'string', description: 'WhatsApp del cliente para enviar confirmación' },
+            },
+            required: ['nombre', 'fecha', 'hora'],
           },
-          required: ['accion', 'nombre', 'fecha'],
+          serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools/agendar-cita-externa?agent_id=${agent.id}`,
         },
-        serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools/agendar-cita?agent_id=${agent.id}`,
-      },
-    });
+      });
+    } else {
+      tools.push({
+        type: 'function',
+        function: {
+          name: 'agendar_cita',
+          description: 'Agenda, modifica o cancela una cita.',
+          parameters: {
+            type: 'object',
+            properties: {
+              accion:   { type: 'string', enum: ['agendar', 'modificar', 'cancelar'] },
+              nombre:   { type: 'string', description: 'Nombre del cliente' },
+              servicio: { type: 'string', description: 'Servicio o tipo de cita' },
+              fecha:    { type: 'string', description: 'Fecha preferida (YYYY-MM-DD)' },
+              hora:     { type: 'string', description: 'Hora preferida (HH:MM)' },
+              telefono: { type: 'string', description: 'Teléfono de confirmación' },
+            },
+            required: ['accion', 'nombre', 'fecha'],
+          },
+          serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools/agendar-cita?agent_id=${agent.id}`,
+        },
+      });
+    }
   }
 
   if (f.existing_client_support || f.client_memory) {

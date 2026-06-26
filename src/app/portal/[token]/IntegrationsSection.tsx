@@ -1,0 +1,283 @@
+'use client';
+
+import { useEffect, useState } from 'react';
+import { Calendar, Check, ChevronDown, ChevronUp, ExternalLink, Lock, MessageCircle, Save } from 'lucide-react';
+import type { Plan } from '@/types/agent';
+
+const PLAN_ORDER: Plan[] = ['basico', 'estandar', 'pro'];
+const PLAN_LABELS: Record<Plan, string> = { basico: 'Básico', estandar: 'Comercial', pro: 'Pro' };
+const PLAN_COLORS: Record<Plan, string> = { basico: '#6b7280', estandar: '#3b82f6', pro: '#a855f7' };
+
+function canUse(clientPlan: Plan, required: Plan): boolean {
+  return PLAN_ORDER.indexOf(clientPlan) >= PLAN_ORDER.indexOf(required);
+}
+
+interface IntegrationDef {
+  id:           'cal_com' | 'google';
+  label:        string;
+  description:  string;
+  requiredPlan: Plan;
+  icon:         React.ReactNode;
+  accentColor:  string;
+}
+
+const INTEGRATIONS: IntegrationDef[] = [
+  {
+    id:           'cal_com',
+    label:        'Cal.com',
+    description:  'Agendamiento con API — crea citas directamente',
+    requiredPlan: 'basico',
+    accentColor:  '#000',
+    icon: (
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+        style={{ background: '#000', border: '1px solid rgba(255,255,255,0.1)' }}>
+        <span style={{ color: '#fff', fontSize: 13, fontWeight: 700 }}>cal</span>
+      </div>
+    ),
+  },
+  {
+    id:           'google',
+    label:        'Google Calendar',
+    description:  'Agenda de citas — envía link de reserva por WhatsApp',
+    requiredPlan: 'basico',
+    accentColor:  '#4285F4',
+    icon: (
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+        style={{ background: '#fff', border: '1px solid rgba(0,0,0,0.1)' }}>
+        <Calendar size={16} style={{ color: '#4285F4' }} />
+      </div>
+    ),
+  },
+];
+
+interface State {
+  calendar_type:           string | null;
+  calendar_event_type_id:  string;
+  calendar_link:           string;
+  cal_api_configured:      boolean;
+  cal_api_key:             string;
+}
+
+const SUPPORT_WA = (process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP ?? '').replace(/\D/g, '');
+
+export default function IntegrationsSection({ token, plan }: { token: string; plan: Plan }) {
+  const [state, setState]       = useState<State>({
+    calendar_type: null, calendar_event_type_id: '', calendar_link: '',
+    cal_api_configured: false, cal_api_key: '',
+  });
+  const [loading, setLoading]   = useState(true);
+  const [saving, setSaving]     = useState(false);
+  const [saved, setSaved]       = useState(false);
+  const [expanded, setExpanded] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetch(`/api/portal/${token}/integrations`)
+      .then(r => r.json())
+      .then(d => {
+        setState(prev => ({ ...prev, ...d, cal_api_key: '' }));
+        setLoading(false);
+        if (d.calendar_type) setExpanded(d.calendar_type);
+      });
+  }, [token]);
+
+  const set = (key: keyof State, val: string | null) =>
+    setState(prev => ({ ...prev, [key]: val }));
+
+  const handleSave = async () => {
+    setSaving(true);
+    const body: Record<string, string | null> = {
+      calendar_type:          state.calendar_type,
+      calendar_event_type_id: state.calendar_event_type_id || null,
+      calendar_link:          state.calendar_link || null,
+    };
+    if (state.cal_api_key) body.calendar_api_key = state.cal_api_key;
+
+    await fetch(`/api/portal/${token}/integrations`, {
+      method:  'PATCH',
+      headers: { 'Content-Type': 'application/json' },
+      body:    JSON.stringify(body),
+    });
+    setSaving(false);
+    setSaved(true);
+    if (state.cal_api_key) setState(prev => ({ ...prev, cal_api_configured: true, cal_api_key: '' }));
+    setTimeout(() => setSaved(false), 2500);
+  };
+
+  const selectType = (type: string | null) => {
+    set('calendar_type', type);
+    setExpanded(type);
+    if (type !== 'cal_com') { set('calendar_event_type_id', ''); set('cal_api_key', ''); }
+  };
+
+  if (loading) return (
+    <div className="flex flex-col gap-3">
+      {[1, 2].map(i => <div key={i} className="h-16 rounded-xl animate-pulse" style={{ background: 'var(--c-surface-2)' }} />)}
+    </div>
+  );
+
+  return (
+    <div className="flex flex-col gap-3">
+      {INTEGRATIONS.map(intg => {
+        const allowed    = canUse(plan, intg.requiredPlan);
+        const isActive   = state.calendar_type === intg.id;
+        const isExpanded = expanded === intg.id;
+
+        return (
+          <div key={intg.id} className="rounded-xl overflow-hidden" style={{
+            border:     `1px solid ${isActive ? `${intg.accentColor}55` : 'var(--c-border)'}`,
+            background: isActive ? `${intg.accentColor}08` : 'var(--c-surface-2)',
+            opacity:    !allowed ? 0.65 : 1,
+          }}>
+            {/* Header row */}
+            <button
+              className="w-full flex items-center gap-3 px-4 py-3 text-left"
+              style={{ background: 'transparent', border: 'none', cursor: allowed ? 'pointer' : 'default' }}
+              onClick={() => allowed && setExpanded(isExpanded ? null : intg.id)}
+              disabled={!allowed}
+            >
+              {intg.icon}
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold" style={{ color: 'var(--c-text)' }}>{intg.label}</p>
+                <p className="text-xs" style={{ color: 'var(--c-text-3)' }}>{intg.description}</p>
+              </div>
+
+              {!allowed ? (
+                <span className="flex items-center gap-1 text-xs px-2 py-0.5 rounded-full font-medium flex-shrink-0"
+                  style={{ background: `${PLAN_COLORS[intg.requiredPlan]}15`, color: PLAN_COLORS[intg.requiredPlan], border: `1px solid ${PLAN_COLORS[intg.requiredPlan]}30` }}>
+                  <Lock size={9} /> {PLAN_LABELS[intg.requiredPlan]}
+                </span>
+              ) : isActive ? (
+                <span className="text-xs px-2 py-0.5 rounded-full font-medium mr-1 flex-shrink-0"
+                  style={{ background: 'rgba(34,197,94,0.12)', color: '#22c55e' }}>Activo</span>
+              ) : null}
+
+              {allowed && (
+                isExpanded
+                  ? <ChevronUp size={14} style={{ color: 'var(--c-text-3)', flexShrink: 0 }} />
+                  : <ChevronDown size={14} style={{ color: 'var(--c-text-3)', flexShrink: 0 }} />
+              )}
+            </button>
+
+            {/* Expanded body */}
+            {allowed && isExpanded && (
+              <div className="px-4 pb-4" style={{ borderTop: '1px solid var(--c-border)' }}>
+                <div className="flex flex-col gap-3 mt-3">
+
+                  {intg.id === 'cal_com' && (
+                    <>
+                      <div>
+                        <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--c-text-2)' }}>API Key de Cal.com</label>
+                        <input
+                          type="password"
+                          value={state.cal_api_key}
+                          onChange={e => set('cal_api_key', e.target.value)}
+                          placeholder={state.cal_api_configured ? '••••••••• (guardada — pega nueva para cambiar)' : 'cal_live_...'}
+                          className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-text)' }}
+                        />
+                        <a href="https://app.cal.com/settings/developer/api-keys" target="_blank" rel="noopener noreferrer"
+                          className="inline-flex items-center gap-1 text-xs mt-1 hover:opacity-80" style={{ color: '#6C3BFF' }}>
+                          Obtener API Key <ExternalLink size={10} />
+                        </a>
+                      </div>
+
+                      <div>
+                        <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--c-text-2)' }}>ID del tipo de evento</label>
+                        <input
+                          type="text"
+                          value={state.calendar_event_type_id}
+                          onChange={e => set('calendar_event_type_id', e.target.value)}
+                          placeholder="Ej: 123456"
+                          className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                          style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-text)' }}
+                        />
+                        <p className="text-xs mt-1" style={{ color: 'var(--c-text-3)' }}>
+                          En cal.com/event-types → editar → revisa la URL del navegador
+                        </p>
+                      </div>
+                    </>
+                  )}
+
+                  {intg.id === 'google' && (
+                    <p className="text-xs p-3 rounded-lg" style={{ background: 'rgba(66,133,244,0.08)', color: 'var(--c-text-3)', border: '1px solid rgba(66,133,244,0.15)' }}>
+                      El agente captura nombre, servicio y horario preferido durante la llamada. Al terminar, envía tu link de reserva por WhatsApp para que el cliente confirme en un clic.
+                    </p>
+                  )}
+
+                  <div>
+                    <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--c-text-2)' }}>
+                      {intg.id === 'cal_com' ? 'Link de reserva (fallback por WhatsApp si falla la API)' : 'Link de tu agenda de citas'}
+                    </label>
+                    <input
+                      type="url"
+                      value={state.calendar_link}
+                      onChange={e => set('calendar_link', e.target.value)}
+                      placeholder={intg.id === 'cal_com' ? 'https://cal.com/tu-usuario/servicio' : 'https://calendar.google.com/calendar/appointments/...'}
+                      className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
+                      style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-text)' }}
+                    />
+                  </div>
+
+                  <div className="flex gap-2 pt-1">
+                    <button
+                      onClick={() => selectType(intg.id)}
+                      className="flex-1 py-2 rounded-lg text-xs font-semibold"
+                      style={{
+                        background: isActive ? 'rgba(34,197,94,0.12)' : `${intg.accentColor}15`,
+                        border:     `1px solid ${isActive ? 'rgba(34,197,94,0.3)' : `${intg.accentColor}40`}`,
+                        color:      isActive ? '#22c55e' : intg.accentColor === '#000' ? 'var(--c-text)' : intg.accentColor,
+                      }}
+                    >
+                      {isActive ? '✓ Seleccionado' : `Usar ${intg.label}`}
+                    </button>
+                    {isActive && (
+                      <button
+                        onClick={() => selectType(null)}
+                        className="px-3 py-2 rounded-lg text-xs"
+                        style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)', color: 'var(--c-text-3)' }}
+                      >
+                        Desactivar
+                      </button>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Save */}
+      <button
+        onClick={handleSave}
+        disabled={saving}
+        className="flex items-center justify-center gap-2 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
+        style={{
+          background: saved ? 'rgba(34,197,94,0.15)' : '#6C3BFF',
+          border:     saved ? '1px solid rgba(34,197,94,0.3)' : 'none',
+          color:      saved ? '#22c55e' : '#fff',
+          opacity:    saving ? 0.6 : 1,
+        }}
+      >
+        {saved ? <><Check size={14} /> Guardado</> : <><Save size={14} /> {saving ? 'Guardando…' : 'Guardar integración'}</>}
+      </button>
+
+      {/* Contact CTA */}
+      <div className="flex items-center justify-between px-4 py-3 rounded-xl"
+        style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
+        <div>
+          <p className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>¿No encuentras tu herramienta?</p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>Podemos conectar cualquier sistema — escríbenos</p>
+        </div>
+        {SUPPORT_WA && (
+          <a href={`https://wa.me/${SUPPORT_WA}?text=Hola, necesito integrar mi sistema con Centinelia`}
+            target="_blank" rel="noopener noreferrer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0"
+            style={{ background: '#25D366', color: '#fff' }}>
+            <MessageCircle size={12} /> WhatsApp
+          </a>
+        )}
+      </div>
+    </div>
+  );
+}

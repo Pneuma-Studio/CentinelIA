@@ -1,0 +1,103 @@
+import { NextRequest, NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { sendWhatsApp } from '@/lib/whatsapp/send';
+
+export async function POST(req: NextRequest) {
+  const { searchParams } = new URL(req.url);
+  const agent_id = searchParams.get('agent_id');
+
+  const body = await req.json();
+  const args = body.toolCallList?.[0]?.function?.arguments ?? body;
+  const { nombre, servicio, fecha, hora, email, whatsapp_cliente } = args;
+
+  if (!agent_id || !nombre || !fecha || !hora) {
+    return NextResponse.json({ result: 'Faltan datos para agendar la cita. Pide nombre, fecha y hora al cliente.' });
+  }
+
+  const supabase = createAdminClient();
+  const { data: agent } = await supabase
+    .from('voice_agents')
+    .select('business_name, calendar_type, calendar_api_key, calendar_event_type_id, calendar_link, transfer_whatsapp')
+    .eq('id', agent_id)
+    .single();
+
+  if (!agent) return NextResponse.json({ result: 'Error interno al agendar la cita.' });
+
+  // 1. Always save to Supabase
+  const fechaIso = /^\d{4}-\d{2}-\d{2}$/.test(fecha) ? fecha : null;
+  await supabase.from('appointments_voice').insert({
+    agent_id: agent_id,
+    nombre,
+    telefono:  whatsapp_cliente ?? null,
+    servicio:  servicio ?? null,
+    fecha,
+    hora,
+    fecha_iso: fechaIso,
+    status:    'confirmada',
+  });
+
+  // 2. Try Cal.com API if configured
+  let calBooked = false;
+  if (agent.calendar_type === 'cal_com' && agent.calendar_api_key && agent.calendar_event_type_id) {
+    try {
+      // Build ISO datetime — assumes Mexico City timezone
+      const startIso = fechaIso
+        ? new Date(`${fechaIso}T${hora}:00-06:00`).toISOString()
+        : null;
+
+      if (startIso) {
+        const calRes = await fetch(`https://api.cal.com/v1/bookings?apiKey=${agent.calendar_api_key}`, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            eventTypeId: parseInt(agent.calendar_event_type_id),
+            start:       startIso,
+            name:        nombre,
+            email:       email ?? `llamada@centinelia.mx`,
+            timeZone:    'America/Monterrey',
+            language:    'es',
+            notes:       `Cita agendada por agente de voz Centinelia para ${agent.business_name}`,
+            ...(servicio && { customInputs: [{ label: 'Servicio', value: servicio }] }),
+          }),
+        });
+
+        if (calRes.ok) {
+          calBooked = true;
+        } else {
+          console.error('[agendar-cita-externa] Cal.com error:', await calRes.text());
+        }
+      }
+    } catch (e) {
+      console.error('[agendar-cita-externa] Cal.com exception:', e);
+    }
+  }
+
+  // 3. Send WhatsApp to client with calendar link if available
+  const callerWa = whatsapp_cliente
+    ? (() => {
+        const digits = whatsapp_cliente.replace(/\D/g, '');
+        return digits.startsWith('52') ? `+${digits}` : `+52${digits}`;
+      })()
+    : null;
+
+  if (callerWa && agent.calendar_link) {
+    const msg = calBooked
+      ? `¡Hola ${nombre}! Tu cita${servicio ? ` de ${servicio}` : ''} el ${fecha} a las ${hora} con *${agent.business_name}* fue confirmada. ¡Te esperamos!`
+      : `¡Hola ${nombre}! Para confirmar tu cita${servicio ? ` de ${servicio}` : ''} el ${fecha} a las ${hora} con *${agent.business_name}*, usa este link:\n\n${agent.calendar_link}`;
+    await sendWhatsApp(callerWa, msg).catch(console.error);
+  }
+
+  // 4. Notify business owner
+  if (agent.transfer_whatsapp) {
+    const ownerMsg = `📅 *Nueva cita — ${agent.business_name}*\n\nCliente: ${nombre}\nServicio: ${servicio ?? '—'}\nFecha: ${fecha} · ${hora}${whatsapp_cliente ? `\nWA: ${whatsapp_cliente}` : ''}${calBooked ? '\n✅ Confirmada en Cal.com' : agent.calendar_link ? '\n📎 Link enviado al cliente' : ''}`;
+    await sendWhatsApp(agent.transfer_whatsapp, ownerMsg).catch(console.error);
+  }
+
+  const result = calBooked
+    ? `Cita confirmada directamente en el calendario de ${agent.business_name}. ${callerWa ? 'Se envió confirmación por WhatsApp al cliente.' : ''}`
+    : agent.calendar_link
+      ? `Datos de la cita registrados. ${callerWa ? `Se envió el link de reserva por WhatsApp a ${nombre} para que confirme.` : 'Dile al cliente que recibirá el link de reserva por WhatsApp.'}`
+      : `Cita registrada: ${nombre}, ${servicio ?? 'sin servicio'}, ${fecha} a las ${hora}.`;
+
+  return NextResponse.json({ result });
+}

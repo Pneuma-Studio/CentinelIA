@@ -33,8 +33,9 @@ import PeakHoursChart          from './PeakHoursChart';
 import LiveNotifications       from './LiveNotifications';
 import SupportChat             from './SupportChat';
 import CallsSearch             from './CallsSearch';
+import IntegrationsSection     from './IntegrationsSection';
 
-type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato';
+type Tab = 'agentes' | 'resumen' | 'actividad' | 'minutos' | 'contrato' | 'integraciones';
 
 interface Props {
   params:       Promise<{ token: string }>;
@@ -162,11 +163,12 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const avgMinPerMonth  = allCalls.length > 0 ? Math.round(allTimeTotalMin / (daysSinceFirst / 30)) : 0;
 
   const TABS: { id: Tab; label: string }[] = [
-    { id: 'agentes',   label: 'Agentes' },
-    { id: 'resumen',   label: 'Resumen' },
-    { id: 'actividad', label: 'Actividad' },
-    { id: 'minutos',   label: 'Minutos' },
-    { id: 'contrato',  label: 'Contrato' },
+    { id: 'agentes',       label: 'Agentes' },
+    { id: 'resumen',       label: 'Resumen' },
+    { id: 'actividad',     label: 'Actividad' },
+    { id: 'minutos',       label: 'Minutos' },
+    { id: 'integraciones', label: 'Integraciones' },
+    { id: 'contrato',      label: 'Contrato' },
   ];
 
   return (
@@ -602,6 +604,19 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <div className="overflow-y-auto" style={{ maxHeight: '420px' }}>
                   <MinutesLedgerSection agentId={agent.id} minutesIncluded={minutesIncluded} minutesUsed={minutesUsed} callerNames={callerNames} />
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── INTEGRACIONES ────────────────────────────────────────────── */}
+          {tab === 'integraciones' && (
+            <div className="flex flex-col gap-5">
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)' }}>
+                <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Calendario</h2>
+                <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>
+                  Conecta tu calendario para que el agente agende citas directamente durante la llamada.
+                </p>
+                <IntegrationsSection token={token} plan={agent.plan as 'basico' | 'estandar' | 'pro'} />
               </div>
             </div>
           )}
