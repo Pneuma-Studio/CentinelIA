@@ -342,8 +342,9 @@ export default function LandingPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5" style={{ position: 'relative', zIndex: 1 }}>
-            {PAINS.map((p) => (
-              <div key={p.stat}
+            {PAINS.map((p, i) => (
+              <AnimatedSection key={p.stat} delay={i * 0.1}>
+              <div
                 className="rounded-2xl p-6 h-full"
                 style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.09)' }}
               >
@@ -358,10 +359,12 @@ export default function LandingPage() {
                 </span>
                 <p className="text-sm leading-relaxed" style={{ color: 'rgba(255,255,255,0.52)' }}>{p.label}</p>
               </div>
+              </AnimatedSection>
             ))}
           </div>
 
           {/* Bridge */}
+          <AnimatedSection delay={0.15}>
           <div
             className="mt-8 rounded-2xl px-7 py-6 flex flex-col sm:flex-row items-start sm:items-center gap-5"
             style={{ background: 'rgba(108,59,255,0.12)', border: `1px solid rgba(108,59,255,0.28)` }}
@@ -379,6 +382,7 @@ export default function LandingPage() {
               </p>
             </div>
           </div>
+          </AnimatedSection>
         </div>
       </section>
 
@@ -496,8 +500,9 @@ export default function LandingPage() {
               { n: '01', title: 'Elige tu plan y paga',       desc: 'Selecciona el plan que se adapte a tu negocio y completa el pago en línea. Tarda menos de 5 minutos.' },
               { n: '02', title: 'Configura tu agente',         desc: 'Accede a tu portal, agrega la información de tu negocio y personaliza cómo responde tu agente.' },
               { n: '03', title: 'Empieza a recibir llamadas',  desc: 'Tu número queda activo en horas. Tu agente atiende, tú solo monitoreas desde el portal.' },
-            ].map(s => (
-              <div key={s.n} className="flex gap-5 items-start">
+            ].map((s, i) => (
+              <AnimatedSection key={s.n} delay={i * 0.12}>
+              <div className="flex gap-5 items-start">
                 <span
                   className="font-bold tabular-nums flex-shrink-0"
                   style={{ fontSize: '2.8rem', color: 'rgba(108,59,255,0.18)', lineHeight: 1, minWidth: 64 }}
@@ -509,6 +514,7 @@ export default function LandingPage() {
                   <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{s.desc}</p>
                 </div>
               </div>
+              </AnimatedSection>
             ))}
           </div>
 
@@ -599,10 +605,10 @@ export default function LandingPage() {
           </AnimatedSection>
 
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
-            {PLANS.map(p => (
+            {PLANS.map((p, i) => (
+              <AnimatedSection key={p.name} delay={i * 0.09}>
               <div
-                key={p.name}
-                className="rounded-2xl p-6 flex flex-col relative overflow-hidden"
+                className="rounded-2xl p-6 flex flex-col relative overflow-hidden h-full"
                 style={{
                   background: p.popular
                     ? `linear-gradient(145deg, ${p.color}22, ${p.color}0a)`
@@ -694,6 +700,7 @@ export default function LandingPage() {
                   Contratar
                 </Link>
               </div>
+              </AnimatedSection>
             ))}
           </div>
         </div>
@@ -706,7 +713,7 @@ export default function LandingPage() {
             style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </MeerkatReveal>
       <div className="max-w-3xl mx-auto px-5 sm:px-8 py-20 sm:py-28" style={{ position: 'relative', zIndex: 2 }}>
-        <div className="text-center mb-12">
+        <AnimatedSection className="text-center mb-12">
           <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
             Preguntas frecuentes
           </p>
@@ -716,7 +723,7 @@ export default function LandingPage() {
           >
             Resolvemos tus dudas
           </h2>
-        </div>
+        </AnimatedSection>
         <FaqSection />
       </div>
       </section>
@@ -738,6 +745,7 @@ export default function LandingPage() {
 
         {/* Centered text — bottom padding creates space for the duo below */}
         <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 'clamp(160px, 30vw, 280px)' }}>
+        <AnimatedSection>
           <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
             Tu equipo te espera
           </p>
@@ -774,6 +782,7 @@ export default function LandingPage() {
               <Phone size={14} /> Habla con un asesor
             </a>
           </div>
+        </AnimatedSection>
         </div>
 
         {/* Duo flotante — peeking up from the bottom edge */}
@@ -785,31 +794,51 @@ export default function LandingPage() {
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer
-        className="max-w-6xl mx-auto px-5 sm:px-8 pt-10 pb-28 sm:py-10 flex flex-col sm:flex-row items-center justify-between gap-4"
+        className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-28 sm:py-10"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
-        <div className="flex items-center gap-3">
+        {/* Mobile: icon | Contratar | Portal de clientes */}
+        <div className="flex sm:hidden items-center justify-between">
           <Image
-            src="/logo.png"
+            src="/logo-icon.png"
             alt="Centinelia"
-            width={130}
-            height={36}
-            style={{ height: 36, width: 'auto', objectFit: 'contain' }}
+            width={32}
+            height={32}
+            style={{ width: 32, height: 32, objectFit: 'contain' }}
           />
-          <span className="text-xs" style={{ color: C.textMute }}>
-            · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
-          </span>
-        </div>
-        <div className="flex items-center gap-5">
-          <Link href="/portal/login" className="text-xs transition-colors" style={{ color: C.textMute }}>
-            Portal de clientes
-          </Link>
-          <Link href="/registro" className="text-xs" style={{ color: C.textMute }}>
+          <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
             Contratar
           </Link>
-          <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: C.textMute }}>
-            hola@centinelia.mx
-          </a>
+          <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+            Portal de clientes
+          </Link>
+        </div>
+
+        {/* Desktop: icon + Pneuma | links */}
+        <div className="hidden sm:flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <Image
+              src="/logo-icon.png"
+              alt="Centinelia"
+              width={32}
+              height={32}
+              style={{ width: 32, height: 32, objectFit: 'contain' }}
+            />
+            <span className="text-xs" style={{ color: C.textMute }}>
+              · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
+            </span>
+          </div>
+          <div className="flex items-center gap-5">
+            <Link href="/portal/login" className="text-xs transition-colors" style={{ color: C.textMute }}>
+              Portal de clientes
+            </Link>
+            <Link href="/registro" className="text-xs" style={{ color: C.textMute }}>
+              Contratar
+            </Link>
+            <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: C.textMute }}>
+              hola@centinelia.mx
+            </a>
+          </div>
         </div>
       </footer>
 

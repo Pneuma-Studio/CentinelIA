@@ -191,6 +191,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     silenceTimeoutSeconds: 10,
     maxDurationSeconds: 1800,
     serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/webhook?secret=${process.env.VAPI_SERVER_SECRET ?? ''}`,
+    recordingEnabled: true,
     analysisPlan: {
       summaryPrompt: 'Resume esta llamada en 2-3 oraciones en texto plano, sin markdown, sin encabezados, sin negritas: qué quería el cliente y cómo terminó la llamada.',
       successEvaluationPrompt: '¿Se resolvió la solicitud del cliente satisfactoriamente?',

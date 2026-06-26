@@ -18,10 +18,15 @@ export async function GET(req: NextRequest) {
   }
 
   const appUrl = process.env.NEXT_PUBLIC_APP_URL!;
-  const session = await stripe.billingPortal.sessions.create({
-    customer:   agent.stripe_customer_id,
-    return_url: `${appUrl}/portal/${token}`,
-  });
 
-  return NextResponse.redirect(session.url);
+  try {
+    const session = await stripe.billingPortal.sessions.create({
+      customer:   agent.stripe_customer_id,
+      return_url: `${appUrl}/portal/${token}?tab=minutos`,
+    });
+    return NextResponse.redirect(session.url);
+  } catch (err) {
+    console.error('Stripe billing portal error:', err);
+    return NextResponse.redirect(`${appUrl}/portal/${token}?tab=minutos&billing_error=1`);
+  }
 }
