@@ -359,35 +359,6 @@ export default function LandingWidgets() {
         </button>
       </div>
 
-      {/* ── Pneuma Studio · Hecho en México — centered between buttons (mobile) ── */}
-      <div
-        className="sm:hidden"
-        style={{
-          position:       'fixed',
-          bottom:         24,
-          left:           '50%',
-          transform:      'translateX(-50%)',
-          zIndex:         9998,
-          height:         56,
-          display:        'flex',
-          alignItems:     'center',
-          justifyContent: 'center',
-          pointerEvents:  'none',
-        }}
-      >
-        <p style={{ fontSize: 10, color: 'rgba(160,140,200,0.55)', textAlign: 'center', lineHeight: 1.4, margin: 0, whiteSpace: 'nowrap' }}>
-          <a
-            href="https://pneumastudio.mx"
-            target="_blank"
-            rel="noopener noreferrer"
-            style={{ color: 'inherit', pointerEvents: 'auto' }}
-          >
-            Pneuma Studio
-          </a>
-          {' · Hecho en México'}
-        </p>
-      </div>
-
       {/* ── WhatsApp button — bottom RIGHT ────────────────────────────────── */}
       <a
         href={WA_LINK}

@@ -794,7 +794,7 @@ export default function LandingPage() {
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer
-        className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10"
+        className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10 relative"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
         {/* Mobile: icon (centered over chat btn) | Contratar | Portal de clientes (aligned with WA btn) */}
@@ -844,6 +844,34 @@ export default function LandingPage() {
             </a>
           </div>
         </div>
+
+        {/* Mobile only: sits in the floating-buttons zone at the very bottom of the page */}
+        <p
+          className="sm:hidden"
+          style={{
+            position:  'absolute',
+            bottom:    44,
+            left:      '50%',
+            transform: 'translateX(-50%)',
+            fontSize:  10,
+            color:     C.textMute,
+            textAlign: 'center',
+            lineHeight: 1.4,
+            whiteSpace: 'nowrap',
+            pointerEvents: 'none',
+          }}
+        >
+          <a
+            href="https://pneumastudio.mx"
+            target="_blank"
+            rel="noopener noreferrer"
+            style={{ color: C.textMute, pointerEvents: 'auto' }}
+            className="hover:opacity-80 transition-opacity"
+          >
+            Pneuma Studio
+          </a>
+          {' · Hecho en México'}
+        </p>
       </footer>
 
       <LandingWidgets />
