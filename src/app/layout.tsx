@@ -14,7 +14,7 @@ const dmSans = DM_Sans({
   weight: ["400", "500", "600"],
 });
 
-const BASE_URL = 'https://centinelia.mx';
+const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),

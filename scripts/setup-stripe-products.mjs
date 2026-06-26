@@ -1,5 +1,5 @@
 /**
- * One-time script to create Stripe products and prices for CentinelIA.
+ * One-time script to create Stripe products and prices for Centinelia.
  * Run with: node scripts/setup-stripe-products.mjs
  */
 
@@ -22,16 +22,16 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
 });
 
 const setupPlans = [
-  { key: 'STRIPE_SETUP_BASICO',    name: 'CentinelIA Instalación Básico',    mxn: 4990 },
-  { key: 'STRIPE_SETUP_ESTANDAR',  name: 'CentinelIA Instalación Estándar',  mxn: 8990 },
-  { key: 'STRIPE_SETUP_PRO',       name: 'CentinelIA Instalación Pro',       mxn: 14990 },
+  { key: 'STRIPE_SETUP_BASICO',    name: 'Centinelia Instalación Básico',    mxn: 4990 },
+  { key: 'STRIPE_SETUP_ESTANDAR',  name: 'Centinelia Instalación Estándar',  mxn: 8990 },
+  { key: 'STRIPE_SETUP_PRO',       name: 'Centinelia Instalación Pro',       mxn: 14990 },
 ];
 
 const minutesPlans = [
-  { key: 'STRIPE_MINUTES_STARTER',    name: 'CentinelIA Minutos Starter',    mxn: 1990,  minutes: 200 },
-  { key: 'STRIPE_MINUTES_GROWTH',     name: 'CentinelIA Minutos Growth',     mxn: 3990,  minutes: 500 },
-  { key: 'STRIPE_MINUTES_SCALE',      name: 'CentinelIA Minutos Scale',      mxn: 7990,  minutes: 1500 },
-  { key: 'STRIPE_MINUTES_ENTERPRISE', name: 'CentinelIA Minutos Enterprise', mxn: 12990, minutes: 3000 },
+  { key: 'STRIPE_MINUTES_STARTER',    name: 'Centinelia Minutos Starter',    mxn: 1990,  minutes: 200 },
+  { key: 'STRIPE_MINUTES_GROWTH',     name: 'Centinelia Minutos Growth',     mxn: 3990,  minutes: 500 },
+  { key: 'STRIPE_MINUTES_SCALE',      name: 'Centinelia Minutos Scale',      mxn: 7990,  minutes: 1500 },
+  { key: 'STRIPE_MINUTES_ENTERPRISE', name: 'Centinelia Minutos Enterprise', mxn: 12990, minutes: 3000 },
 ];
 
 console.log('Creating Stripe products...\n');

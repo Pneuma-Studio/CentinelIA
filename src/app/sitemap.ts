@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next';
 
-const BASE_URL = 'https://centinelia.mx';
+const BASE_URL = 'https://www.centinelia.mx';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   return [

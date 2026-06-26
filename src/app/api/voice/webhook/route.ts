@@ -21,40 +21,62 @@ export async function POST(req: NextRequest) {
     case 'end-of-call-report': {
       const call = message.call;
 
-      // agent_id can come from assistant metadata or call metadata depending on Vapi version
+      // Log structure on first path to diagnose payload format issues
+      console.log('[webhook] end-of-call-report received. call.id:', call?.id,
+        '| message.assistantId:', message.assistantId,
+        '| call.assistantId:', call?.assistantId,
+        '| message.assistant?.metadata:', JSON.stringify(message.assistant?.metadata),
+        '| call?.assistant?.metadata:', JSON.stringify(call?.assistant?.metadata));
+
+      // agent_id: try every known path across Vapi versions
       const agentId: string =
-        message.assistant?.metadata?.agent_id ??
-        call?.assistant?.metadata?.agent_id    ??
-        call?.metadata?.agent_id               ??
+        message.assistant?.metadata?.agent_id   ??  // standard
+        call?.assistant?.metadata?.agent_id      ??  // nested in call
+        call?.metadata?.agent_id                 ??  // call-level metadata
+        message.metadata?.agent_id               ??  // top-level metadata
         '';
 
-      // Fallback: resolve by Vapi assistant ID if metadata path was empty
+      // Fallback: look up by Vapi assistant ID (works across all payload versions)
       let resolvedAgentId = agentId;
-      if (!resolvedAgentId && call?.assistantId) {
+      const vapiAssistantId =
+        call?.assistantId       ??
+        message.assistantId     ??
+        call?.assistant?.id     ??
+        message.assistant?.id   ??
+        '';
+
+      if (!resolvedAgentId && vapiAssistantId) {
         const { data: byVapi } = await supabase
           .from('voice_agents')
           .select('id')
-          .eq('vapi_agent_id', call.assistantId)
+          .eq('vapi_agent_id', vapiAssistantId)
           .single();
         if (byVapi?.id) resolvedAgentId = byVapi.id;
       }
 
       if (!resolvedAgentId) {
-        console.error('webhook: no agent_id found for call', call?.id, 'assistantId:', call?.assistantId);
+        console.error('[webhook] no agent_id found. call.id:', call?.id,
+          'vapiAssistantId:', vapiAssistantId,
+          'message keys:', Object.keys(message));
         break;
       }
 
-      const startedAt = call?.startedAt ? new Date(call.startedAt).getTime() : 0;
-      const endedAt   = call?.endedAt   ? new Date(call.endedAt).getTime()   : 0;
+      // Duration: call.startedAt/endedAt may not be in webhook payload — also check message level
+      const rawStartedAt = call?.startedAt ?? message.startedAt;
+      const rawEndedAt   = call?.endedAt   ?? message.endedAt;
+      const startedAt    = rawStartedAt ? new Date(rawStartedAt).getTime() : 0;
+      const endedAt      = rawEndedAt   ? new Date(rawEndedAt).getTime()   : 0;
       const durationSeconds = startedAt && endedAt ? Math.round((endedAt - startedAt) / 1000) : 0;
 
-      const structured   = message.analysis?.structuredData ?? null;
+      // Analysis: may live at message.analysis or call.analysis
+      const analysis     = message.analysis ?? call?.analysis ?? null;
+      const structured   = analysis?.structuredData ?? null;
       const rawOutcome   = detectOutcome(message, structured);
-      const outcome      = durationSeconds <= 5 ? 'missed' : rawOutcome;
-      const transcript   = message.transcript ?? null;
-      const summary      = message.analysis?.summary ?? null;
-      const recordingUrl = call?.recordingUrl ?? null;
-      const callerNumber = call?.customer?.number ?? '';
+      const outcome      = durationSeconds <= 5 ? 'unanswered' : rawOutcome;
+      const transcript   = message.transcript ?? call?.transcript ?? null;
+      const summary      = analysis?.summary ?? message.summary ?? call?.summary ?? null;
+      const recordingUrl = call?.recordingUrl ?? message.artifact?.recordingUrl ?? null;
+      const callerNumber = call?.customer?.number ?? message.customer?.number ?? '';
 
       // 1. Log call
       const { error: callInsertError } = await supabase.from('voice_calls').insert({
@@ -122,7 +144,7 @@ export async function POST(req: NextRequest) {
           .single();
 
         if (agentForEmail?.client_email && (agentForEmail.notify_email ?? true)) {
-          const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx';
+          const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx';
           const portalUrl = `${appUrl}/portal/${agentForEmail.portal_token}`;
           const outcomeSubjects: Record<string, string> = {
             lead_created:       '🎯 Nuevo lead capturado',
@@ -208,7 +230,7 @@ export async function POST(req: NextRequest) {
           await sendEmail({
             to: agent.client_email,
             subject: `⚠️ Agente pausado — ${agent.business_name}`,
-            html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx'}/portal/${agent.portal_token}` }),
+            html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }
         break;
@@ -222,7 +244,7 @@ export async function POST(req: NextRequest) {
           await sendEmail({
             to: agent.client_email,
             subject: `📊 Aviso: ${Math.round(pct)}% de minutos usados — ${agent.business_name}`,
-            html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://centinelia.mx'}/portal/${agent.portal_token}` }),
+            html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }
       }

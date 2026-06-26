@@ -23,6 +23,7 @@ import PortalLeadsSection      from './PortalLeadsSection';
 import PortalOrdersSection     from './PortalOrdersSection';
 import PortalAppointmentsSection from './PortalAppointmentsSection';
 import BuyMinutesSection       from './BuyMinutesSection';
+import UpgradePlanSection      from './UpgradePlanSection';
 import MinutesLedgerSection    from './MinutesLedgerSection';
 import CallCard                from './CallCard';
 import DownloadCallsCSV        from './DownloadCallsCSV';
@@ -571,18 +572,29 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <BuyMinutesSection token={token} />
               </div>
 
-              {/* Manage subscription */}
-              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
-                <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Gestionar suscripción</h2>
-                <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>Cambia de plan, actualiza tu método de pago o cancela tu suscripción desde el portal de pagos.</p>
-                <a
-                  href={`/api/billing/portal-session?token=${token}`}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
-                  style={{ background: 'rgba(108,59,255,0.15)', border: '1px solid rgba(108,59,255,0.3)', color: '#C4A8FF', textDecoration: 'none' }}
-                >
-                  Administrar plan y facturación →
-                </a>
-              </div>
+              {/* Cambiar plan */}
+              {agent.plan && (
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+                  <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Cambiar plan</h2>
+                  <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>Sube o baja de tier según las necesidades de tu negocio.</p>
+                  <UpgradePlanSection token={token} currentPlan={agent.plan as 'basico' | 'estandar' | 'pro'} />
+                </div>
+              )}
+
+              {/* Facturación */}
+              {hasStripe && (
+                <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+                  <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Facturación</h2>
+                  <p className="text-xs mb-4" style={{ color: 'var(--c-text-2)' }}>Actualiza tu método de pago, descarga facturas o cancela tu suscripción.</p>
+                  <a
+                    href={`/api/billing/portal-session?token=${token}`}
+                    className="inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-semibold transition-opacity hover:opacity-80"
+                    style={{ background: 'rgba(108,59,255,0.15)', border: '1px solid rgba(108,59,255,0.3)', color: '#C4A8FF', textDecoration: 'none' }}
+                  >
+                    Portal de facturación →
+                  </a>
+                </div>
+              )}
 
               {/* Ledger */}
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>

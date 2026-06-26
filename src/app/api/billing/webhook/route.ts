@@ -8,6 +8,7 @@ import { pauseVapiAgent, resumeVapiAgent } from '@/lib/vapi/control';
 import { createVapiAssistant } from '@/lib/vapi/sync';
 import { provisionPhoneNumber } from '@/lib/vapi/provision';
 import type { VoiceAgent } from '@/types/agent';
+import { PLAN_FEATURES } from '@/types/agent';
 import type { Plan } from '@/types/agent';
 import type { MinutesPlan } from '@/lib/billing/plans';
 import type Stripe from 'stripe';
@@ -28,6 +29,40 @@ export async function POST(req: NextRequest) {
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
+
+      // Plan upgrade: setup fee paid → update subscription + features
+      if (session.metadata?.type === 'plan_upgrade') {
+        const agentId       = session.metadata?.agent_id;
+        const toPlan        = session.metadata?.to_plan as Plan | undefined;
+        const toMinutesPlan = session.metadata?.to_minutes_plan as MinutesPlan | undefined;
+        if (!agentId || !toPlan || !toMinutesPlan
+          || !FEATURE_PLAN_CONFIG[toPlan]
+          || !MINUTES_PLAN_CONFIG[toMinutesPlan]) break;
+
+        const { data: agentData } = await supabase
+          .from('voice_agents')
+          .select('stripe_subscription_id')
+          .eq('id', agentId)
+          .single();
+
+        if (agentData?.stripe_subscription_id) {
+          const sub     = await stripe.subscriptions.retrieve(agentData.stripe_subscription_id);
+          const subItem = sub.items.data.find(item => item.price.recurring !== null);
+          if (subItem) {
+            await stripe.subscriptions.update(agentData.stripe_subscription_id, {
+              items:              [{ id: subItem.id, price: MINUTES_PLAN_CONFIG[toMinutesPlan].priceId() }],
+              proration_behavior: 'create_prorations',
+            });
+          }
+        }
+
+        await supabase.from('voice_agents').update({
+          plan:         toPlan,
+          features:     PLAN_FEATURES[toPlan],
+          minutes_plan: toMinutesPlan,
+        }).eq('id', agentId);
+        break;
+      }
 
       // Extra minutes top-up
       if (session.metadata?.type === 'extra_minutes') {

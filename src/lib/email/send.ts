@@ -1,9 +1,9 @@
 const FROM    = process.env.RESEND_FROM_EMAIL ?? 'Centinelia <notificaciones@centinelia.mx>';
-const LOGO    = 'https://centinelia.mx/logo-icon.png';
+const LOGO    = 'https://www.centinelia.mx/logo-icon.png';
 const FOOTER  = `
   <div style="text-align:center;padding:24px 0 8px;border-top:1px solid rgba(255,255,255,0.06)">
     <p style="color:rgba(255,255,255,0.2);font-size:12px;margin:0;line-height:1.8">
-      <a href="https://centinelia.mx" style="color:rgba(255,255,255,0.2);text-decoration:none">Centinelia</a> · <a href="https://pneumastudio.mx" style="color:rgba(255,255,255,0.2);text-decoration:none">Pneuma Studio</a><br>
+      <a href="https://www.centinelia.mx" style="color:rgba(255,255,255,0.2);text-decoration:none">Centinelia</a> · <a href="https://pneumastudio.mx" style="color:rgba(255,255,255,0.2);text-decoration:none">Pneuma Studio</a><br>
       <a href="mailto:hola@centinelia.mx" style="color:rgba(108,59,255,0.6);text-decoration:none">hola@centinelia.mx</a>
     </p>
   </div>`;

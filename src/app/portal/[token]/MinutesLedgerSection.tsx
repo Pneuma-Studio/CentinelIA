@@ -81,7 +81,22 @@ export default async function MinutesLedgerSection({
     };
   });
 
-  // Compute balance forward from oldest entry — independent of minutes_used in DB
+  // Current balance: authoritative source is agent record (minutesIncluded - minutesUsed)
+  const currentBalance = minutesIncluded - minutesUsed;
+
+  // If no credits in ledger, add a synthetic activation entry so the running total makes sense
+  if (credits.length === 0 && minutesIncluded > 0) {
+    const firstDate = debits.length > 0 ? debits[debits.length - 1].date : new Date().toISOString();
+    credits.push({
+      id:          'initial-plan',
+      date:        firstDate,
+      amount:      minutesIncluded,
+      description: `Plan incluido — ${minutesIncluded} minutos`,
+      source:      'activacion' as Source,
+    });
+  }
+
+  // Compute running balance forward from oldest entry
   const chronological = [...credits, ...debits].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -90,7 +105,6 @@ export default async function MinutesLedgerSection({
     running += e.amount;
     return { ...e, balance: running };
   });
-  const currentBalance = running;
 
   // Reverse for display (newest first)
   const entries = withBalance.reverse();

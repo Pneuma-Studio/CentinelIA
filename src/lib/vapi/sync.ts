@@ -87,6 +87,24 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
     });
   }
 
+  if (agent.features.existing_client_support || agent.features.client_memory) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'buscar_cliente',
+        description: 'Busca el historial e información de un cliente existente por nombre o teléfono.',
+        parameters: {
+          type: 'object',
+          properties: {
+            identificador: { type: 'string', description: 'Nombre completo, número de teléfono, o WhatsApp del cliente' },
+          },
+          required: ['identificador'],
+        },
+      },
+      server: { url: `${base}/buscar-cliente?agent_id=${id}` },
+    });
+  }
+
   if (agent.features.smart_transfer) {
     // Step 1 — notify owner via WhatsApp before the transfer
     tools.push({
@@ -129,6 +147,25 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
     }
   }
 
+  if (agent.features.whatsapp_escalation) {
+    tools.push({
+      type: 'function',
+      function: {
+        name: 'enviar_whatsapp_escalacion',
+        description: 'Envía un WhatsApp al cliente diciéndole que pueden atenderle por ese canal cuando la llamada no pudo resolverse.',
+        parameters: {
+          type: 'object',
+          properties: {
+            numero_cliente: { type: 'string', description: 'Número del cliente con código de país, ej: +528112345678' },
+            motivo:         { type: 'string', description: 'Breve motivo de la escalación' },
+          },
+          required: ['numero_cliente'],
+        },
+      },
+      server: { url: `${base}/enviar-whatsapp-escalacion?agent_id=${id}` },
+    });
+  }
+
   const ids: string[] = [];
   for (const tool of tools) {
     const res = await fetch(`${VAPI_URL}/tool`, {
@@ -162,16 +199,16 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
     voice: {
       provider: '11labs',
       voiceId: agent.elevenlabs_voice_id || 'jUxkp8eMgszgJX3XU2pV',
-      model: 'eleven_multilingual_v2',
-      stability: 0.30,
-      similarityBoost: 0.70,
-      style: 0.30,
+      model: 'eleven_turbo_v2_5',
+      stability: 0.20,
+      similarityBoost: 0.75,
+      style: 0.55,
       speed: 1.1,
       useSpeakerBoost: true,
-      optimizeStreamingLatency: 3,
+      optimizeStreamingLatency: 4,
       chunkPlan: {
         enabled: true,
-        minCharacters: 60,
+        minCharacters: 30,
         punctuationBoundaries: ['.', '!', '?', ',', ';', ':'],
       },
     },
