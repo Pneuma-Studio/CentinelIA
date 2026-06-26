@@ -797,14 +797,14 @@ export default function LandingPage() {
         className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
-        {/* Mobile: icon | Contratar (centered) | Portal de clientes (aligned with WA button) */}
+        {/* Mobile: icon (centered over chat btn) | Contratar | Portal de clientes (aligned with WA btn) */}
         <div className="flex sm:hidden items-center gap-2">
           <Image
             src="/logo-icon.png"
             alt="Centinelia"
             width={52}
             height={52}
-            style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0 }}
+            style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0, marginLeft: 6 }}
           />
           <div className="flex flex-1 items-center">
             <div className="flex-1 flex justify-center">
@@ -812,7 +812,7 @@ export default function LandingPage() {
                 Contratar
               </Link>
             </div>
-            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70 flex-shrink-0" style={{ color: C.textMute, marginRight: 4 }}>
+            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70 flex-shrink-0" style={{ color: C.textMute, marginRight: 52 }}>
               Portal de clientes
             </Link>
           </div>
