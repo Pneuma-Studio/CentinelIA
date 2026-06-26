@@ -1,11 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 import { updateVapiAssistant } from '@/lib/vapi/sync';
 import type { VoiceAgent } from '@/types/agent';
 
 interface Params { params: Promise<{ token: string }> }
 
 export async function PATCH(req: NextRequest, { params }: Params) {
+  const cookie = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
+  const auth   = await verifySession(cookie);
+  if (!auth) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+
   const { token } = await params;
   const body = await req.json();
   const supabase = createAdminClient();

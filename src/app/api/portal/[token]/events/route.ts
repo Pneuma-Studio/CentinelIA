@@ -1,9 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 interface Params { params: Promise<{ token: string }> }
 
 export async function GET(req: NextRequest, { params }: Params) {
+  const cookie = req.cookies.get(PORTAL_COOKIE)?.value ?? '';
+  const auth   = await verifySession(cookie);
+  if (!auth) return NextResponse.json({ error: 'No autenticado' }, { status: 401 });
+
   const { token } = await params;
   const since = req.nextUrl.searchParams.get('since');
   if (!since) return NextResponse.json({ calls: [] });
