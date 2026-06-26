@@ -1,13 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { MessageCircle, Mail, PhoneOff } from 'lucide-react';
+import { MessageCircle, Mail } from 'lucide-react';
 
 interface Props {
-  token:                    string;
-  initWhatsApp:             boolean;
-  initEmail:                boolean;
-  initMissedCallRecovery:   boolean;
+  token:        string;
+  initWhatsApp: boolean;
+  initEmail:    boolean;
 }
 
 function Toggle({ on, onChange, disabled }: { on: boolean; onChange: (v: boolean) => void; disabled: boolean }) {
@@ -46,14 +45,13 @@ function Toggle({ on, onChange, disabled }: { on: boolean; onChange: (v: boolean
   );
 }
 
-export default function NotificationsToggle({ token, initWhatsApp, initEmail, initMissedCallRecovery }: Props) {
-  const [wa,       setWa]       = useState(initWhatsApp);
-  const [email,    setEmail]    = useState(initEmail);
-  const [recovery, setRecovery] = useState(initMissedCallRecovery);
-  const [saving,   setSaving]   = useState<string | null>(null);
-  const [saved,    setSaved]    = useState<string | null>(null);
+export default function NotificationsToggle({ token, initWhatsApp, initEmail }: Props) {
+  const [wa,     setWa]     = useState(initWhatsApp);
+  const [email,  setEmail]  = useState(initEmail);
+  const [saving, setSaving] = useState<string | null>(null);
+  const [saved,  setSaved]  = useState<string | null>(null);
 
-  async function update(field: 'notify_whatsapp' | 'notify_email' | 'missed_call_recovery', value: boolean) {
+  async function update(field: 'notify_whatsapp' | 'notify_email', value: boolean) {
     setSaving(field);
     setSaved(null);
     try {
@@ -70,7 +68,7 @@ export default function NotificationsToggle({ token, initWhatsApp, initEmail, in
   }
 
   const rows: {
-    field: 'notify_whatsapp' | 'notify_email' | 'missed_call_recovery';
+    field: 'notify_whatsapp' | 'notify_email';
     icon:  React.ReactNode;
     label: string;
     desc:  string;
@@ -92,14 +90,6 @@ export default function NotificationsToggle({ token, initWhatsApp, initEmail, in
       desc:  'Recibe un email cuando el agente capture un lead, cita o pedido.',
       value: email,
       set:   (v) => { setEmail(v); update('notify_email', v); },
-    },
-    {
-      field: 'missed_call_recovery',
-      icon:  <PhoneOff size={15} color="#f59e0b" />,
-      label: 'Recuperador de llamadas perdidas',
-      desc:  'Si alguien llama y cuelga, el agente le envía un WhatsApp automáticamente para retomar el contacto.',
-      value: recovery,
-      set:   (v) => { setRecovery(v); update('missed_call_recovery', v); },
     },
   ];
 
