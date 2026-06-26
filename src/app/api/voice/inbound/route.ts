@@ -247,13 +247,35 @@ function buildTools(agent: VoiceAgent) {
   }
 
   if (f.appointment_booking) {
-    const hasCalendar = !!(agent as any).calendar_type;
+    const hasCalendar     = !!(agent as any).calendar_type;
+    const hasCalComApi    = (agent as any).calendar_type === 'cal_com' && !!(agent as any).calendar_api_key;
     if (hasCalendar) {
+      if (hasCalComApi) {
+        tools.push({
+          type: 'function',
+          function: {
+            name: 'consultar_disponibilidad',
+            description: 'Consulta los horarios disponibles en el calendario antes de agendar. SIEMPRE llama a esta herramienta primero cuando un cliente quiera una cita, para poder ofrecerle opciones reales disponibles.',
+            parameters: {
+              type: 'object',
+              properties: {
+                fecha_inicio: { type: 'string', description: 'Fecha inicio del rango a consultar (YYYY-MM-DD). Opcional, por defecto hoy.' },
+                fecha_fin:    { type: 'string', description: 'Fecha fin del rango a consultar (YYYY-MM-DD). Opcional, por defecto 7 días.' },
+              },
+              required: [],
+            },
+            serverUrl: `${process.env.NEXT_PUBLIC_APP_URL}/api/voice/tools/consultar-disponibilidad?agent_id=${agent.id}`,
+          },
+        });
+      }
+
       tools.push({
         type: 'function',
         function: {
           name: 'agendar_cita_externa',
-          description: 'Agenda una cita y la registra en el calendario del negocio. Solicita nombre, servicio, fecha y hora. Opcionalmente email y WhatsApp del cliente.',
+          description: hasCalComApi
+            ? 'Confirma y registra la cita en el calendario. Llama DESPUÉS de consultar_disponibilidad y de que el cliente haya elegido un horario disponible. No uses fechas u horas que no estén en la lista de disponibles.'
+            : 'Registra la cita del cliente y envía el link de reserva por WhatsApp para que confirme.',
           parameters: {
             type: 'object',
             properties: {
