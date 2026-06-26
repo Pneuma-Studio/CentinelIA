@@ -1,6 +1,8 @@
 ﻿import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 const FIXED_PACKAGES: Record<number, number> = { 100: 1200, 200: 2400 };
 const PRICE_PER_MIN = 12;
@@ -10,6 +12,10 @@ function calcPrice(minutes: number): number {
 }
 
 export async function POST(req: NextRequest) {
+  const cookieStore = await cookies();
+  const session = await verifySession(cookieStore.get(PORTAL_COOKIE)?.value ?? '');
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const { token, minutes } = await req.json() as { token: string; minutes: number };
 
   if (!Number.isInteger(minutes) || minutes < 10 || minutes > 5000) {

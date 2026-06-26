@@ -1,8 +1,14 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { cookies } from 'next/headers';
 import { stripe } from '@/lib/stripe';
 import { createAdminClient } from '@/lib/supabase/admin';
+import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 
 export async function GET(req: NextRequest) {
+  const cookieStore = await cookies();
+  const session = await verifySession(cookieStore.get(PORTAL_COOKIE)?.value ?? '');
+  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+
   const token = req.nextUrl.searchParams.get('token');
   if (!token) return NextResponse.json({ error: 'token requerido' }, { status: 400 });
 
