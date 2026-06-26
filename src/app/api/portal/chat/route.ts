@@ -1,19 +1,20 @@
-﻿import { NextRequest, NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 import { rateLimit, limiters } from '@/lib/ratelimit';
+import { getKnowledgeBase } from '@/lib/knowledge-base';
 
 export const dynamic = 'force-dynamic';
 
-const SYSTEM_PROMPT = `Eres el asistente de soporte de Centinelia. Ayudas a los clientes a entender y aprovechar su agente de voz al máximo.
+const BASE_SYSTEM_PROMPT = `Eres el asistente de soporte de Centinelia. Ayudas a los clientes a entender y aprovechar su agente de voz al máximo.
 
 **Sobre Centinelia:**
 Centinelia es una plataforma de agentes de voz con inteligencia artificial para negocios en México. Los agentes atienden llamadas telefónicas de forma automática las 24 horas, los 7 días de la semana.
 
 **Planes disponibles:**
-- Básico: Atención de llamadas, información del negocio, escalamiento a WhatsApp
-- Estándar: Todo lo de Básico + Captura de leads y prospectos
-- Pro: Todo lo de Estándar + Agenda de citas, toma de pedidos, voz personalizable, transferencia inteligente
+- Recepcionista ($1,990/mes): Atención 24/7 y agendamiento de citas
+- Comercial ($3,490/mes): Todo lo de Recepcionista + Toma de pedidos, calificación de leads, escalación a WhatsApp
+- Pro ($6,490/mes): Todo lo de Comercial + Voz y nombre personalizables, multiidioma, memoria de cliente, transferencia inteligente
 
 **Portal del cliente — pestañas:**
 - Agentes: Ver y gestionar los agentes activos, pausar o reanudar el servicio, acceder a la configuración de cada agente
@@ -31,16 +32,16 @@ Centinelia es una plataforma de agentes de voz con inteligencia artificial para 
 **Minutos:**
 - Cada plan incluye un paquete de minutos que se renueva mensualmente
 - Los minutos se reinician en la fecha indicada en la pestaña Minutos
-- Minutos adicionales disponibles: Starter (50 min), Growth (100 min), Scale (250 min), Enterprise (500 min)
+- Minutos adicionales disponibles: 100 min ($1,200), 250 min ($3,000), 500 min ($6,000)
 - Al 80% de consumo el cliente recibe una alerta por WhatsApp y correo
 - Al 100% el agente se pausa automáticamente y el cliente es notificado
-- Los minutos comprados se suman al saldo disponible de inmediato
+- Los minutos comprados se suman al saldo disponible de inmediato y reactivan el agente si estaba pausado
 
 **Pausar y reanudar el agente:**
 - El cliente puede pausar y reanudar voluntariamente desde la pestaña Agentes
-- Si el agente se pausa por falta de minutos o pago, se requiere intervención del equipo de Centinelia
+- Si el agente se pausa por falta de minutos o pago, se requiere comprar minutos o regularizar el pago
 
-**Respuestas de audio y llamadas:**
+**Llamadas y grabaciones:**
 - Las llamadas se registran automáticamente en la pestaña Resumen
 - Cada llamada muestra número de quien llamó, duración, resumen generado por IA y transcripción
 - Si el agente tiene grabación activada, el audio también está disponible en cada llamada
@@ -69,13 +70,18 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: 'Invalid messages' }, { status: 400 });
   }
 
+  const extraKb = await getKnowledgeBase('kb_portal');
+  const system  = extraKb
+    ? `${BASE_SYSTEM_PROMPT}\n\n## Información adicional de soporte\n${extraKb}`
+    : BASE_SYSTEM_PROMPT;
+
   const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY });
 
   const stream = client.messages.stream({
-    model: 'claude-haiku-4-5-20251001',
+    model:      'claude-haiku-4-5-20251001',
     max_tokens: 1024,
-    system: SYSTEM_PROMPT,
-    messages: messages.slice(-20),
+    system,
+    messages:   messages.slice(-20),
   });
 
   const readable = new ReadableStream({

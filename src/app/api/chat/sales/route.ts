@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import Anthropic from '@anthropic-ai/sdk';
 import { rateLimit, limiters } from '@/lib/ratelimit';
+import { getKnowledgeBase } from '@/lib/knowledge-base';
 
 export const dynamic = 'force-dynamic';
 
-const SYSTEM_PROMPT = `Eres el asistente de ventas de Centinelia, una plataforma de agentes de voz con inteligencia artificial para negocios en México. Tu misión es resolver dudas de prospectos y guiarlos hacia contratar.
+const BASE_SYSTEM_PROMPT = `Eres el asistente de ventas de Centinelia, una plataforma de agentes de voz con inteligencia artificial para negocios en México. Tu misión es resolver dudas de prospectos y guiarlos hacia contratar.
 
 ## Qué es Centinelia
 Un agente de voz con IA que atiende las llamadas de tu negocio las 24 horas, los 7 días de la semana. El agente habla con los clientes de forma natural, responde preguntas sobre tu negocio, agenda citas, captura datos de prospectos y toma pedidos — todo sin que el dueño tenga que estar presente.
@@ -14,27 +15,25 @@ Negocios medianos y pequeños en México que reciben llamadas y pierden clientes
 
 ## Planes y precios (exactos)
 
-**Plan Básico — $1,990/mes + $4,990 instalación (pago único)**
+**Plan Recepcionista — $1,990/mes + $4,990 instalación (pago único)**
 - 200 minutos incluidos al mes
 - Recepcionista 24/7 (atiende llamadas en cualquier horario)
-- Captura de leads (nombre, teléfono, necesidad de cada prospecto)
-- Agenda de citas (confirma, modifica, cancela durante la llamada)
-- Resumen de cada llamada enviado a tu WhatsApp en tiempo real
+- Agendamiento de citas
 
-**Plan Estándar — $3,990/mes + $8,990 instalación (pago único) ⭐ Más popular**
+**Plan Comercial — $3,490/mes + $7,990 instalación (pago único) ⭐ Más popular**
 - 500 minutos incluidos al mes
-- Todo lo de Básico
-- Transferencia inteligente (detecta cuándo pasar la llamada a una persona)
+- Todo lo de Recepcionista
 - Toma de pedidos (registra productos, cantidades y datos de entrega)
-- Alertas cuando los minutos del mes se estén agotando
+- Calificación de leads
+- Escalación a WhatsApp
 
-**Plan Pro — $7,990/mes + $14,990 instalación (pago único)**
-- 1,500 minutos incluidos al mes
-- Todo lo de Estándar
-- Nombre + voz personalizable (el agente tiene nombre propio y la voz que elijas)
-- Multiidioma: detecta si el cliente habla inglés y responde en el mismo idioma
+**Plan Pro — $6,490/mes + $12,990 instalación (pago único)**
+- 1,000 minutos incluidos al mes
+- Todo lo de Comercial
+- Voz y nombre personalizables
+- Multiidioma (detecta si el cliente habla inglés y responde en el mismo idioma)
 - Memoria de cliente (recuerda llamadas anteriores para atención personalizada)
-- Escalación a WhatsApp si el cliente lo solicita
+- Transferencia inteligente a agente humano
 
 **Plan Empresarial — Cotización personalizada**
 - Para negocios con sistema POS, CRM o calendario propio (restaurantes con sistema, consultorios con agenda propia, franquicias, etc.)
@@ -43,11 +42,10 @@ Negocios medianos y pequeños en México que reciben llamadas y pierden clientes
 - Múltiples agentes o sucursales
 - SLA y soporte dedicado
 
-## Minutos adicionales (compra extra)
-- Starter: 50 min extra — $290
-- Growth: 100 min extra — $490
-- Scale: 250 min extra — $990
-- Enterprise: 500 min extra — $1,690
+## Minutos adicionales (compra extra desde el portal)
+- 100 minutos extra — $1,200
+- 250 minutos extra — $3,000
+- 500 minutos extra — $6,000
 
 ## Cómo funciona el proceso de compra
 1. El cliente elige su plan en centinelia.mx/registro y llena un formulario de 3 pasos (plan, datos del negocio, datos de contacto)
@@ -67,7 +65,7 @@ Negocios medianos y pequeños en México que reciben llamadas y pierden clientes
 
 "¿Es seguro dejar que la IA conteste mis llamadas?" — El agente solo responde preguntas de las que tiene información. Si algo está fuera de su conocimiento, informa al cliente que le devolverán la llamada. Para casos urgentes activa la transferencia inteligente.
 
-"¿Puedo probarlo primero?" — El plan Básico es la forma de probar con la menor inversión posible ($1,990/mes). Muchos clientes empiezan ahí y suben de plan al ver los resultados.
+"¿Puedo probarlo primero?" — El plan Recepcionista es la forma de probar con la menor inversión posible ($1,990/mes). Muchos clientes empiezan ahí y suben de plan al ver los resultados.
 
 "¿El número de teléfono lo pongo yo?" — Centinelia te asigna un número local nuevo (con lada de tu ciudad) que usas para tu negocio, o bien puedes redirigir tus llamadas actuales a ese número.
 
@@ -97,10 +95,15 @@ export async function POST(req: NextRequest) {
     return new Response('data: [DONE]\n\n', { headers: { 'Content-Type': 'text/event-stream' } });
   }
 
+  const extraKb = await getKnowledgeBase('kb_sales');
+  const system  = extraKb
+    ? `${BASE_SYSTEM_PROMPT}\n\n## Información adicional\n${extraKb}`
+    : BASE_SYSTEM_PROMPT;
+
   const stream = client.messages.stream({
     model:      'claude-haiku-4-5-20251001',
     max_tokens: 800,
-    system:     SYSTEM_PROMPT,
+    system,
     messages:   messages.slice(-16),
   });
 

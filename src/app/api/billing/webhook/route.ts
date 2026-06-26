@@ -56,11 +56,31 @@ export async function POST(req: NextRequest) {
           }
         }
 
+        const newMinutesCfg = MINUTES_PLAN_CONFIG[toMinutesPlan];
+        const { data: prevForUpgrade } = await supabase
+          .from('voice_agents')
+          .select('minutes_used, minutes_included')
+          .eq('id', agentId)
+          .single();
+        // Carry already-used minutes; new balance = new plan allocation minus used so far
+        const usedSoFar    = prevForUpgrade?.minutes_used ?? 0;
+        const newIncluded  = Math.max(newMinutesCfg.minutes, usedSoFar); // never go negative
+
         await supabase.from('voice_agents').update({
-          plan:         toPlan,
-          features:     PLAN_FEATURES[toPlan],
-          minutes_plan: toMinutesPlan,
+          plan:             toPlan,
+          features:         PLAN_FEATURES[toPlan],
+          minutes_plan:     toMinutesPlan,
+          minutes_included: newIncluded,
         }).eq('id', agentId);
+
+        if (newIncluded > (prevForUpgrade?.minutes_included ?? 0)) {
+          await supabase.from('minutes_ledger').insert({
+            agent_id:    agentId,
+            amount:      newIncluded - (prevForUpgrade?.minutes_included ?? 0),
+            description: `Upgrade a ${newMinutesCfg.label} — ajuste inmediato de minutos`,
+            source:      'activacion',
+          });
+        }
         break;
       }
 
@@ -72,12 +92,16 @@ export async function POST(req: NextRequest) {
 
         const { data: agent } = await supabase
           .from('voice_agents')
-          .select('minutes_included')
+          .select('minutes_included, phone_number, vapi_agent_id')
           .eq('id', agentId)
           .single();
 
         await supabase.from('voice_agents')
-          .update({ minutes_included: (agent?.minutes_included ?? 0) + minutes })
+          .update({
+            minutes_included: (agent?.minutes_included ?? 0) + minutes,
+            active:           true,
+            billing_status:   'activo',
+          })
           .eq('id', agentId);
 
         await supabase.from('minutes_ledger').insert({
@@ -86,6 +110,11 @@ export async function POST(req: NextRequest) {
           description: `Compra de ${minutes} minutos extra`,
           source:      'extra_compra',
         });
+
+        // Reactivate Vapi in case agent was auto-paused for hitting the limit
+        if (agent?.phone_number && agent?.vapi_agent_id) {
+          await resumeVapiAgent(agent.phone_number, agent.vapi_agent_id);
+        }
         break;
       }
 

@@ -40,12 +40,17 @@ async function buyTwilioNumber(areaCode?: string): Promise<string | null> {
 
   const numberToBuy = candidates[0];
 
+  const buyParams: Record<string, string> = { PhoneNumber: numberToBuy };
+  // Mexico local numbers require an approved Regulatory Bundle (BU... SID)
+  const bundleSid = process.env.TWILIO_REGULATORY_BUNDLE_SID;
+  if (bundleSid) buyParams.BundleSid = bundleSid;
+
   const buyRes = await fetch(
     `https://api.twilio.com/2010-04-01/Accounts/${sid}/IncomingPhoneNumbers.json`,
     {
       method:  'POST',
       headers: { Authorization: twilioBasicAuth(), 'Content-Type': 'application/x-www-form-urlencoded' },
-      body:    new URLSearchParams({ PhoneNumber: numberToBuy }).toString(),
+      body:    new URLSearchParams(buyParams).toString(),
     }
   );
 
@@ -81,10 +86,17 @@ async function importToVapi(phoneNumber: string): Promise<string | null> {
 }
 
 async function assignAssistant(vapiPhoneId: string, vapiAssistantId: string): Promise<boolean> {
+  const appUrl  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx';
+  const secret  = process.env.VAPI_SERVER_SECRET ?? '';
+  const serverUrl = `${appUrl}/api/voice/inbound?secret=${secret}`;
+
   const res = await fetch(`${VAPI_URL}/phone-number/${vapiPhoneId}`, {
     method:  'PATCH',
     headers: vapiHeaders(),
-    body:    JSON.stringify({ assistantId: vapiAssistantId }),
+    body:    JSON.stringify({
+      assistantId: vapiAssistantId,
+      serverUrl,
+    }),
   });
   if (!res.ok) console.error('provision: assign assistant failed', await res.text());
   return res.ok;
