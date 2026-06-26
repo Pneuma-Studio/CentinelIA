@@ -827,9 +827,9 @@ export default function LandingPage() {
               <Image
                 src="/logo-icon.png"
                 alt="Centinelia"
-                width={32}
-                height={32}
-                style={{ width: 32, height: 32, objectFit: 'contain', display: 'block' }}
+                width={52}
+                height={52}
+                style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }}
               />
             </Link>
             <span className="text-xs" style={{ color: C.textMute }}>
