@@ -18,6 +18,7 @@ const BASE_URL = 'https://centinelia.mx';
 
 export const metadata: Metadata = {
   metadataBase: new URL(BASE_URL),
+  manifest: '/site.webmanifest',
 
   title: {
     default: 'Centinelia — Tu negocio nunca pierde una llamada',
