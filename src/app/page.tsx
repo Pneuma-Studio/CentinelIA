@@ -804,7 +804,7 @@ export default function LandingPage() {
             alt="Centinelia"
             width={52}
             height={52}
-            style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0, marginLeft: 3 }}
+            style={{ width: 52, height: 52, objectFit: 'contain', flexShrink: 0, marginLeft: 4.5 }}
           />
           <div className="flex flex-1 items-center">
             <div className="flex-1 flex justify-center">
@@ -812,7 +812,7 @@ export default function LandingPage() {
                 Contratar
               </Link>
             </div>
-            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70 flex-shrink-0" style={{ color: C.textMute, marginRight: 20 }}>
+            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70 flex-shrink-0" style={{ color: C.textMute, marginRight: 10 }}>
               Portal de clientes
             </Link>
           </div>
