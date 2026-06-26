@@ -70,13 +70,18 @@ export async function POST(req: NextRequest) {
       const parts: string[] = [];
       if (lead?.nombre)   parts.push(`Nombre: ${lead.nombre}`);
       if (lead?.negocio)  parts.push(`Negocio: ${lead.negocio}`);
-      if (lead?.servicio) parts.push(`Servicio de interés: ${lead.servicio}`);
+      if (lead?.servicio) parts.push(`Servicio de interés previo: ${lead.servicio}`);
       if (history.length > 0) {
         parts.push(`Ha llamado antes ${history.length} vez${history.length > 1 ? 'es' : ''}.`);
-        if (history[0].summary) parts.push(`Última vez: ${history[0].summary}`);
+        if (history[0].summary) parts.push(`Última llamada: ${history[0].summary}`);
       }
-      callerName    = lead?.nombre ?? '';
-      callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\n${parts.join('\n')}\nNO preguntes su nombre — ya lo tienes. Salúdale por su nombre de pila y continúa la conversación naturalmente.`;
+      callerName = lead?.nombre ?? '';
+      if (callerName) {
+        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\n${parts.join('\n')}\nNO preguntes su nombre — ya lo sabes. Salúdale por su nombre de pila y continúa la conversación naturalmente.`;
+      } else {
+        // History exists but no name captured yet — don't ask again, just acknowledge naturally
+        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\nCliente frecuente — ${history.length} llamada${history.length > 1 ? 's' : ''} previa${history.length > 1 ? 's' : ''}.\n${history[0]?.summary ? `Última llamada: ${history[0].summary}` : ''}\nSaluda cordialmente pero sí puedes preguntarle su nombre si es necesario para la solicitud.`;
+      }
     }
   }
 

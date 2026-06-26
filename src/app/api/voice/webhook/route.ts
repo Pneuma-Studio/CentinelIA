@@ -114,6 +114,29 @@ export async function POST(req: NextRequest) {
         }
       }
 
+      // 2c-pre. Save minimal caller profile so future calls can greet by name.
+      // Only when a nombre was captured AND no existing profile exists for this number.
+      if (structured?.nombre && callerNumber) {
+        const normCaller = callerNumber.replace(/\D/g, '').slice(-10);
+        const { data: existingProfile } = await supabase
+          .from('leads_voice')
+          .select('id')
+          .eq('agent_id', resolvedAgentId)
+          .ilike('whatsapp', `%${normCaller}%`)
+          .limit(1)
+          .maybeSingle();
+
+        if (!existingProfile) {
+          await supabase.from('leads_voice').insert({
+            agent_id: resolvedAgentId,
+            nombre:   structured.nombre,
+            negocio:  structured.negocio ?? null,
+            whatsapp: callerNumber,
+            source:   'perfil',
+          });
+        }
+      }
+
       // 2b. Save appointment when tipo_contacto === 'cita'
       if (structured?.tipo_contacto === 'cita' || structured?.cita_fecha) {
         const telefono = structured.cita_telefono ?? structured.whatsapp ?? callerNumber ?? null;
