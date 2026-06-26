@@ -389,7 +389,7 @@ export default function LandingWidgets() {
       </div>
 
       {/* ── WhatsApp button — bottom RIGHT ────────────────────────────────── */}
-      <
+      <a
         href={WA_LINK}
         target="_blank"
         rel="noopener noreferrer"
