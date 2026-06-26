@@ -13,8 +13,8 @@ function calcPrice(minutes: number): number {
 
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
-  const session = await verifySession(cookieStore.get(PORTAL_COOKIE)?.value ?? '');
-  if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const auth = await verifySession(cookieStore.get(PORTAL_COOKIE)?.value ?? '');
+  if (!auth) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const { token, minutes } = await req.json() as { token: string; minutes: number };
 
