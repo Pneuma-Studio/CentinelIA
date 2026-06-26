@@ -797,30 +797,23 @@ export default function LandingPage() {
         className="max-w-6xl mx-auto px-5 sm:px-8 pt-8 pb-28 sm:py-10"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
-        {/* Mobile: row 1 — icon | Contratar | Portal de clientes */}
-        {/*        row 2 — Pneuma Studio · Hecho en México        */}
-        <div className="flex sm:hidden flex-col gap-3">
-          <div className="flex items-center gap-3">
-            <Image
-              src="/logo-icon.png"
-              alt="Centinelia"
-              width={64}
-              height={64}
-              style={{ width: 64, height: 64, objectFit: 'contain', flexShrink: 0 }}
-            />
-            <div className="flex flex-1 items-center justify-between">
-              <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
-                Contratar
-              </Link>
-              <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
-                Portal de clientes
-              </Link>
-            </div>
+        {/* Mobile: icon | Contratar | Portal de clientes */}
+        <div className="flex sm:hidden items-center gap-3">
+          <Image
+            src="/logo-icon.png"
+            alt="Centinelia"
+            width={64}
+            height={64}
+            style={{ width: 64, height: 64, objectFit: 'contain', flexShrink: 0 }}
+          />
+          <div className="flex flex-1 items-center justify-between">
+            <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+              Contratar
+            </Link>
+            <Link href="/portal/login" className="text-xs transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+              Portal de clientes
+            </Link>
           </div>
-          <p className="text-[10px] text-center leading-tight" style={{ color: C.textMute }}>
-            <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a>
-            {' · Hecho en México'}
-          </p>
         </div>
 
         {/* Desktop: icon + Pneuma | links */}
