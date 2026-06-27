@@ -217,7 +217,7 @@ export default function LandingPage() {
 
             {/* Rotating niche */}
             <p className="mb-6 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Perfecto para <RotatingNiche />
+              Tu agente <RotatingNiche />
             </p>
 
             {/* Sub */}
