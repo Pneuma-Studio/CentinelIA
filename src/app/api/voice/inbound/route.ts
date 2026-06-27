@@ -8,7 +8,8 @@ import type { VoiceAgent } from '@/types/agent';
 // We respond with the agent configuration (system prompt + tools) for this caller.
 export async function POST(req: NextRequest) {
   const vapiSecret = process.env.VAPI_SERVER_SECRET;
-  if (vapiSecret && req.nextUrl.searchParams.get('secret') !== vapiSecret) {
+  const providedSecret = req.headers.get('x-vapi-secret') ?? req.nextUrl.searchParams.get('secret');
+  if (vapiSecret && providedSecret !== vapiSecret) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
