@@ -78,7 +78,7 @@ const PLANS: PlanDef[] = [
       { label: 'Todo lo de Recepcionista',    desc: 'Recepcionista 24/7, agenda de citas, resúmenes y portal completo.' },
       { label: 'Captura de leads',             desc: 'Registra nombre, teléfono, servicio y presupuesto de cada prospecto automáticamente.' },
       { label: 'Toma de pedidos',              desc: 'Registra pedidos completos con productos, cantidades y datos de entrega o recogida.' },
-      { label: 'Escalación a WhatsApp',        desc: 'Si el cliente lo prefiere, el agente continúa la conversación por WhatsApp automáticamente.' },
+      { label: 'Escalación a WhatsApp',        desc: 'Si el cliente lo prefiere, el agente lo transfiere a WhatsApp para que el negocio continúe la conversación directamente.' },
       { label: 'Reporte semanal por email',    desc: 'Recibe cada lunes un resumen con llamadas, leads, citas y pedidos de la semana.' },
     ],
   },

@@ -771,7 +771,9 @@ export default function LandingPage() {
               Contratar ahora <ArrowRight size={15} />
             </Link>
             <a
-              href={DEMO_PHONE_HREF}
+              href="https://wa.me/528116333559?text=Hola%2C%20quiero%20informaci%C3%B3n%20sobre%20Centinelia"
+              target="_blank"
+              rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-medium transition-all hover:opacity-90"
               style={{
                 background: 'rgba(255,255,255,0.08)',
