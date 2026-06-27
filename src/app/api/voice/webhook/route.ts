@@ -93,6 +93,8 @@ export async function POST(req: NextRequest) {
         order_created:       outcome === 'order_taken',
         transferred:         outcome === 'transferred',
         cost_usd:            call?.cost ?? null,
+        nivel_interes:        structured?.nivel_interes       ?? null,
+        acciones_pendientes:  structured?.acciones_pendientes ?? null,
       });
 
       // 2. Save lead from structured data
@@ -233,12 +235,22 @@ export async function POST(req: NextRequest) {
         const cleanSummary = summary
           ? summary.replace(/#{1,6}\s*/g, '').replace(/\*\*(.*?)\*\*/g, '*$1*').trim()
           : null;
+        const interesEmoji = structured?.nivel_interes === 'alto'
+          ? '🔥 Alto'
+          : structured?.nivel_interes === 'medio'
+          ? '🟡 Medio'
+          : structured?.nivel_interes === 'bajo'
+          ? '🔵 Bajo'
+          : null;
+
         const msg = [
           `🟣 *Centinelia* · ${agent.business_name}`,
           '━━━━━━━━━━━━━━━━━━━',
           `${outcomeLabels[outcome] ?? '📱 Llamada'} · ⏱ ${mins} min`,
           callerNumber ? `📞 ${callerNumber}` : null,
+          interesEmoji ? `🎯 Interés: ${interesEmoji}` : null,
           cleanSummary ? `\n${cleanSummary}` : null,
+          structured?.acciones_pendientes ? `\n✅ *Pendiente:* ${structured.acciones_pendientes}` : null,
         ].filter(Boolean).join('\n');
         await sendWhatsApp(agent.transfer_whatsapp, msg);
       }

@@ -115,7 +115,8 @@ export default function DemoSelector({ demoPhone, demoPhoneHref }: Props) {
               <p className="font-bold tabular-nums" style={{ fontSize: 'clamp(1.4rem, 4vw, 2rem)', color: '#1A0A3B' }}>
                 {demoPhone}
               </p>
-              <p className="text-xs mt-1" style={{ color: 'rgba(26,10,59,0.38)' }}>Toca para llamar desde móvil</p>
+              <p className="text-xs mt-1 sm:hidden" style={{ color: 'rgba(26,10,59,0.38)' }}>Toca para llamar</p>
+              <p className="text-xs mt-1 hidden sm:block" style={{ color: 'rgba(26,10,59,0.38)' }}>Marca este número desde tu teléfono</p>
             </div>
           </a>
         </div>
