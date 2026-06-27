@@ -3,9 +3,11 @@
 import { useState, useEffect } from 'react';
 
 const NICHES = [
-  'captura leads',
-  'agenda citas',
-  'toma pedidos',
+  'clínicas y consultorios',
+  'restaurantes y cafeterías',
+  'despachos y agencias',
+  'tiendas y servicios',
+  'inmobiliarias',
 ];
 
 export default function RotatingNiche() {

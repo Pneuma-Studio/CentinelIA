@@ -217,7 +217,7 @@ export default function LandingPage() {
 
             {/* Rotating niche */}
             <p className="mb-6 text-sm" style={{ color: 'rgba(255,255,255,0.45)' }}>
-              Tu agente <RotatingNiche />
+              Perfecto para <RotatingNiche />
             </p>
 
             {/* Sub */}
@@ -225,8 +225,8 @@ export default function LandingPage() {
               className="mb-8 leading-relaxed"
               style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)' }}
             >
-              Centinelia atiende tus llamadas, agenda citas y captura leads con
-              inteligencia artificial — las 24 horas, los 7 días, mientras tú
+              Centinelia atiende tus llamadas, captura leads, agenda citas y
+              toma pedidos con IA — las 24 horas, los 7 días, mientras tú
               atiendes lo que importa.
             </p>
 
