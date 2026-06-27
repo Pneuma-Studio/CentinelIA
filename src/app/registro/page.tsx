@@ -478,7 +478,7 @@ function RegistroInner() {
                               className="text-xs px-2 py-0.5 rounded-full font-semibold flex-shrink-0"
                               style={{ background: p.color, color: '#fff' }}
                             >
-                              Recomendado
+                              Popular
                             </span>
                           )}
                           {!p.custom && (
