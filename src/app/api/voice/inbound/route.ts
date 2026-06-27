@@ -15,9 +15,9 @@ export async function POST(req: NextRequest) {
   const body = await req.json();
   const { message } = body;
 
-  // Vapi sends a "call" message type for inbound calls
-  const phoneNumber: string = message?.call?.customer?.number ?? '';
-  const vapiPhoneNumber: string = message?.call?.phoneNumber?.number ?? '';
+  // Vapi sends phoneNumber at message.phoneNumber (not nested inside call)
+  const phoneNumber: string = message?.customer?.number ?? message?.call?.customer?.number ?? '';
+  const vapiPhoneNumber: string = message?.phoneNumber?.number ?? message?.call?.phoneNumber?.number ?? '';
 
   const supabase = createAdminClient();
 

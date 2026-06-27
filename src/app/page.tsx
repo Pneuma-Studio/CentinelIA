@@ -77,7 +77,7 @@ const PAINS = [
   {
     icon:  <Clock size={22} color="#eab308" />,
     stat:  '16 h',
-    label: 'al día tu negocio está cerrado — pero tus clientes no dejan de llamar.',
+    label: 'al día en promedio tu negocio está cerrado — pero tus clientes no dejan de llamar.',
     color: '#eab308',
   },
 ];
@@ -226,8 +226,8 @@ export default function LandingPage() {
               style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)' }}
             >
               Centinelia atiende tus llamadas, agenda citas y captura leads con
-              inteligencia artificial — las 24 horas, los 7 días, sin que tengas
-              que estar presente.
+              inteligencia artificial — las 24 horas, los 7 días, mientras tú
+              atiendes lo que importa.
             </p>
 
             {/* CTAs */}
