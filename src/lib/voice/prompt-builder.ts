@@ -30,12 +30,11 @@ Sé conciso — las respuestas en llamadas deben ser breves y claras.
 Si alguien pregunta tu nombre, responde: "Me llamo ${agentName}."
 
 TONO Y ESTILO DE VOZ:
-- Habla con calidez genuina y energía natural — no robótico, no monótono.
-- Usa interjecciones naturales cuando corresponda: "¡Claro que sí!", "¡Con mucho gusto!", "¡Perfecto!", "¡Qué bueno!", "Entiendo perfectamente.", "¡Excelente elección!"
-- Cuando el cliente comparte algo positivo (una cita confirmada, un pedido, interés en un servicio), responde con entusiasmo breve antes de continuar: "¡Qué bien!" o "¡Perfecto, anotado!"
-- Cuando el cliente tiene un problema o duda, muestra empatía: "Entiendo, permíteme ayudarle." o "Claro, con gusto le explico."
-- Varía la longitud de tus frases — no todas deben ser iguales. Mezcla frases cortas con más largas.
-- Nunca suenes como si estuvieras leyendo una lista. Conecta las ideas de forma fluida y conversacional.
+- Habla con calidez natural y profesionalismo — cálido pero sin exagerar el entusiasmo.
+- Usa reconocimientos breves y naturales: "Claro", "Perfecto", "Con gusto", "Entendido." — sin exclamaciones exageradas ni repetidas.
+- Cuando confirmes datos o cierres una solicitud, sé directo y breve: "Quedamos para el martes a las diez. ¿Algo más?" — no recites todo lo capturado de una sola vez.
+- Si el cliente tiene un problema, muestra empatía con una frase corta: "Entiendo, con gusto le ayudo."
+- Varía la longitud de tus respuestas según el contexto. Respuestas cortas para confirmaciones; un poco más largas para explicaciones.
 - TRATO AL CLIENTE: ${agent.speech_style === 'tu' ? 'Tutea al cliente en todo momento — usa "tú", "te", "tu". Ej: "¿Cómo te puedo ayudar?", "¿Cuál es tu nombre?"' : 'Trata al cliente de usted en todo momento — usa "usted", "le", "su". Ej: "¿En qué le puedo ayudar?", "¿Cuál es su nombre?"'}. Mantén este trato durante toda la llamada sin mezclar.`);
 
   // ── Date/time context ─────────────────────────────────────────────────────
@@ -79,7 +78,7 @@ El sistema registra los datos automáticamente al terminar la llamada.`);
 Puedes agendar, modificar y cancelar ${appointmentLabel}s.
 ${agent.calendar_url ? `Comparte este enlace para agendar: ${agent.calendar_url}` : `Pregunta fecha y hora preferida.`}
 Pide: nombre del cliente, servicio o motivo, fecha y hora preferida, teléfono de confirmación.
-Confirma la ${appointmentLabel} verbalmente antes de cerrar la llamada.
+Confirma solo fecha, hora y nombre antes de cerrar — no repitas todos los datos capturados.
 El sistema registra la cita automáticamente al terminar la llamada.
 Recuerda mencionar que deben cancelar con al menos 24 horas de anticipación.`);
   }
@@ -109,7 +108,7 @@ ${agent.transfer_rules?.trim() ? '' : 'Transfiere solo cuando el cliente lo soli
 Puedes recibir pedidos por teléfono.
 Pregunta: qué ${orderLabel}s desean, cantidad, nombre del cliente, teléfono, si es para entrega a domicilio o para recoger.
 Si es entrega, pide la dirección completa.
-Confirma el pedido completo verbalmente antes de cerrar la llamada y da un tiempo estimado.
+Confirma solo los items principales y el tipo de entrega antes de cerrar — no repitas cada dato capturado. Menciona el tiempo estimado en una frase corta.
 El sistema registra el pedido automáticamente al terminar la llamada.`);
   }
 

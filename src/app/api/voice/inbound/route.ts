@@ -147,10 +147,10 @@ export async function POST(req: NextRequest) {
         provider: '11labs',
         voiceId: typedAgent.elevenlabs_voice_id ?? process.env.ELEVENLABS_DEFAULT_VOICE_ID,
         model: 'eleven_turbo_v2_5',
-        stability: 0.20,
+        stability: 0.45,
         similarityBoost: 0.75,
-        style: 0.55,
-        speed: 1.1,
+        style: 0.30,
+        speed: 1.0,
         useSpeakerBoost: true,
         optimizeStreamingLatency: 4,
         chunkPlan: {
