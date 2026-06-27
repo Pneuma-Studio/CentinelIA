@@ -52,7 +52,7 @@ export const metadata: Metadata = {
       'Agentes de voz con IA que atienden las llamadas de tu negocio 24/7. Agenda citas, captura leads y toma pedidos — desde $1,990/mes.',
     images: [
       {
-        url: '/og-image.png',
+        url: '/og-image.png?v=2',
         width: 1200,
         height: 630,
         alt: 'Centinelia — Agentes de voz con IA para tu negocio',
@@ -64,7 +64,7 @@ export const metadata: Metadata = {
     title: 'Centinelia — Tu negocio nunca pierde una llamada',
     description:
       'Agentes de voz con IA que atienden las llamadas de tu negocio 24/7. Desde $1,990/mes.',
-    images: ['/og-image.png'],
+    images: ['/og-image.png?v=2'],
   },
 };
 
