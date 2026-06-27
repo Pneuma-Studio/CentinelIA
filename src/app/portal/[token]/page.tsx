@@ -649,7 +649,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             </span>
             <div className="flex items-center gap-2">
               {supportWhatsApp && (
-                <a href={`https://wa.me/${supportWhatsApp.replace(/\D/g, '')}`} target="_blank" rel="noopener noreferrer"
+                <a href={`https://wa.me/${supportWhatsApp.replace(/\D/g, '')}?text=${encodeURIComponent('¡Hola! Quiero saber cómo puedo contratar un agente 24/7 para mi negocio.')}`} target="_blank" rel="noopener noreferrer"
                   className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
                   style={{ background: '#22c55e', color: '#fff' }}>
                   <MessageCircle size={12} /> WhatsApp

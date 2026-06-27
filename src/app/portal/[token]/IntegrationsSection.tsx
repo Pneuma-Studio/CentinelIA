@@ -270,7 +270,7 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
           <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>Podemos conectar cualquier sistema — escríbenos</p>
         </div>
         {SUPPORT_WA && (
-          <a href={`https://wa.me/${SUPPORT_WA}?text=Hola, necesito integrar mi sistema con Centinelia`}
+          <a href={`https://wa.me/${SUPPORT_WA}?text=${encodeURIComponent('¡Hola! Quiero saber cómo puedo contratar un agente 24/7 para mi negocio.')}`}
             target="_blank" rel="noopener noreferrer"
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold flex-shrink-0"
             style={{ background: '#25D366', color: '#fff' }}>
