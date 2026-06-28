@@ -39,7 +39,6 @@ import PortalTabNav           from './PortalTabNav';
 import KnowledgeBaseEditor    from './KnowledgeBaseEditor';
 import WebsiteSyncButton      from './WebsiteSyncButton';
 import ReviewLinkEditor       from './ReviewLinkEditor';
-import ReviewBadge            from './ReviewBadge';
 import BusinessHoursEditor    from './BusinessHoursEditor';
 
 type Tab = 'agentes' | 'negocio' | 'resumen' | 'actividad' | 'minutos' | 'contrato' | 'integraciones';
@@ -696,7 +695,6 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         <LiveNotifications token={token} />
       </div>
 
-      <ReviewBadge />
     </ThemeProvider>
   );
 }
