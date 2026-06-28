@@ -12,8 +12,6 @@ import type { BusinessHours } from '@/types/agent';
 
 import PortalLogout           from '../PortalLogout';
 import BusinessHoursEditor    from '../BusinessHoursEditor';
-import KnowledgeBaseEditor    from '../KnowledgeBaseEditor';
-import WebsiteSyncButton      from '../WebsiteSyncButton';
 import PortalVoiceSelector    from '../PortalVoiceSelector';
 import NotificationsToggle    from '../NotificationsToggle';
 import AgentCustomization     from '../AgentCustomization';
@@ -120,23 +118,6 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               initTransferRules={(agent as any).transfer_rules ?? ''}
               initSpeechStyle={(agent as any).speech_style ?? 'usted'}
             />
-          </div>
-
-          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <h2 className="text-xs font-semibold mb-3 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-              Base de conocimiento
-            </h2>
-            <KnowledgeBaseEditor token={token} initialValue={agent.knowledge_base ?? ''} />
-          </div>
-
-          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-              Sitio web
-            </h2>
-            <p className="text-xs mb-4" style={{ color: 'var(--c-text-3)' }}>
-              Conecta tu sitio web para que el agente consulte información adicional desde ahí.
-            </p>
-            <WebsiteSyncButton token={token} currentUrl={(agent as any).business_website ?? null} />
           </div>
 
           <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
