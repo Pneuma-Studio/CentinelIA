@@ -8,7 +8,7 @@ const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
   title: 'Recepcionista Virtual para Restaurantes y Cafeterías',
-  description: 'Agente de voz con IA que toma pedidos, agenda reservaciones y responde preguntas del menú 24/7. Sin perder una sola llamada. Desde $1,990/mes.',
+  description: 'Agente de voz con IA que toma pedidos, agenda reservaciones y responde preguntas del menú 24/7. Sin perder una sola llamada. Reservaciones desde $3,490/mes · con toma de pedidos desde $6,490/mes.',
   keywords: [
     'recepcionista virtual restaurante', 'toma pedidos por teléfono IA',
     'reservaciones automáticas restaurante', 'agente voz cafetería México',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${BASE_URL}/industrias/restaurantes` },
   openGraph: {
     title: 'Recepcionista Virtual para Restaurantes y Cafeterías | Centinelia',
-    description: 'Agente de voz con IA que toma pedidos, agenda reservaciones y responde sobre el menú 24/7. Desde $1,990/mes.',
+    description: 'Agente de voz con IA que toma pedidos, agenda reservaciones y responde sobre el menú 24/7. Reservaciones desde $3,490/mes · con toma de pedidos desde $6,490/mes.',
     url: `${BASE_URL}/industrias/restaurantes`,
     images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
   },
@@ -246,7 +246,7 @@ export default function RestaurantesPage() {
             Deja de perder ventas en hora pico
           </h2>
           <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>
-            Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.
+            Activo en menos de 24 horas. Sin contratos de permanencia. Reservaciones desde $3,490/mes · con toma de pedidos desde $6,490/mes.
           </p>
           <Link href="/registro" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
             Activar mi agente ahora <ArrowRight size={15} />

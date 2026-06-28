@@ -8,7 +8,7 @@ const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
   title: 'Recepcionista Virtual para Despachos y Consultorías',
-  description: 'Agente de voz con IA que califica leads, agenda consultas y atiende llamadas 24/7 para despachos de abogados, contadores y agencias. Desde $1,990/mes.',
+  description: 'Agente de voz con IA que califica leads, agenda consultas y atiende llamadas 24/7 para despachos de abogados, contadores y agencias. Plan Comercial desde $3,490/mes.',
   keywords: [
     'recepcionista virtual despacho abogados', 'agente voz bufete contadores',
     'atención telefónica despacho México', 'agenda consultas automática',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${BASE_URL}/industrias/despachos` },
   openGraph: {
     title: 'Recepcionista Virtual para Despachos y Consultorías | Centinelia',
-    description: 'Agente de voz con IA que califica leads, agenda consultas y atiende llamadas 24/7. Desde $1,990/mes.',
+    description: 'Agente de voz con IA que califica leads, agenda consultas y atiende llamadas 24/7. Plan Comercial desde $3,490/mes.',
     url: `${BASE_URL}/industrias/despachos`,
     images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
   },
@@ -231,7 +231,7 @@ export default function DespachosPage() {
       <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', padding: '80px 24px' }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Tu despacho abierto para nuevos clientes las 24 horas</h2>
-          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.</p>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Plan Comercial desde $3,490/mes.</p>
           <Link href="/registro" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>

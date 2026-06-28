@@ -66,41 +66,101 @@ const PLANS: PlanDef[] = [
   {
     id: 'basico', label: 'Recepcionista', price: 4990, origPrice: 6990, monthly: 1990, origMonthly: 2490, minutes: 200, color: '#6b7280',
     features: [
-      { label: 'Recepcionista 24/7',          desc: 'Atiende llamadas en cualquier horario, incluso fuera de tu horario laboral y fines de semana.' },
-      { label: 'Captura de leads',             desc: 'Registra nombre, teléfono, servicio y presupuesto de cada prospecto automáticamente.' },
-      { label: 'Resúmenes WhatsApp + Email',   desc: 'Recibes un resumen de cada conversación en tiempo real por WhatsApp y correo electrónico.' },
-      { label: 'Portal con horas pico',        desc: 'Visualiza en qué horas del día recibes más llamadas y monitorea toda tu actividad.' },
+      {
+        label: 'Recepcionista 24/7',
+        desc: 'Tu negocio siempre contesta — a las 3am, un domingo, en días festivos. El agente saluda con el nombre de tu negocio, entiende lo que necesita el cliente y responde usando la información que le proporcionaste. Para el cliente, es como hablar con alguien de tu equipo.',
+      },
+      {
+        label: 'Captura de leads',
+        desc: 'Cuando alguien llama interesado, el agente obtiene su nombre, teléfono y qué está buscando. Recibes esos datos en tiempo real por WhatsApp — ningún prospecto se pierde aunque no hayas podido contestar.',
+      },
+      {
+        label: 'Resúmenes WhatsApp + Email',
+        desc: 'Al terminar cada llamada recibes un mensaje: quién llamó, qué quería y qué quedó pendiente. Sin escuchar grabaciones largas ni revisar listas. En el correo llega la versión completa para tener historial.',
+      },
+      {
+        label: 'Portal con horas pico',
+        desc: 'Panel web donde puedes ver todas tus llamadas, en qué horas recibes más contactos y qué están pidiendo tus clientes. Útil para ajustar horarios, preparar personal o lanzar promociones en los momentos de mayor demanda.',
+      },
     ],
   },
   {
     id: 'estandar', label: 'Comercial', price: 7990, origPrice: 9990, monthly: 3490, origMonthly: 4490, minutes: 500, recommended: true, color: '#3b82f6',
     features: [
-      { label: 'Todo lo de Recepcionista',     desc: 'Recepcionista 24/7, captura de leads, resúmenes y portal completo.' },
-      { label: 'Agendamiento de citas',         desc: 'Confirma, modifica y cancela citas durante la llamada sin que tengas que intervenir.' },
-      { label: 'Transferencia inteligente',     desc: 'El agente detecta cuándo una llamada necesita atención humana y transfiere automáticamente a tu número.' },
-      { label: 'Escalación a WhatsApp',         desc: 'Si el cliente lo prefiere, el agente lo transfiere a WhatsApp para que el negocio continúe la conversación directamente.' },
-      { label: 'Reporte semanal por email',     desc: 'Recibe cada lunes un resumen con llamadas, leads, citas y pedidos de la semana.' },
+      {
+        label: 'Todo lo de Recepcionista',
+        desc: 'Incluye recepcionista 24/7, captura automática de leads, resúmenes por WhatsApp y correo después de cada llamada, y acceso completo al portal con historial de actividad.',
+      },
+      {
+        label: 'Agendamiento de citas',
+        desc: 'El agente confirma disponibilidad, acuerda fecha y hora con el cliente durante la llamada y registra la cita. También puede modificar o cancelar citas existentes si el cliente lo solicita. Funciona con Google Calendar, Calendly o Cal.com — sin que tú intervengas.',
+      },
+      {
+        label: 'Transferencia inteligente',
+        desc: 'Cuando hay una urgencia real o el cliente pide hablar con una persona, el agente transfiere la llamada automáticamente a tu número de celular. Tú defines qué situaciones activan la transferencia — una emergencia, un cliente molesto, una venta grande.',
+      },
+      {
+        label: 'Escalación a WhatsApp',
+        desc: 'Si el cliente prefiere continuar por mensaje, el agente termina la llamada e indica al cliente que puede escribirle al WhatsApp de tu negocio. La conversación no se pierde — solo cambia de canal.',
+      },
+      {
+        label: 'Reporte semanal por email',
+        desc: 'Cada lunes recibes un correo con el resumen de la semana: total de llamadas, leads capturados, citas agendadas, horas de mayor actividad y duración promedio. Para saber qué está pasando sin revisar el portal todos los días.',
+      },
     ],
   },
   {
     id: 'pro', label: 'Pro', price: 12990, origPrice: 16990, monthly: 6490, origMonthly: 8490, minutes: 1000, color: '#a855f7',
     features: [
-      { label: 'Todo lo de Comercial',          desc: 'Incluye todas las funciones del plan Comercial.' },
-      { label: 'Toma de pedidos',               desc: 'Registra pedidos completos con productos, cantidades y datos de entrega o recogida.' },
-      { label: 'Memoria de cliente',            desc: 'El agente recuerda preferencias e historial de cada cliente para ofrecer atención personalizada.' },
-      { label: 'Nombre + Voz personalizable',   desc: 'Elige el nombre de tu agente (Ana, Carlos, Sofía…) y la voz que mejor represente tu marca.' },
-      { label: 'Multiidioma (ES + EN)',          desc: 'Tu agente detecta automáticamente el idioma del cliente y responde en español o inglés.' },
-      { label: 'Grabaciones de llamadas',        desc: 'Accede y descarga grabaciones de tus llamadas desde el portal durante 7 días.' },
+      {
+        label: 'Todo lo de Comercial',
+        desc: 'Incluye todas las funciones del plan Comercial: recepcionista 24/7, captura de leads, agendamiento de citas, transferencia inteligente, escalación a WhatsApp y reportes semanales automáticos.',
+      },
+      {
+        label: 'Toma de pedidos',
+        desc: 'El agente recibe pedidos completos durante la llamada — productos, cantidades, tallas o lo que aplique a tu negocio — y confirma si es para recoger o a domicilio. Cada pedido llega a tu WhatsApp listo para preparar, con todos los datos del cliente.',
+      },
+      {
+        label: 'Memoria de cliente',
+        desc: 'El agente recuerda a los clientes que han llamado antes: su nombre, qué pidieron la última vez, sus preferencias o restricciones. Un cliente frecuente siente que lo conocen — eso fideliza.',
+      },
+      {
+        label: 'Nombre + Voz personalizable',
+        desc: 'Elige el nombre con el que se presenta tu agente — Ana, Carlos, Sofía o el que mejor encaje con tu marca — y selecciona entre distintas voces con diferentes tonos y acentos. Tu negocio tiene una identidad de voz propia.',
+      },
+      {
+        label: 'Multiidioma (ES + EN)',
+        desc: 'El agente detecta en las primeras palabras si el cliente habla español o inglés y responde en ese idioma de forma natural durante toda la llamada. Ideal para zonas turísticas, fronterizas o negocios con clientela internacional.',
+      },
+      {
+        label: 'Grabaciones de llamadas',
+        desc: 'Desde el portal puedes escuchar y descargar las grabaciones de todas las llamadas de los últimos 7 días. Útil para revisar cómo atiende el agente, resolver una disputa, auditar la calidad o entrenar a tu equipo.',
+      },
     ],
   },
   {
     id: 'empresarial', label: 'Empresarial', price: 0, origPrice: 0, monthly: 0, origMonthly: 0, minutes: 0, custom: true, color: '#f59e0b',
     features: [
-      { label: 'Integración con tu sistema',        desc: 'Conectamos tu agente con el POS, CRM o calendario que ya usas: Square, Shopify, Calendly, Google Calendar y más.' },
-      { label: 'Flujos conversacionales a medida',  desc: 'Diseñamos conversaciones específicas para los procesos únicos de tu negocio, sin limitaciones de plantilla.' },
-      { label: 'Múltiples agentes / sucursales',    desc: 'Ideal para cadenas, franquicias o negocios con varios puntos de atención simultáneos.' },
-      { label: 'Onboarding y capacitación',         desc: 'Nuestro equipo entrena el agente con tus datos y capacita a tu equipo para sacar el máximo provecho.' },
-      { label: 'SLA y soporte dedicado',            desc: 'Tiempo de respuesta garantizado y línea directa con el equipo técnico de Centinelia.' },
+      {
+        label: 'Integración con tu sistema',
+        desc: 'Conectamos tu agente con el software que ya usas: punto de venta (Square, Shopify, Poster), CRM (HubSpot, Pipedrive), sistema de reservas (Calendly, Google Calendar, OpenTable) u otro. El agente puede consultar inventario, disponibilidad o historial de cliente en tiempo real durante la llamada.',
+      },
+      {
+        label: 'Flujos conversacionales a medida',
+        desc: 'Diseñamos la conversación exacta que tu negocio necesita: precalificación de crédito, cotizaciones en vivo, encuestas de satisfacción al cierre de llamada, o cualquier proceso que hoy requiere una persona. Sin plantillas — construido desde cero para tu operación.',
+      },
+      {
+        label: 'Múltiples agentes / sucursales',
+        desc: 'Configura un agente distinto para cada sucursal, departamento o número telefónico — cada uno con su propia información, nombre y portal de reportes independiente. Ideal para cadenas, franquicias o negocios con varios puntos de atención simultáneos.',
+      },
+      {
+        label: 'Onboarding y capacitación',
+        desc: 'Nuestro equipo configura el agente usando tu catálogo, precios, preguntas frecuentes y casos especiales. Tú nos das el material, nosotros lo entrenamos. También capacitamos a quien administrará el portal para que lo aprovechen desde el primer día.',
+      },
+      {
+        label: 'SLA y soporte dedicado',
+        desc: 'Tiempo de respuesta garantizado por escrito. Tienes acceso directo al equipo técnico de Centinelia — no un ticket que tarda días, sino una persona que conoce tu configuración y puede resolver problemas en horas.',
+      },
     ],
   },
 ];

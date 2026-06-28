@@ -8,7 +8,7 @@ const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
   title: 'Recepcionista Virtual para Clínicas y Consultorios',
-  description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Sin perder una sola llamada. Desde $1,990/mes.',
+  description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Sin perder una sola llamada. Plan Comercial desde $3,490/mes.',
   keywords: [
     'recepcionista virtual consultorio', 'agenda citas automática clínica',
     'agente de voz para médicos', 'recepcionista IA consultorio México',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${BASE_URL}/industrias/clinicas` },
   openGraph: {
     title: 'Recepcionista Virtual para Clínicas y Consultorios | Centinelia',
-    description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Desde $1,990/mes.',
+    description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Plan Comercial desde $3,490/mes.',
     url: `${BASE_URL}/industrias/clinicas`,
     images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
   },
@@ -270,7 +270,7 @@ export default function ClinicasPage() {
             Tu consultorio merece no perder más pacientes
           </h2>
           <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>
-            Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.
+            Activo en menos de 24 horas. Sin contratos de permanencia. Plan Comercial desde $3,490/mes.
           </p>
           <Link
             href="/registro"

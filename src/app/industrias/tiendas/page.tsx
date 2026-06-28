@@ -8,7 +8,7 @@ const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
   title: 'Recepcionista Virtual para Tiendas y Servicios',
-  description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7 para tiendas retail y negocios de servicio. Desde $1,990/mes.',
+  description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7 para tiendas retail y negocios de servicio. Desde $1,990/mes · con toma de pedidos desde $6,490/mes.',
   keywords: [
     'recepcionista virtual tienda', 'toma pedidos telefónicos IA',
     'atención al cliente automatizada México', 'agente voz retail',
@@ -17,7 +17,7 @@ export const metadata: Metadata = {
   alternates: { canonical: `${BASE_URL}/industrias/tiendas` },
   openGraph: {
     title: 'Recepcionista Virtual para Tiendas y Servicios | Centinelia',
-    description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7. Desde $1,990/mes.',
+    description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7. Desde $1,990/mes · con toma de pedidos desde $6,490/mes.',
     url: `${BASE_URL}/industrias/tiendas`,
     images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
   },
@@ -225,7 +225,7 @@ export default function TiendasPage() {
       <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', padding: '80px 24px' }}>
         <div className="max-w-2xl mx-auto text-center">
           <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Tu negocio disponible a cualquier hora, cualquier día</h2>
-          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.</p>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes · con toma de pedidos desde $6,490/mes.</p>
           <Link href="/registro" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
