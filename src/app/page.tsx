@@ -809,7 +809,10 @@ export default function LandingPage() {
             />
           </Link>
           <div className="flex flex-1 items-center">
-            <div className="flex-1 flex justify-center">
+            <div className="flex-1 flex items-center justify-center gap-4">
+              <Link href="/industrias" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
+                Industrias
+              </Link>
               <Link href="/registro" className="text-xs font-medium transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
                 Contratar
               </Link>
@@ -837,6 +840,9 @@ export default function LandingPage() {
             </span>
           </div>
           <div className="flex items-center gap-5">
+            <Link href="/industrias" className="text-xs transition-colors" style={{ color: C.textMute }}>
+              Industrias
+            </Link>
             <Link href="/portal/login" className="text-xs transition-colors" style={{ color: C.textMute }}>
               Portal de clientes
             </Link>
