@@ -1,0 +1,272 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Check, Phone, ArrowRight, CalendarDays, PhoneOff, Clock, MessageCircle, Star } from 'lucide-react';
+import LandingNav from '@/app/LandingNav';
+import LandingWidgets from '@/app/LandingWidgets';
+
+const BASE_URL = 'https://www.centinelia.mx';
+
+export const metadata: Metadata = {
+  title: 'Recepcionista Virtual para Clínicas y Consultorios',
+  description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Sin perder una sola llamada. Desde $1,990/mes.',
+  keywords: [
+    'recepcionista virtual consultorio', 'agenda citas automática clínica',
+    'agente de voz para médicos', 'recepcionista IA consultorio México',
+    'atención telefónica clínica', 'chatbot voz médico dentista',
+  ],
+  alternates: { canonical: `${BASE_URL}/industrias/clinicas` },
+  openGraph: {
+    title: 'Recepcionista Virtual para Clínicas y Consultorios | Centinelia',
+    description: 'Agente de voz con IA que agenda citas, responde preguntas y captura nuevos pacientes 24/7. Desde $1,990/mes.',
+    url: `${BASE_URL}/industrias/clinicas`,
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
+  },
+};
+
+const C = {
+  bg:      '#FAFBFF',
+  text:    '#1A0A3B',
+  textSub: 'rgba(26,10,59,0.58)',
+  accent:  '#6C3BFF',
+  border:  'rgba(108,59,255,0.12)',
+};
+
+const PROBLEMS = [
+  {
+    icon: <PhoneOff size={22} color="#ef4444" />,
+    title: 'Llamadas que se pierden en horas pico',
+    desc: 'La recepcionista está con un paciente y el teléfono suena sin que nadie conteste. Ese paciente llama al siguiente consultorio.',
+  },
+  {
+    icon: <Clock size={22} color="#f59e0b" />,
+    title: 'Cero atención fuera de horario',
+    desc: 'El 40% de las llamadas llegan después de las 6pm o en fin de semana. Sin nadie que conteste, esas citas nunca se agendan.',
+  },
+  {
+    icon: <MessageCircle size={22} color="#8b5cf6" />,
+    title: 'La recepcionista responde lo mismo todo el día',
+    desc: '"¿Cuánto cuesta la consulta?", "¿A qué hora abren?", "¿Tienen disponibilidad el viernes?" — preguntas que consumen tiempo y atención.',
+  },
+];
+
+const FEATURES = [
+  { label: 'Agenda, modifica y cancela citas — sin intervención humana' },
+  { label: 'Responde preguntas frecuentes: costos, seguros, horarios, ubicación' },
+  { label: 'Captura datos de nuevos pacientes interesados' },
+  { label: 'Transfiere a WhatsApp si el caso requiere atención directa' },
+  { label: 'Funciona las 24 horas, los 7 días, sin descansos ni incapacidades' },
+  { label: 'Resumen de cada llamada directo a tu WhatsApp o correo' },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: 'Antes perdíamos citas porque nadie contestaba después de las 7pm. Ahora el agente las agenda solo y yo las veo en el portal al día siguiente.',
+    author: 'Médico general, consultorio privado — Monterrey',
+  },
+  {
+    quote: 'Mis pacientes llaman para preguntar el precio de la consulta a toda hora. El agente les responde al momento y les agenda si quieren. Ya no dependo de que alguien esté en el escritorio.',
+    author: 'Dentista, clínica dental — CDMX',
+  },
+  {
+    quote: 'Pensé que mis pacientes iban a notar que era una IA, pero la mayoría pregunta por citas y listo. El que sí pregunta, el agente le dice la verdad y no ha pasado nada.',
+    author: 'Psicóloga, consultorio — Guadalajara',
+  },
+];
+
+const FAQS = [
+  {
+    q: '¿Puede el agente manejar cancelaciones de último momento?',
+    a: 'Sí. El agente acepta cancelaciones y puede ofrecer reagendar en el momento. Tú recibes una notificación inmediata con el hueco disponible.',
+  },
+  {
+    q: '¿Funciona si tenemos varios doctores y horarios distintos?',
+    a: 'Sí. Puedes configurar disponibilidad por doctor o por servicio. El agente consulta el calendario en tiempo real y solo ofrece horarios disponibles.',
+  },
+  {
+    q: '¿Qué pasa si un paciente llama por algo urgente o de emergencia?',
+    a: 'El agente detecta urgencias y puede transferir la llamada de inmediato a tu número personal o enviar una alerta por WhatsApp para que atiendas tú directamente.',
+  },
+  {
+    q: '¿El agente puede manejar información médica sensible?',
+    a: 'El agente no accede ni almacena expedientes médicos. Su función es logística: agendar, informar y capturar datos de contacto. La información clínica sigue siendo tuya.',
+  },
+];
+
+export default function ClinicasPage() {
+  return (
+    <>
+      <LandingNav />
+      <LandingWidgets />
+
+      {/* ── HERO ── */}
+      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', paddingTop: 120, paddingBottom: 80 }}>
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>
+            Centinelia para clínicas y consultorios
+          </p>
+          <h1 className="font-bold leading-tight mb-5" style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', color: '#fff' }}>
+            Tu consultorio nunca más{' '}
+            <span style={{ background: 'linear-gradient(135deg, #9B6DFF, #C4A8FF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              pierde una cita
+            </span>
+          </h1>
+          <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
+            Un agente de voz con IA atiende las llamadas de tu clínica las 24 horas. Agenda citas, responde preguntas frecuentes y captura nuevos pacientes — sin que tú ni tu recepcionista tengan que estar presentes.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link
+              href="/registro"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+              style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}
+            >
+              Activar mi agente <ArrowRight size={15} />
+            </Link>
+            <a
+              href="tel:+528116333559"
+              className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-medium"
+              style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.82)', border: '1px solid rgba(255,255,255,0.2)' }}
+            >
+              <Phone size={14} /> Habla con un asesor
+            </a>
+          </div>
+        </div>
+      </section>
+
+      {/* ── EL PROBLEMA ── */}
+      <section style={{ background: C.bg, padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <p className="text-xs font-semibold tracking-widest uppercase text-center mb-3" style={{ color: C.accent }}>El problema</p>
+          <h2 className="font-bold text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: C.text }}>
+            Cada llamada sin respuesta es un paciente que se va con la competencia
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {PROBLEMS.map((p, i) => (
+              <div key={i} className="rounded-2xl p-6" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
+                <div className="mb-4">{p.icon}</div>
+                <h3 className="font-semibold mb-2 text-sm" style={{ color: C.text }}>{p.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── SOLUCIÓN ── */}
+      <section style={{ background: '#fff', padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>La solución</p>
+              <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: C.text }}>
+                Un recepcionista que nunca falta, nunca se cansa y siempre contesta
+              </h2>
+              <p className="mb-8 leading-relaxed" style={{ color: C.textSub }}>
+                Centinelia configura un agente de voz entrenado con la información de tu consultorio. Sabe tus precios, tus horarios, tus servicios — y habla como parte de tu equipo.
+              </p>
+              <ul className="space-y-3">
+                {FEATURES.map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm" style={{ color: C.text }}>
+                    <Check size={16} color={C.accent} className="flex-shrink-0 mt-0.5" />
+                    {f.label}
+                  </li>
+                ))}
+              </ul>
+              <Link
+                href="/registro"
+                className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90"
+                style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}
+              >
+                Contratar ahora <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="rounded-2xl p-8" style={{ background: 'linear-gradient(135deg, rgba(108,59,255,0.06), rgba(155,109,255,0.03))', border: `1px solid ${C.border}` }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="rounded-full flex items-center justify-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' }}>
+                  <CalendarDays size={20} color="#fff" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: C.text }}>Agente activo ahora mismo</p>
+                  <p className="text-xs" style={{ color: C.textSub }}>Clínica Dental ejemplo · Monterrey</p>
+                </div>
+              </div>
+              {[
+                { time: '8:34 pm', msg: '"Buenas noches, ¿tienen cita disponible esta semana para limpieza dental?"' },
+                { time: '8:34 pm', msg: 'Sí, tenemos el jueves a las 10am o el viernes a las 4pm. ¿Cuál le viene mejor?', agent: true },
+                { time: '8:35 pm', msg: '"El jueves a las 10, por favor. Me llamo Roberto Garza."' },
+                { time: '8:35 pm', msg: '¡Perfecto, Roberto! Quedaste agendado para el jueves a las 10am. Te llegará una confirmación. ¿Algo más?', agent: true },
+              ].map((m, i) => (
+                <div key={i} className={`flex ${m.agent ? 'justify-end' : 'justify-start'} mb-3`}>
+                  <div className="max-w-[85%]">
+                    <p className="text-xs mb-1" style={{ color: C.textSub, textAlign: m.agent ? 'right' : 'left' }}>{m.time}</p>
+                    <div className="rounded-2xl px-4 py-2.5 text-xs leading-relaxed" style={{
+                      background: m.agent ? 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' : '#f3f4f6',
+                      color: m.agent ? '#fff' : C.text,
+                    }}>
+                      {m.msg}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── TESTIMONIOS ── */}
+      <section style={{ background: C.bg, padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-bold text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', color: C.text }}>
+            Lo que dicen los consultorios que ya lo usan
+          </h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
+                <div className="flex gap-0.5">
+                  {Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}
+                </div>
+                <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section style={{ background: '#fff', padding: '80px 24px' }}>
+        <div className="max-w-2xl mx-auto">
+          <h2 className="font-bold text-center mb-10" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: C.text }}>
+            Preguntas frecuentes de clínicas
+          </h2>
+          <div className="space-y-4">
+            {FAQS.map((f, i) => (
+              <div key={i} className="rounded-xl p-5" style={{ background: C.bg, border: `1px solid ${C.border}` }}>
+                <p className="font-semibold text-sm mb-2" style={{ color: C.text }}>{f.q}</p>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── CTA FINAL ── */}
+      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', padding: '80px 24px' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>
+            Tu consultorio merece no perder más pacientes
+          </h2>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>
+            Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.
+          </p>
+          <Link
+            href="/registro"
+            className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]"
+            style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}
+          >
+            Activar mi agente ahora <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
+    </>
+  );
+}
