@@ -33,7 +33,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   }
 
   // Business-level fields (knowledge_base) propagate to all agents of the same account
-  const businessFields = ['knowledge_base'];
+  const businessFields = ['knowledge_base', 'business_hours'];
   const businessUpdate = Object.fromEntries(Object.entries(update).filter(([k]) => businessFields.includes(k)));
   if (Object.keys(businessUpdate).length > 0 && agent.portal_email) {
     const { data: siblings } = await supabase

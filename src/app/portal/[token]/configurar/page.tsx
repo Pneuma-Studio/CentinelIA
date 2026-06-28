@@ -8,10 +8,8 @@ import { cookies } from 'next/headers';
 import { verifySession, PORTAL_COOKIE } from '@/lib/portal/auth';
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ThemeToggle from '@/components/ThemeToggle';
-import type { BusinessHours } from '@/types/agent';
 
 import PortalLogout           from '../PortalLogout';
-import BusinessHoursEditor    from '../BusinessHoursEditor';
 import PortalVoiceSelector    from '../PortalVoiceSelector';
 import NotificationsToggle    from '../NotificationsToggle';
 import AgentCustomization     from '../AgentCustomization';
@@ -118,13 +116,6 @@ export default async function ConfigurarAgentePage({ params }: Props) {
               initTransferRules={(agent as any).transfer_rules ?? ''}
               initSpeechStyle={(agent as any).speech_style ?? 'usted'}
             />
-          </div>
-
-          <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>
-            <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>
-              Horario de atención
-            </h2>
-            <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
           </div>
 
           <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border)' }}>

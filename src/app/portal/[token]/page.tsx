@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Phone, CheckCircle, XCircle, CreditCard, PhoneCall, Users, ShoppingBag, CalendarDays, MessageCircle, Mail, AlertTriangle, ChevronRight, ExternalLink } from 'lucide-react';
+import type { BusinessHours } from '@/types/agent';
 // Phone, CheckCircle, XCircle still used in Agentes tab and alerts
 import type { VoiceCall } from '@/types/agent';
 import { MINUTES_PLAN_CONFIG } from '@/lib/billing/plans';
@@ -38,6 +39,7 @@ import PortalTabNav           from './PortalTabNav';
 import KnowledgeBaseEditor    from './KnowledgeBaseEditor';
 import WebsiteSyncButton      from './WebsiteSyncButton';
 import ReviewLinkEditor       from './ReviewLinkEditor';
+import BusinessHoursEditor    from './BusinessHoursEditor';
 
 type Tab = 'agentes' | 'negocio' | 'resumen' | 'actividad' | 'minutos' | 'contrato' | 'integraciones';
 
@@ -408,6 +410,11 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
                 <h2 className="text-xs font-semibold mb-1 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Base de conocimiento</h2>
                 <KnowledgeBaseEditor token={token} initialValue={(agent as any).knowledge_base ?? ''} />
+              </div>
+
+              <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
+                <h2 className="text-xs font-semibold mb-4 tracking-widest uppercase" style={{ color: 'var(--c-text-3)' }}>Horario de atención</h2>
+                <BusinessHoursEditor token={token} initialHours={(agent.business_hours ?? null) as BusinessHours | null} />
               </div>
 
               <div className="rounded-xl p-5" style={{ background: 'var(--c-surface)', border: '1px solid var(--c-border-2)', backdropFilter: 'blur(12px)', WebkitBackdropFilter: 'blur(12px)' }}>
