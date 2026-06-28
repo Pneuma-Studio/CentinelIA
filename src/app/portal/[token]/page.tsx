@@ -457,9 +457,9 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
                 <KpiCard icon={<PhoneCall size={16} color="#6C3BFF" />}  value={String(calls.length)}   label="Llamadas" sub={`prom. ${avgDuration} min`} valueColor="#6C3BFF" accentColor="#6C3BFF" />
                 <KpiCard icon={<span style={{ fontSize: 16 }}>⏱</span>}  value={`${totalHours}h`}       label="Tiempo atendido"  valueColor="var(--c-text)" accentColor="#6b7280" />
-                {showLeads  && <KpiCard icon={<Users size={16} color="#22c55e" />}       value={String(leads.length)}   label="Leads"    sub={`${calls.length > 0 ? Math.round((leads.length / calls.length) * 100) : 0}% conv.`} valueColor="#22c55e" accentColor="#22c55e" />}
-                {showOrders && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" accentColor="#f59e0b" />}
-                {showAppts  && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" accentColor="#3b82f6" />}
+                {showLeads  && leads.length  > 0 && <KpiCard icon={<Users size={16} color="#22c55e" />}       value={String(leads.length)}   label="Leads"    sub={`${calls.length > 0 ? Math.round((leads.length / calls.length) * 100) : 0}% conv.`} valueColor="#22c55e" accentColor="#22c55e" />}
+                {showOrders && orders.length > 0 && <KpiCard icon={<ShoppingBag size={16} color="#f59e0b" />} value={String(orders.length)}  label="Pedidos"  sub={`${pendingOrders} pendientes`} valueColor="#f59e0b" accentColor="#f59e0b" />}
+                {showAppts  && appts.length  > 0 && <KpiCard icon={<CalendarDays size={16} color="#3b82f6" />}value={String(appts.length)}   label="Citas"    sub={`${confirmedAppts} confirmadas`} valueColor="#3b82f6" accentColor="#3b82f6" />}
               </div>
 
               {/* Peak hours */}

@@ -1,8 +1,11 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { Check, Phone, ArrowRight, UtensilsCrossed, PhoneOff, Clock, Users, Star } from 'lucide-react';
 import LandingNav from '@/app/LandingNav';
 import LandingWidgets from '@/app/LandingWidgets';
+import MeerkatReveal from '@/app/MeerkatReveal';
+import IndustryFooter from '@/app/industrias/IndustryFooter';
 
 const BASE_URL = 'https://www.centinelia.mx';
 
@@ -112,8 +115,14 @@ export default function RestaurantesPage() {
       <LandingNav />
       <LandingWidgets />
 
-      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', paddingTop: 120, paddingBottom: 80 }}>
-        <div className="max-w-4xl mx-auto px-6 text-center">
+      <section style={{ position: 'relative' }}>
+        {/* Background image + overlay */}
+        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+          <Image src="/hero-bg.png" alt="" fill priority quality={85} style={{ objectFit: 'cover', objectPosition: 'center' }} />
+          <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(13,5,32,0.88) 0%, rgba(26,10,59,0.93) 100%)' }} />
+        </div>
+        {/* Content */}
+        <div className="max-w-4xl mx-auto px-6 text-center" style={{ paddingTop: 120, paddingBottom: 100, position: 'relative', zIndex: 1 }}>
           <p className="text-xs font-semibold tracking-widest uppercase mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>
             Centinelia para restaurantes y cafeterías
           </p>
@@ -135,6 +144,10 @@ export default function RestaurantesPage() {
             </a>
           </div>
         </div>
+        {/* Meerkat — desktop, peeking from bottom-right */}
+        <MeerkatReveal className="agent-sway hidden sm:block absolute pointer-events-none select-none" style={{ bottom: -10, right: 48, width: 150, height: 210, zIndex: 2 }}>
+          <Image src="/agent-headset.png" alt="" fill sizes="150px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+        </MeerkatReveal>
       </section>
 
       <section style={{ background: C.bg, padding: '80px 24px' }}>
@@ -161,7 +174,7 @@ export default function RestaurantesPage() {
             <div>
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>La solución</p>
               <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: C.text }}>
-                Un mesero virtual que atiende el teléfono mientras tú atiendes el salón
+                Un mesero virtual que atiende el teléfono mientras tú atiendes el restaurante
               </h2>
               <p className="mb-8 leading-relaxed" style={{ color: C.textSub }}>
                 Centinelia configura un agente entrenado con tu menú, horarios y políticas. Habla de forma natural, sin sonar como un robot, y registra cada interacción para que no se pierda ningún detalle.
@@ -240,8 +253,8 @@ export default function RestaurantesPage() {
         </div>
       </section>
 
-      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', padding: '80px 24px' }}>
-        <div className="max-w-2xl mx-auto text-center">
+      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', paddingTop: 80, paddingBottom: 180, paddingLeft: 24, paddingRight: 24, position: 'relative' }}>
+        <div className="max-w-2xl mx-auto text-center" style={{ position: 'relative', zIndex: 1 }}>
           <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>
             Deja de perder ventas en hora pico
           </h2>
@@ -252,7 +265,16 @@ export default function RestaurantesPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
+        {/* Meerkat duo — peeking from bottom */}
+        <MeerkatReveal
+          className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[280px] h-[200px] sm:w-[480px] sm:h-[360px]"
+          style={{ zIndex: 1 }}
+        >
+          <Image src="/agent-duo-call.png" alt="Equipo Centinelia" fill sizes="(max-width: 640px) 280px, 480px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+        </MeerkatReveal>
       </section>
+
+      <IndustryFooter />
     </>
   );
 }

@@ -1,6 +1,6 @@
 'use client';
 
-export default function AudioWaveform({ barCount = 28 }: { barCount?: number }) {
+export default function AudioWaveform({ barCount = 25 }: { barCount?: number }) {
   const bars = Array.from({ length: barCount }, (_, i) => i);
 
   return (

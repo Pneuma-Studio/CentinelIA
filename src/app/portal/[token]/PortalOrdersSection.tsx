@@ -210,7 +210,7 @@ export default function PortalOrdersSection({ initialOrders, token, isPro }: {
                   {/* Bottom: date + status select */}
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                      {new Date(order.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                      {new Date(order.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </span>
                     <select value={status} disabled={updatingStatus === order.id}
                       onChange={e => updateStatus(order.id, e.target.value as OrderStatus)}

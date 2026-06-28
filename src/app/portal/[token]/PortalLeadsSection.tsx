@@ -247,7 +247,7 @@ export default function PortalLeadsSection({ initialLeads, token, filename, isPr
                   {/* Bottom: date + status select */}
                   <div className="flex items-center justify-between gap-2">
                     <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-                      {new Date(lead.created_at).toLocaleDateString('es-MX', { day: 'numeric', month: 'short' })}
+                      {new Date(lead.created_at).toLocaleString('es-MX', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
                     </span>
                     <select
                       value={status}
