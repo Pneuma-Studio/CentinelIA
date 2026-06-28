@@ -19,7 +19,7 @@ const PLANS: {
     setupFee:   4990,
     monthlyFee: 1990,
     minutes:    200,
-    features:   ['Recepcionista 24/7', 'Agendamiento de citas'],
+    features:   ['Recepcionista 24/7', 'Captura de leads', 'Resúmenes por WhatsApp y Email', 'Portal con historial y horas pico'],
     color:      '#6b7280',
   },
   {
@@ -28,7 +28,7 @@ const PLANS: {
     setupFee:   7990,
     monthlyFee: 3490,
     minutes:    500,
-    features:   ['Todo Básico', 'Toma de pedidos', 'Calificación de leads', 'Escalación WhatsApp'],
+    features:   ['Todo lo de Recepcionista', 'Agendamiento de citas', 'Transferencia inteligente', 'Escalación a WhatsApp', 'Reporte semanal por email'],
     color:      '#3b82f6',
   },
   {
@@ -37,7 +37,7 @@ const PLANS: {
     setupFee:   12990,
     monthlyFee: 6490,
     minutes:    1000,
-    features:   ['Todo Estándar', 'Multiidioma', 'Memoria de cliente', 'Transferencia inteligente'],
+    features:   ['Todo lo de Comercial', 'Toma de pedidos', 'Memoria de cliente', 'Voz personalizable', 'Multiidioma (ES + EN)', 'Grabaciones de llamadas'],
     color:      '#a855f7',
   },
 ];
