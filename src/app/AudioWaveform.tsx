@@ -9,7 +9,7 @@ export default function AudioWaveform({ barCount = 25 }: { barCount?: number }) 
         <span
           key={i}
           className="wavebar"
-          style={{ animationDelay: `${(i * 37) % 700}ms` }}
+          style={{ animationDelay: `${Math.round(i * 900 / barCount)}ms` }}
         />
       ))}
     </div>
