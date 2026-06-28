@@ -661,7 +661,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         </div>
 
         {/* Footer */}
-        <div className="mt-2 px-4 sm:px-6 py-3 pb-24 sm:pb-4" style={{ borderTop: '1px solid var(--c-border)', position: 'relative', zIndex: 1 }}>
+        <div className="mt-1 px-4 sm:px-6 pt-2 pb-20 sm:pb-4" style={{ borderTop: '1px solid var(--c-border)', position: 'relative', zIndex: 1 }}>
 
           {/* Review badge — absolute in the pb space, same pattern as landing footer */}
           {centineliReviewUrl && (
@@ -693,7 +693,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
             </a>
           )}
 
-          <div className="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="max-w-4xl mx-auto flex items-center justify-between gap-2">
             <span className="text-xs" style={{ color: 'var(--c-text-4)' }}>
               Powered by{' '}
               <a
