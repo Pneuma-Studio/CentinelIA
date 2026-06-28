@@ -76,7 +76,7 @@ const PLANS: PlanDef[] = [
       },
       {
         label: 'Resúmenes por WhatsApp y Email',
-        desc: 'Al terminar cada llamada recibes quién llamó, qué quería y qué quedó pendiente — sin escuchar grabaciones.',
+        desc: 'Al terminar cada llamada recibes quién llamó, qué quería y qué quedó pendiente.',
       },
       {
         label: 'Portal con historial y horas pico',
@@ -93,7 +93,7 @@ const PLANS: PlanDef[] = [
       },
       {
         label: 'Agendamiento de citas',
-        desc: 'Confirma, modifica o cancela citas durante la llamada. Compatible con Google Calendar, Calendly y Cal.com.',
+        desc: 'Confirma, modifica o cancela citas durante la llamada. Compatible con Google Calendar y Cal.com.',
       },
       {
         label: 'Transferencia inteligente',
