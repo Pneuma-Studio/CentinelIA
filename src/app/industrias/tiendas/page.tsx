@@ -1,0 +1,222 @@
+import type { Metadata } from 'next';
+import Link from 'next/link';
+import { Check, Phone, ArrowRight, ShoppingBag, PhoneOff, Clock, MessageCircle, Star } from 'lucide-react';
+import LandingNav from '@/app/LandingNav';
+import LandingWidgets from '@/app/LandingWidgets';
+
+const BASE_URL = 'https://www.centinelia.mx';
+
+export const metadata: Metadata = {
+  title: 'Recepcionista Virtual para Tiendas y Servicios',
+  description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7 para tiendas retail y negocios de servicio. Desde $1,990/mes.',
+  keywords: [
+    'recepcionista virtual tienda', 'toma pedidos telefónicos IA',
+    'atención al cliente automatizada México', 'agente voz retail',
+    'pedidos por teléfono automáticos', 'recepcionista IA negocio servicio',
+  ],
+  alternates: { canonical: `${BASE_URL}/industrias/tiendas` },
+  openGraph: {
+    title: 'Recepcionista Virtual para Tiendas y Servicios | Centinelia',
+    description: 'Agente de voz con IA que atiende llamadas, toma pedidos y responde sobre disponibilidad 24/7. Desde $1,990/mes.',
+    url: `${BASE_URL}/industrias/tiendas`,
+    images: [{ url: '/og-image.png?v=2', width: 1200, height: 630 }],
+  },
+};
+
+const C = { bg: '#FAFBFF', text: '#1A0A3B', textSub: 'rgba(26,10,59,0.58)', accent: '#6C3BFF', border: 'rgba(108,59,255,0.12)' };
+
+const PROBLEMS = [
+  {
+    icon: <PhoneOff size={22} color="#ef4444" />,
+    title: 'Llamadas perdidas mientras atiendes el local',
+    desc: 'Cuando hay clientes en tienda, el teléfono queda sin atender. Esos clientes que llaman para preguntar disponibilidad o hacer un pedido se van con quien sí contesta.',
+  },
+  {
+    icon: <MessageCircle size={22} color="#f59e0b" />,
+    title: '"¿Tienen el modelo X en talla M?" — veinte veces al día',
+    desc: 'Las mismas preguntas sobre disponibilidad, precios y horarios consumen tiempo que deberías dedicar a los clientes frente a ti o a hacer crecer tu negocio.',
+  },
+  {
+    icon: <Clock size={22} color="#8b5cf6" />,
+    title: 'Sin atención fuera del horario del local',
+    desc: 'Los clientes deciden comprar cuando pueden, no cuando tú abres. Llaman por la noche o el domingo y si no hay respuesta, hacen el pedido en línea con la competencia.',
+  },
+];
+
+const FEATURES = [
+  { label: 'Responde disponibilidad, precios, tallas y características de productos' },
+  { label: 'Toma pedidos para recoger en tienda o envío a domicilio' },
+  { label: 'Informa horarios, ubicación y políticas de devolución' },
+  { label: 'Registra cada pedido y notifica al equipo por WhatsApp' },
+  { label: 'Captura datos de clientes interesados cuando el producto no está disponible' },
+  { label: 'Atiende fuera de horario para no perder ventas nocturnas ni de fin de semana' },
+];
+
+const TESTIMONIALS = [
+  {
+    quote: 'Tenemos una floristería y en temporadas altas como San Valentín no dábamos abasto ni en el local ni en el teléfono. El agente tomó pedidos toda la noche del 13 y llegamos al 14 con el doble de ventas.',
+    author: 'Dueña de floristería — Monterrey',
+  },
+  {
+    quote: 'Mis clientes llaman para preguntar si tenemos repuesto de tal modelo antes de venir. El agente consulta lo que le cargué y les responde al momento. Ya no pierdo esa venta porque nadie contestó.',
+    author: 'Dueño de taller de electrónica — Guadalajara',
+  },
+  {
+    quote: 'Vendemos uniformes y en agosto nos caen cientos de llamadas de papás preguntando tallas y precios. El agente los atiende a todos y me manda los pedidos. Fue el agosto más ordenado que hemos tenido.',
+    author: 'Administrador de tienda de uniformes escolares — CDMX',
+  },
+];
+
+const FAQS = [
+  {
+    q: '¿El agente puede consultar inventario en tiempo real?',
+    a: 'Puedes cargar tu catálogo de productos en el portal y actualizarlo cuando quieras. Para inventario en tiempo real con tu sistema de punto de venta, lo configuramos con una integración personalizada.',
+  },
+  {
+    q: '¿Cómo maneja el agente los pedidos que toma?',
+    a: 'Cada pedido llega a tu WhatsApp y al portal con todos los datos: producto, cantidad, nombre del cliente y tipo de entrega. También queda registrado para que puedas exportarlo.',
+  },
+  {
+    q: '¿Puede el agente dar seguimiento a pedidos ya realizados?',
+    a: 'Si le proporcionas la información del pedido, sí. Para seguimiento automatizado conectado a tu sistema de logística, lo configuramos como integración personalizada.',
+  },
+  {
+    q: '¿Funciona para negocios de servicio además de tiendas (plomeros, electricistas, etc.)?',
+    a: 'Perfectamente. Para servicios, el agente agenda citas de visita, toma datos del problema y filtra por zona geográfica. Muchos negocios de servicio a domicilio lo usan exactamente así.',
+  },
+];
+
+export default function TiendasPage() {
+  return (
+    <>
+      <LandingNav />
+      <LandingWidgets />
+
+      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', paddingTop: 120, paddingBottom: 80 }}>
+        <div className="max-w-4xl mx-auto px-6 text-center">
+          <p className="text-xs font-semibold tracking-widest uppercase mb-5" style={{ color: 'rgba(255,255,255,0.4)' }}>Centinelia para tiendas y servicios</p>
+          <h1 className="font-bold leading-tight mb-5" style={{ fontSize: 'clamp(2.2rem, 5vw, 4rem)', color: '#fff' }}>
+            Tu tienda vende aunque{' '}
+            <span style={{ background: 'linear-gradient(135deg, #9B6DFF, #C4A8FF)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+              estés ocupado
+            </span>
+          </h1>
+          <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
+            Un agente de voz con IA atiende las llamadas de tu negocio a cualquier hora. Responde sobre disponibilidad, toma pedidos y captura clientes — mientras tú atiendes el local o descansas.
+          </p>
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+            <Link href="/registro" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
+              Activar mi agente <ArrowRight size={15} />
+            </Link>
+            <a href="tel:+528116333559" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-medium" style={{ background: 'rgba(255,255,255,0.08)', color: 'rgba(255,255,255,0.82)', border: '1px solid rgba(255,255,255,0.2)' }}>
+              <Phone size={14} /> Habla con un asesor
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: C.bg, padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <p className="text-xs font-semibold tracking-widest uppercase text-center mb-3" style={{ color: C.accent }}>El problema</p>
+          <h2 className="font-bold text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: C.text }}>Cada llamada sin respuesta es una venta que se va</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {PROBLEMS.map((p, i) => (
+              <div key={i} className="rounded-2xl p-6" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
+                <div className="mb-4">{p.icon}</div>
+                <h3 className="font-semibold mb-2 text-sm" style={{ color: C.text }}>{p.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{p.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: '#fff', padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+            <div>
+              <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>La solución</p>
+              <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.4rem)', color: C.text }}>Un vendedor que contesta, informa y toma pedidos sin descanso</h2>
+              <p className="mb-8 leading-relaxed" style={{ color: C.textSub }}>Centinelia configura un agente entrenado con tu catálogo, precios, horarios y políticas. Habla como parte de tu equipo y registra cada interacción para que no se pierda ninguna venta.</p>
+              <ul className="space-y-3">
+                {FEATURES.map((f, i) => (
+                  <li key={i} className="flex items-start gap-3 text-sm" style={{ color: C.text }}>
+                    <Check size={16} color={C.accent} className="flex-shrink-0 mt-0.5" />
+                    {f.label}
+                  </li>
+                ))}
+              </ul>
+              <Link href="/registro" className="inline-flex items-center gap-2 mt-8 px-6 py-3 rounded-xl text-sm font-bold transition-all hover:opacity-90" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
+                Contratar ahora <ArrowRight size={14} />
+              </Link>
+            </div>
+            <div className="rounded-2xl p-8" style={{ background: 'linear-gradient(135deg, rgba(108,59,255,0.06), rgba(155,109,255,0.03))', border: `1px solid ${C.border}` }}>
+              <div className="flex items-center gap-3 mb-6">
+                <div className="rounded-full flex items-center justify-center" style={{ width: 44, height: 44, background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' }}>
+                  <ShoppingBag size={20} color="#fff" />
+                </div>
+                <div>
+                  <p className="font-semibold text-sm" style={{ color: C.text }}>Agente activo ahora mismo</p>
+                  <p className="text-xs" style={{ color: C.textSub }}>Tienda ejemplo · Domingo 8:40 pm</p>
+                </div>
+              </div>
+              {[
+                { msg: '"Hola, ¿tienen la sudadera gris que venden en Instagram en talla L?"' },
+                { msg: 'Sí, contamos con la sudadera gris en talla L. ¿Quiere recogerla en tienda o prefiere envío a domicilio?', agent: true },
+                { msg: '"Envío, por favor. ¿Cuánto tarda y cuánto cuesta?"' },
+                { msg: 'El envío a Monterrey tarda 2 días hábiles y tiene un costo de ochenta pesos. ¿Le tomamos el pedido ahora?', agent: true },
+              ].map((m, i) => (
+                <div key={i} className={`flex ${m.agent ? 'justify-end' : 'justify-start'} mb-3`}>
+                  <div className="max-w-[85%]">
+                    <div className="rounded-2xl px-4 py-2.5 text-xs leading-relaxed" style={{ background: m.agent ? 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' : '#f3f4f6', color: m.agent ? '#fff' : C.text }}>
+                      {m.msg}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: C.bg, padding: '80px 24px' }}>
+        <div className="max-w-5xl mx-auto">
+          <h2 className="font-bold text-center mb-12" style={{ fontSize: 'clamp(1.6rem, 3vw, 2.2rem)', color: C.text }}>Lo que dicen los negocios que ya lo usan</h2>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
+                <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}</div>
+                <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: '#fff', padding: '80px 24px' }}>
+        <div className="max-w-2xl mx-auto">
+          <h2 className="font-bold text-center mb-10" style={{ fontSize: 'clamp(1.5rem, 3vw, 2rem)', color: C.text }}>Preguntas frecuentes de tiendas y servicios</h2>
+          <div className="space-y-4">
+            {FAQS.map((f, i) => (
+              <div key={i} className="rounded-xl p-5" style={{ background: C.bg, border: `1px solid ${C.border}` }}>
+                <p className="font-semibold text-sm mb-2" style={{ color: C.text }}>{f.q}</p>
+                <p className="text-sm leading-relaxed" style={{ color: C.textSub }}>{f.a}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', padding: '80px 24px' }}>
+        <div className="max-w-2xl mx-auto text-center">
+          <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Tu negocio disponible a cualquier hora, cualquier día</h2>
+          <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes.</p>
+          <Link href="/registro" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
+            Activar mi agente ahora <ArrowRight size={15} />
+          </Link>
+        </div>
+      </section>
+    </>
+  );
+}
