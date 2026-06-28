@@ -14,7 +14,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
   const supabase = createAdminClient();
   const { data } = await supabase
     .from('voice_agents')
-    .select('calendar_type, calendar_event_type_id, calendar_link, calendar_api_key')
+    .select('calendar_type, calendar_event_type_id, calendar_link, calendar_api_key, google_review_url')
     .eq('portal_token', token)
     .single();
 
@@ -23,6 +23,7 @@ export async function GET(_req: NextRequest, { params }: Params) {
     calendar_event_type_id:   data?.calendar_event_type_id  ?? '',
     calendar_link:            data?.calendar_link            ?? '',
     cal_api_configured:       !!(data?.calendar_api_key),
+    google_review_url:        data?.google_review_url        ?? '',
   });
 }
 
@@ -33,7 +34,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
   const body = await req.json();
-  const allowed = ['calendar_type', 'calendar_api_key', 'calendar_event_type_id', 'calendar_link'];
+  const allowed = ['calendar_type', 'calendar_api_key', 'calendar_event_type_id', 'calendar_link', 'google_review_url'];
   const update: Record<string, string | null> = {};
   for (const key of allowed) {
     if (key in body) update[key] = body[key] || null;

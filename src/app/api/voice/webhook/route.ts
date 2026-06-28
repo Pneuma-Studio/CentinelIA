@@ -207,7 +207,7 @@ export async function POST(req: NextRequest) {
       // 4. Fetch agent for notifications
       const { data: agent } = await supabase
         .from('voice_agents')
-        .select('business_name, agent_name, client_email, transfer_whatsapp, portal_token, notify_whatsapp, notify_email, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id, missed_call_recovery')
+        .select('business_name, agent_name, client_email, transfer_whatsapp, portal_token, notify_whatsapp, notify_email, minutes_used, minutes_included, minutes_reset_date, active, phone_number, vapi_agent_id, missed_call_recovery, google_review_url')
         .eq('id', resolvedAgentId)
         .single();
 
@@ -285,7 +285,7 @@ export async function POST(req: NextRequest) {
       }
 
       // 8. Review request to caller (if agent has google_review_url and call was substantive)
-      const reviewUrl = (agent as any)?.google_review_url ?? null;
+      const reviewUrl = agent?.google_review_url ?? null;
       const callerWa  = structured?.whatsapp ?? callerNumber;
       const goodCall  = ['info_provided', 'appointment_booked', 'lead_created', 'order_taken'].includes(outcome);
       if (reviewUrl && callerWa && goodCall && durationSeconds >= 60) {

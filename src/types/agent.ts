@@ -76,6 +76,7 @@ export interface VoiceAgent {
   speech_style?: 'tu' | 'usted';   // trato al cliente: 'tu' (informal) | 'usted' (formal, default)
   first_message?: string;          // primer mensaje del agente al contestar (personalizable)
   transfer_rules?: string;         // reglas de cuándo transferir la llamada a un humano
+  google_review_url?: string;      // link de reseñas de Google del negocio
   notion_client_id?: string;      // link al cliente en Pneuma Studio CRM
   contract_text?: string | null;          // custom contract override (null = use template)
   contract_accepted_at?: string | null;   // ISO timestamp of client acceptance

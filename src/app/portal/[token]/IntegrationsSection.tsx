@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Calendar, Check, ChevronDown, ChevronUp, ExternalLink, Lock, MessageCircle, Save } from 'lucide-react';
+import { Calendar, CalendarCheck, Check, ChevronDown, ChevronUp, ExternalLink, Lock, MessageCircle, Save } from 'lucide-react';
 import type { Plan } from '@/types/agent';
 
 const PLAN_ORDER: Plan[] = ['basico', 'estandar', 'pro'];
@@ -13,7 +13,7 @@ function canUse(clientPlan: Plan, required: Plan): boolean {
 }
 
 interface IntegrationDef {
-  id:           'cal_com' | 'google';
+  id:           'cal_com' | 'google' | 'calendly';
   label:        string;
   description:  string;
   requiredPlan: Plan;
@@ -25,7 +25,7 @@ const INTEGRATIONS: IntegrationDef[] = [
   {
     id:           'cal_com',
     label:        'Cal.com',
-    description:  'Agendamiento con API — crea citas directamente',
+    description:  'Agendamiento directo — el agente crea la cita durante la llamada',
     requiredPlan: 'basico',
     accentColor:  '#000',
     icon: (
@@ -36,9 +36,22 @@ const INTEGRATIONS: IntegrationDef[] = [
     ),
   },
   {
+    id:           'calendly',
+    label:        'Calendly',
+    description:  'Agendamiento vía link — el agente comparte tu URL por WhatsApp',
+    requiredPlan: 'basico',
+    accentColor:  '#006BFF',
+    icon: (
+      <div className="w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0"
+        style={{ background: '#006BFF' }}>
+        <CalendarCheck size={16} color="#fff" />
+      </div>
+    ),
+  },
+  {
     id:           'google',
     label:        'Google Calendar',
-    description:  'Agenda de citas — envía link de reserva por WhatsApp',
+    description:  'Agendamiento vía link — el agente comparte tu URL por WhatsApp',
     requiredPlan: 'basico',
     accentColor:  '#4285F4',
     icon: (
@@ -111,7 +124,7 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
 
   if (loading) return (
     <div className="flex flex-col gap-3">
-      {[1, 2].map(i => <div key={i} className="h-16 rounded-xl animate-pulse" style={{ background: 'var(--c-surface-2)' }} />)}
+      {[1, 2, 3].map(i => <div key={i} className="h-16 rounded-xl animate-pulse" style={{ background: 'var(--c-surface-2)' }} />)}
     </div>
   );
 
@@ -128,7 +141,6 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
             background: isActive ? `${intg.accentColor}08` : 'var(--c-surface-2)',
             opacity:    !allowed ? 0.65 : 1,
           }}>
-            {/* Header row */}
             <button
               className="w-full flex items-center gap-3 px-4 py-3 text-left"
               style={{ background: 'transparent', border: 'none', cursor: allowed ? 'pointer' : 'default' }}
@@ -158,7 +170,6 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
               )}
             </button>
 
-            {/* Expanded body */}
             {allowed && isExpanded && (
               <div className="px-4 pb-4" style={{ borderTop: '1px solid var(--c-border)' }}>
                 <div className="flex flex-col gap-3 mt-3">
@@ -200,19 +211,35 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
 
                   {intg.id === 'google' && (
                     <p className="text-xs p-3 rounded-lg" style={{ background: 'rgba(66,133,244,0.08)', color: 'var(--c-text-3)', border: '1px solid rgba(66,133,244,0.15)' }}>
-                      El agente captura nombre, servicio y horario preferido durante la llamada. Al terminar, envía tu link de reserva por WhatsApp para que el cliente confirme en un clic.
+                      El agente captura nombre, servicio y horario durante la llamada. Al terminar, envía tu link de reserva por WhatsApp para que el cliente confirme.
+                    </p>
+                  )}
+
+                  {intg.id === 'calendly' && (
+                    <p className="text-xs p-3 rounded-lg" style={{ background: 'rgba(0,107,255,0.08)', color: 'var(--c-text-3)', border: '1px solid rgba(0,107,255,0.15)' }}>
+                      El agente captura nombre y servicio durante la llamada. Al terminar, envía tu link de Calendly por WhatsApp para que el cliente seleccione su horario. Para agendamiento directo sin link, usa Cal.com.
                     </p>
                   )}
 
                   <div>
                     <label className="text-xs font-medium mb-1 block" style={{ color: 'var(--c-text-2)' }}>
-                      {intg.id === 'cal_com' ? 'Link de reserva (fallback por WhatsApp si falla la API)' : 'Link de tu agenda de citas'}
+                      {intg.id === 'cal_com'
+                        ? 'Link de reserva (fallback por WhatsApp si falla la API)'
+                        : intg.id === 'calendly'
+                        ? 'Link de tu agenda en Calendly'
+                        : 'Link de tu agenda de citas'}
                     </label>
                     <input
                       type="url"
                       value={state.calendar_link}
                       onChange={e => set('calendar_link', e.target.value)}
-                      placeholder={intg.id === 'cal_com' ? 'https://cal.com/tu-usuario/servicio' : 'https://calendar.google.com/calendar/appointments/...'}
+                      placeholder={
+                        intg.id === 'cal_com'
+                          ? 'https://cal.com/tu-usuario/servicio'
+                          : intg.id === 'calendly'
+                          ? 'https://calendly.com/tu-usuario/30min'
+                          : 'https://calendar.google.com/calendar/appointments/...'
+                      }
                       className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
                       style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-text)' }}
                     />

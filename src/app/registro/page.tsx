@@ -93,7 +93,7 @@ const PLANS: PlanDef[] = [
       },
       {
         label: 'Agendamiento de citas',
-        desc: 'Confirma, modifica o cancela citas durante la llamada. Compatible con Google Calendar y Cal.com.',
+        desc: 'Confirma, modifica o cancela citas durante la llamada. Compatible con Google Calendar, Calendly y Cal.com.',
       },
       {
         label: 'Transferencia inteligente',
