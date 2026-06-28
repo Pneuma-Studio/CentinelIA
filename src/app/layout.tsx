@@ -40,6 +40,13 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true },
   },
+  icons: {
+    icon: [
+      { url: '/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
+      { url: '/favicon.ico' },
+    ],
+    shortcut: '/favicon-96x96.png',
+  },
   alternates: {
     canonical: BASE_URL,
   },
@@ -74,7 +81,7 @@ const organizationSchema = {
   '@type': 'Organization',
   name: 'Centinelia',
   url: BASE_URL,
-  logo: `${BASE_URL}/og-image.png`,
+  logo: `${BASE_URL}/logo-icon.png`,
   description: 'Agentes de voz con inteligencia artificial que atienden las llamadas de tu negocio 24/7. Captura leads, agenda citas y toma pedidos — desde $1,990/mes.',
   contactPoint: {
     '@type': 'ContactPoint',
