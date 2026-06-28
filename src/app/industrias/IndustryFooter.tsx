@@ -5,9 +5,9 @@ export default function IndustryFooter() {
   const textMute = 'rgba(26,10,59,0.35)';
 
   return (
+    <div style={{ background: '#FAFBFF', borderTop: '1px solid rgba(108,59,255,0.12)' }}>
     <footer
       className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10 relative"
-      style={{ borderTop: '1px solid rgba(108,59,255,0.12)' }}
     >
       {/* Mobile: logo + links */}
       <div className="flex sm:hidden items-center gap-2">
@@ -50,5 +50,6 @@ export default function IndustryFooter() {
         </div>
       </div>
     </footer>
+    </div>
   );
 }
