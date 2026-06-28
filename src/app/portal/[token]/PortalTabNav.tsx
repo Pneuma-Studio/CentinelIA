@@ -30,19 +30,22 @@ export default function PortalTabNav({ token, currentTab, tabs }: { token: strin
         ))}
       </div>
 
-      {/* Mobile: current tab name + hamburger */}
-      <div className="flex sm:hidden items-center justify-between py-2.5">
+      {/* Mobile: current tab name + hamburger — whole row is clickable */}
+      <button
+        onClick={() => setOpen(o => !o)}
+        className="flex sm:hidden w-full items-center justify-between py-2.5 text-left"
+        style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}
+      >
         <span className="text-sm font-semibold" style={{ color: '#6C3BFF', filter: 'drop-shadow(0 0 8px rgba(108,59,255,0.4))' }}>
           {current?.label}
         </span>
-        <button
-          onClick={() => setOpen(o => !o)}
+        <span
           className="p-1.5 rounded-lg transition-colors"
           style={{ color: 'var(--c-text-2)', background: open ? 'var(--c-surface-2)' : 'transparent' }}
         >
           {open ? <X size={18} /> : <Menu size={18} />}
-        </button>
-      </div>
+        </span>
+      </button>
 
       {/* Mobile dropdown — inline expansion, negative margins to fill nav bar width */}
       {open && (
