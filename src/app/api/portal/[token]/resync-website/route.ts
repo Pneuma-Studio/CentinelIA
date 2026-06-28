@@ -37,15 +37,22 @@ export async function POST(req: NextRequest, { params }: Params) {
   const scraped = await scrapeWebsite(newUrl);
   if (!scraped) return NextResponse.json({ error: 'No se pudo acceder al sitio web. Verifica la URL.' }, { status: 422 });
 
+  // Apply to all agents of the same account
   await supabase
     .from('voice_agents')
     .update({ business_website: newUrl, website_knowledge: scraped })
-    .eq('id', agent.id);
+    .eq('portal_email', agent.portal_email);
 
-  // Re-fetch full agent to rebuild system prompt
-  const { data: updated } = await supabase.from('voice_agents').select('*').eq('id', agent.id).single();
-  if (updated?.vapi_agent_id) {
-    await updateVapiAssistant(updated.vapi_agent_id, updated as VoiceAgent);
+  // Re-fetch and sync all agents so Vapi picks up the new content
+  const { data: allAgents } = await supabase
+    .from('voice_agents')
+    .select('*')
+    .eq('portal_email', agent.portal_email);
+
+  for (const a of allAgents ?? []) {
+    if (a.vapi_agent_id) {
+      updateVapiAssistant(a.vapi_agent_id, a as VoiceAgent).catch(console.error);
+    }
   }
 
   return NextResponse.json({ ok: true, chars: scraped.length, url: newUrl });

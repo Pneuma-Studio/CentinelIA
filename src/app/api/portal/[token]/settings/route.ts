@@ -16,7 +16,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   const supabase = createAdminClient();
 
   const { data: agent } = await supabase
-    .from('voice_agents').select('id, vapi_agent_id').eq('portal_token', token).single();
+    .from('voice_agents').select('id, vapi_agent_id, portal_email').eq('portal_token', token).single();
   if (!agent) return NextResponse.json({ error: 'Invalid token' }, { status: 401 });
 
   const allowed = ['business_hours', 'knowledge_base', 'notify_whatsapp', 'notify_email', 'first_message', 'transfer_rules', 'missed_call_recovery', 'agent_name', 'speech_style'];
@@ -30,6 +30,32 @@ export async function PATCH(req: NextRequest, { params }: Params) {
   // Sync to Vapi so the agent picks up the new content immediately
   if (agent.vapi_agent_id) {
     updateVapiAssistant(agent.vapi_agent_id, data as VoiceAgent).catch(console.error);
+  }
+
+  // Business-level fields (knowledge_base) propagate to all agents of the same account
+  const businessFields = ['knowledge_base'];
+  const businessUpdate = Object.fromEntries(Object.entries(update).filter(([k]) => businessFields.includes(k)));
+  if (Object.keys(businessUpdate).length > 0 && agent.portal_email) {
+    const { data: siblings } = await supabase
+      .from('voice_agents')
+      .select('id, vapi_agent_id')
+      .eq('portal_email', agent.portal_email)
+      .neq('id', agent.id);
+
+    if (siblings?.length) {
+      await supabase
+        .from('voice_agents')
+        .update(businessUpdate)
+        .eq('portal_email', agent.portal_email)
+        .neq('id', agent.id);
+
+      for (const s of siblings) {
+        if (s.vapi_agent_id) {
+          const { data: full } = await supabase.from('voice_agents').select('*').eq('id', s.id).single();
+          if (full) updateVapiAssistant(s.vapi_agent_id, full as VoiceAgent).catch(console.error);
+        }
+      }
+    }
   }
 
   return NextResponse.json({ ok: true });
