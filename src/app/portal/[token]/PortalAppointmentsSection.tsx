@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { CalendarDays, Filter, Pencil, X, Check, Loader2 } from 'lucide-react';
+import { CalendarDays, Filter, Pencil, X, Check, Loader2, Download } from 'lucide-react';
 import ActivityDetailModal, { type ActivityItem } from './ActivityDetailModal';
 
 type ApptStatus = 'confirmada' | 'completada' | 'cancelada' | 'no_asistio';
@@ -139,9 +139,35 @@ export default function PortalAppointmentsSection({ initialAppointments, token, 
           )}
         </div>
 
-        <p className="text-xs" style={{ color: 'var(--c-text-3)' }}>
-          {filtered.length} de {appts.length} {label}{appts.length !== 1 ? 's' : ''}{quickFilter !== 'all' ? ' (filtrado)' : ''}
-        </p>
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-xs" style={{ color: 'var(--c-text-3)' }}>
+            {filtered.length} de {appts.length} {label}{appts.length !== 1 ? 's' : ''}{quickFilter !== 'all' ? ' (filtrado)' : ''}
+          </p>
+          {filtered.length > 0 && (
+            <button
+              onClick={() => {
+                const rows = [
+                  ['Nombre', 'Teléfono', 'Servicio', 'Fecha', 'Hora', 'Estado', 'Registrado'],
+                  ...filtered.map(a => [
+                    a.nombre ?? '', a.telefono ?? '', a.servicio ?? '',
+                    a.fecha ?? '', a.hora ?? '', a.status ?? '',
+                    new Date(a.created_at).toLocaleString('es-MX'),
+                  ].map(v => `"${String(v).replace(/"/g, '""')}"` )),
+                ];
+                const csv  = rows.map(r => r.join(',')).join('\r\n');
+                const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+                const url  = URL.createObjectURL(blob);
+                const a    = document.createElement('a'); a.href = url;
+                a.download = `citas-${new Date().toISOString().slice(0,10)}.csv`;
+                a.click(); URL.revokeObjectURL(url);
+              }}
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-opacity hover:opacity-80"
+              style={{ background: 'rgba(108,59,255,0.12)', color: '#6C3BFF', border: '1px solid rgba(108,59,255,0.25)' }}
+            >
+              <Download size={12} /> Exportar CSV
+            </button>
+          )}
+        </div>
 
         {filtered.length === 0 ? (
           <div className="text-center py-8 text-sm" style={{ color: 'var(--c-text-3)' }}>Sin {label}s en este período</div>
