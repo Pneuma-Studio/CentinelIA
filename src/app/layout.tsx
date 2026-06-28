@@ -68,6 +68,38 @@ export const metadata: Metadata = {
   },
 };
 
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'Centinelia',
+  url: BASE_URL,
+  logo: `${BASE_URL}/og-image.png`,
+  description: 'Agentes de voz con inteligencia artificial que atienden las llamadas de tu negocio 24/7. Captura leads, agenda citas y toma pedidos — desde $1,990/mes.',
+  contactPoint: {
+    '@type': 'ContactPoint',
+    telephone: '+52-81-1633-3559',
+    contactType: 'sales',
+    availableLanguage: ['Spanish', 'English'],
+    areaServed: 'MX',
+  },
+  sameAs: [],
+  foundingLocation: { '@type': 'Place', addressCountry: 'MX' },
+};
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: [
+    { '@type': 'Question', name: '¿Suena natural o robótico?', acceptedAnswer: { '@type': 'Answer', text: 'El agente usa voces de ElevenLabs, la misma tecnología que usan estudios de doblaje y plataformas globales. La mayoría de los clientes no notan la diferencia.' } },
+    { '@type': 'Question', name: '¿Qué pasa si el agente no sabe responder algo?', acceptedAnswer: { '@type': 'Answer', text: 'El agente reconoce sus límites. Si no tiene la información, lo dice con honestidad y ofrece tomar los datos del cliente para que el equipo le llame de regreso. Nunca inventa respuestas ni da información incorrecta.' } },
+    { '@type': 'Question', name: '¿Cuánto tiempo tarda en estar activo?', acceptedAnswer: { '@type': 'Answer', text: 'Menos de 24 horas. Después de contratar, accedes al portal, agregas la información de tu negocio y el agente queda listo. No necesitas saber de tecnología.' } },
+    { '@type': 'Question', name: '¿Funciona para mi tipo de negocio?', acceptedAnswer: { '@type': 'Answer', text: 'Funciona para cualquier negocio que reciba llamadas: clínicas, restaurantes, despachos, inmobiliarias, tiendas, academias y más. El agente aprende sobre tu negocio específico — no es un bot genérico.' } },
+    { '@type': 'Question', name: '¿Puedo cancelar cuando quiera?', acceptedAnswer: { '@type': 'Answer', text: 'Sí, sin penalizaciones ni trámites. No hay contratos de permanencia. Si decides cancelar, el servicio termina al final del ciclo de facturación.' } },
+    { '@type': 'Question', name: '¿Qué pasa si el agente comete un error?', acceptedAnswer: { '@type': 'Answer', text: 'Tienes acceso a las grabaciones y transcripciones de cada llamada desde tu portal. Si algo no quedó bien, lo ajustas en la configuración en tiempo real y el cambio se aplica en minutos.' } },
+    { '@type': 'Question', name: '¿Mis clientes van a saber que están hablando con una IA?', acceptedAnswer: { '@type': 'Answer', text: 'El agente habla de forma natural y no menciona proactivamente que es un asistente automatizado. Si algún cliente pregunta directamente, el agente responde con honestidad. Puedes personalizar el nombre y la voz del agente.' } },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -79,6 +111,16 @@ export default function RootLayout({
       suppressHydrationWarning
       className={`${sora.variable} ${dmSans.variable} h-full antialiased`}
     >
+      <head>
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
+        <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <>
+            <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`} />
+            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');` }} />
+          </>
+        )}
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
