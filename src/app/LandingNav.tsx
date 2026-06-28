@@ -6,16 +6,17 @@ import Image from 'next/image';
 import { ChevronDown, Menu, X } from 'lucide-react';
 
 const INDUSTRIES = [
-  { href: '/industrias/clinicas',     label: 'Clínicas y Consultorios' },
-  { href: '/industrias/restaurantes', label: 'Restaurantes y Cafeterías' },
-  { href: '/industrias/despachos',    label: 'Despachos y Consultorías' },
-  { href: '/industrias/inmobiliarias',label: 'Inmobiliarias' },
-  { href: '/industrias/tiendas',      label: 'Tiendas y Servicios' },
+  { href: '/industrias/clinicas',      label: 'Clínicas y Consultorios' },
+  { href: '/industrias/restaurantes',  label: 'Restaurantes y Cafeterías' },
+  { href: '/industrias/despachos',     label: 'Despachos y Consultorías' },
+  { href: '/industrias/inmobiliarias', label: 'Inmobiliarias' },
+  { href: '/industrias/tiendas',       label: 'Tiendas y Servicios' },
 ];
 
 export default function LandingNav() {
-  const [scrolled, setScrolled] = useState(false);
-  const [open, setOpen] = useState(false);
+  const [scrolled, setScrolled]         = useState(false);
+  const [menuOpen, setMenuOpen]         = useState(false);
+  const [industriasOpen, setIndustrias] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
@@ -26,13 +27,58 @@ export default function LandingNav() {
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
-      if (navRef.current && !navRef.current.contains(e.target as Node)) setOpen(false);
+      if (navRef.current && !navRef.current.contains(e.target as Node)) close();
     };
     document.addEventListener('mousedown', handler);
     return () => document.removeEventListener('mousedown', handler);
   }, []);
 
+  const close = () => { setMenuOpen(false); setIndustrias(false); };
   const textColor = scrolled ? 'rgba(26,10,59,0.58)' : 'rgba(255,255,255,0.72)';
+
+  /* shared menu content */
+  const menuContent = (
+    <>
+      <Link
+        href="/portal/login"
+        onClick={close}
+        className="block px-5 py-3 text-sm hover:bg-[#FAFBFF] transition-colors"
+        style={{ color: 'rgba(26,10,59,0.6)' }}
+      >
+        Iniciar sesión
+      </Link>
+
+      <div style={{ borderTop: '1px solid rgba(108,59,255,0.08)' }} />
+
+      <button
+        onClick={() => setIndustrias(v => !v)}
+        className="w-full flex items-center justify-between px-5 py-3 text-sm hover:bg-[#FAFBFF] transition-colors"
+        style={{ color: '#1A0A3B' }}
+      >
+        Industrias
+        <ChevronDown
+          size={13}
+          style={{ transition: 'transform 0.2s', transform: industriasOpen ? 'rotate(180deg)' : 'none' }}
+        />
+      </button>
+
+      {industriasOpen && (
+        <div style={{ borderTop: '1px solid rgba(108,59,255,0.06)', background: 'rgba(108,59,255,0.02)' }}>
+          {INDUSTRIES.map(ind => (
+            <Link
+              key={ind.href}
+              href={ind.href}
+              onClick={close}
+              className="block px-8 py-2.5 text-sm hover:bg-[rgba(108,59,255,0.05)] transition-colors"
+              style={{ color: 'rgba(26,10,59,0.7)' }}
+            >
+              {ind.label}
+            </Link>
+          ))}
+        </div>
+      )}
+    </>
+  );
 
   return (
     <nav
@@ -57,57 +103,17 @@ export default function LandingNav() {
           )}
         </Link>
 
-        {/* Actions */}
-        <div className="flex items-center gap-1 sm:gap-2">
+        {/* Right side */}
+        <div className="flex items-center gap-2 relative">
 
-          {/* Desktop: Industrias dropdown */}
-          <div className="relative hidden sm:block">
-            <button
-              onClick={() => setOpen(v => !v)}
-              className="flex items-center gap-1 px-4 py-2 rounded-xl text-sm font-medium transition-colors"
-              style={{ color: textColor }}
-            >
-              Industrias
-              <ChevronDown size={13} style={{ transition: 'transform 0.2s', transform: open ? 'rotate(180deg)' : 'none' }} />
-            </button>
-
-            {open && (
-              <div
-                className="absolute right-0 top-full mt-2 w-60 rounded-2xl shadow-xl overflow-hidden"
-                style={{ background: '#fff', border: '1px solid rgba(108,59,255,0.12)' }}
-              >
-                {INDUSTRIES.map(ind => (
-                  <Link
-                    key={ind.href}
-                    href={ind.href}
-                    onClick={() => setOpen(false)}
-                    className="block px-5 py-2.5 text-sm hover:bg-[#FAFBFF] transition-colors"
-                    style={{ color: '#1A0A3B' }}
-                  >
-                    {ind.label}
-                  </Link>
-                ))}
-                <div style={{ borderTop: '1px solid rgba(108,59,255,0.1)', margin: '4px 0' }} />
-                <Link
-                  href="/portal/login"
-                  onClick={() => setOpen(false)}
-                  className="block px-5 py-2.5 pb-3 text-sm hover:bg-[#FAFBFF] transition-colors"
-                  style={{ color: 'rgba(26,10,59,0.5)' }}
-                >
-                  Iniciar sesión
-                </Link>
-              </div>
-            )}
-          </div>
-
-          {/* Mobile: hamburger */}
+          {/* Hamburger — same on mobile and desktop */}
           <button
-            onClick={() => setOpen(v => !v)}
-            className="sm:hidden p-2 rounded-xl transition-colors"
+            onClick={() => { setMenuOpen(v => !v); setIndustrias(false); }}
+            className="p-2 rounded-xl transition-colors"
             style={{ color: textColor }}
             aria-label="Menú"
           >
-            {open ? <X size={20} /> : <Menu size={20} />}
+            {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
           {/* Contratar — always visible */}
@@ -118,38 +124,26 @@ export default function LandingNav() {
           >
             Contratar
           </Link>
+
+          {/* Desktop dropdown — right-aligned below button */}
+          {menuOpen && (
+            <div
+              className="hidden sm:block absolute right-0 top-full mt-2 w-64 rounded-2xl shadow-xl overflow-hidden"
+              style={{ background: '#fff', border: '1px solid rgba(108,59,255,0.12)' }}
+            >
+              {menuContent}
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Mobile slide-down menu */}
-      {open && (
+      {/* Mobile slide-down panel */}
+      {menuOpen && (
         <div
-          className="sm:hidden"
+          className="sm:hidden overflow-hidden"
           style={{ background: '#fff', borderBottom: '1px solid rgba(108,59,255,0.1)' }}
         >
-          <p className="px-5 pt-4 pb-1 text-xs font-semibold tracking-widest uppercase" style={{ color: 'rgba(26,10,59,0.32)' }}>
-            Industrias
-          </p>
-          {INDUSTRIES.map(ind => (
-            <Link
-              key={ind.href}
-              href={ind.href}
-              onClick={() => setOpen(false)}
-              className="block px-5 py-3 text-sm"
-              style={{ color: '#1A0A3B' }}
-            >
-              {ind.label}
-            </Link>
-          ))}
-          <div style={{ borderTop: '1px solid rgba(108,59,255,0.1)', margin: '4px 20px' }} />
-          <Link
-            href="/portal/login"
-            onClick={() => setOpen(false)}
-            className="block px-5 py-3 pb-4 text-sm"
-            style={{ color: 'rgba(26,10,59,0.5)' }}
-          >
-            Iniciar sesión
-          </Link>
+          {menuContent}
         </div>
       )}
     </nav>
