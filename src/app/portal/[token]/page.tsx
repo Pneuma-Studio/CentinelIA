@@ -672,7 +672,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
               className="sm:hidden flex items-center gap-1.5 rounded-full text-[11px] whitespace-nowrap"
               style={{
                 position:             'absolute',
-                bottom:               20,
+                bottom:               25,
                 left:                 '50%',
                 transform:            'translateX(-50%)',
                 padding:              '6px 14px',
