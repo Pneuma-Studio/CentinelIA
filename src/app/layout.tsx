@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Sora, DM_Sans } from "next/font/google";
+import Script from "next/script";
 import "./globals.css";
 
 const sora = Sora({
@@ -114,14 +115,25 @@ export default function RootLayout({
       <head>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationSchema) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqSchema) }} />
+      </head>
+      <body className="min-h-full flex flex-col">
+        {children}
         {process.env.NEXT_PUBLIC_GA_ID && (
           <>
-            <script async src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`} />
-            <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');` }} />
+            <Script
+              strategy="afterInteractive"
+              src={`https://www.googletagmanager.com/gtag/js?id=${process.env.NEXT_PUBLIC_GA_ID}`}
+            />
+            <Script
+              id="ga4-init"
+              strategy="afterInteractive"
+              dangerouslySetInnerHTML={{
+                __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments)}gtag('js',new Date());gtag('config','${process.env.NEXT_PUBLIC_GA_ID}');`,
+              }}
+            />
           </>
         )}
-      </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      </body>
     </html>
   );
 }
