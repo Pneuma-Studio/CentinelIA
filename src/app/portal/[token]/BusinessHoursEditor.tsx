@@ -79,17 +79,25 @@ export default function BusinessHoursEditor({
   const setTime = (key: keyof BusinessHours, field: 'from' | 'to', value: string) =>
     setHours(h => ({ ...h, [key]: { ...h[key], [field]: value } }));
 
-  const handleSave = async () => {
+  const save = async (business_hours: BusinessHours | null) => {
     setSaving(true);
     setSaved(false);
     const res = await fetch(`/api/portal/${token}/settings`, {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ business_hours: enabled ? hours : null }),
+      body: JSON.stringify({ business_hours }),
     });
     setSaving(false);
     if (res.ok) { setSaved(true); setTimeout(() => setSaved(false), 2500); }
   };
+
+  const handleMasterToggle = () => {
+    const next = !enabled;
+    setEnabled(next);
+    if (!next) save(null); // switching to 24/7 → save immediately
+  };
+
+  const handleSave = () => save(hours);
 
   return (
     <div className="flex flex-col gap-4">
@@ -104,7 +112,7 @@ export default function BusinessHoursEditor({
             {enabled ? 'El agente solo contesta en este horario' : 'El agente siempre contesta'}
           </div>
         </div>
-        <Toggle on={enabled} onToggle={() => setEnabled(v => !v)} />
+        <Toggle on={enabled} onToggle={handleMasterToggle} />
       </div>
 
       {/* Day rows */}
