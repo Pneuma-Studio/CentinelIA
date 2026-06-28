@@ -797,23 +797,18 @@ export default function LandingPage() {
         className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10 relative"
         style={{ borderTop: `1px solid ${C.border}` }}
       >
-        {/* Mobile: 2-row layout */}
-        <div className="flex sm:hidden flex-col gap-3">
-          <div className="flex items-center gap-2">
-            <Link href="/" className="transition-opacity hover:opacity-70" style={{ flexShrink: 0 }}>
-              <Image
-                src="/logo-icon.png"
-                alt="Centinelia"
-                width={40}
-                height={40}
-                style={{ width: 40, height: 40, objectFit: 'contain', display: 'block' }}
-              />
-            </Link>
-            <span style={{ fontSize: 11, color: C.textMute, lineHeight: 1.4 }}>
-              · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
-            </span>
-          </div>
-          <div className="flex items-center gap-5">
+        {/* Mobile: logo + links en una fila */}
+        <div className="flex sm:hidden items-center gap-2">
+          <Link href="/" className="transition-opacity hover:opacity-70" style={{ flexShrink: 0, marginLeft: 4.5 }}>
+            <Image
+              src="/logo-icon.png"
+              alt="Centinelia"
+              width={52}
+              height={52}
+              style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }}
+            />
+          </Link>
+          <div className="flex flex-1 items-center justify-evenly">
             <Link href="/industrias" className="text-xs transition-opacity hover:opacity-70" style={{ color: C.textMute }}>
               Industrias
             </Link>
@@ -825,6 +820,22 @@ export default function LandingPage() {
             </Link>
           </div>
         </div>
+
+        {/* Mobile: crédito al fondo */}
+        <p
+          className="sm:hidden"
+          style={{
+            position: 'absolute', bottom: 44, left: '50%', transform: 'translateX(-50%)',
+            fontSize: 10, color: C.textMute, textAlign: 'center', lineHeight: 1.4,
+            whiteSpace: 'nowrap', pointerEvents: 'none',
+          }}
+        >
+          <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer"
+            style={{ color: C.textMute, pointerEvents: 'auto' }}
+            className="hover:opacity-80 transition-opacity"
+          >Pneuma Studio</a>
+          {' · Hecho en México'}
+        </p>
 
         {/* Desktop: icon + Pneuma | links */}
         <div className="hidden sm:flex items-center justify-between gap-4">
