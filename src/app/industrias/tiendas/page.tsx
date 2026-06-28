@@ -109,9 +109,9 @@ export default function TiendasPage() {
       <LandingNav />
       <LandingWidgets />
 
-      <section style={{ position: 'relative' }}>
+      <section style={{ position: 'relative', overflow: 'hidden' }}>
         {/* Background image + overlay */}
-        <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
+        <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
           <Image src="/hero-bg.png" alt="" fill priority quality={85} style={{ objectFit: 'cover', objectPosition: 'center' }} />
           <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(160deg, rgba(13,5,32,0.88) 0%, rgba(26,10,59,0.93) 100%)' }} />
         </div>
@@ -136,9 +136,9 @@ export default function TiendasPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeking from bottom-right */}
-        <MeerkatReveal className="agent-sway hidden sm:block absolute pointer-events-none select-none" style={{ bottom: -10, right: 48, width: 150, height: 210, zIndex: 2 }}>
-          <Image src="/agent-headset.png" alt="" fill sizes="150px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
+          <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
       </section>
 
@@ -235,20 +235,20 @@ export default function TiendasPage() {
         </div>
       </section>
 
-      <section style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)', paddingTop: 80, paddingBottom: 180, paddingLeft: 24, paddingRight: 24, position: 'relative' }}>
-        <div className="max-w-2xl mx-auto text-center" style={{ position: 'relative', zIndex: 1 }}>
+      <section className="relative overflow-hidden" style={{ background: 'linear-gradient(160deg, #0D0520 0%, #1A0A3B 100%)' }}>
+        <div className="max-w-2xl mx-auto px-6 text-center" style={{ paddingTop: 80, paddingBottom: 'clamp(160px, 30vw, 280px)', position: 'relative', zIndex: 1 }}>
           <h2 className="font-bold mb-4" style={{ fontSize: 'clamp(1.8rem, 4vw, 3rem)', color: '#fff' }}>Tu negocio disponible a cualquier hora, cualquier día</h2>
           <p className="mb-8" style={{ color: 'rgba(255,255,255,0.58)', lineHeight: 1.7 }}>Activo en menos de 24 horas. Sin contratos de permanencia. Desde $1,990/mes · con toma de pedidos desde $6,490/mes.</p>
           <Link href="/registro" className="inline-flex items-center gap-2 px-8 py-4 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeking from bottom */}
+        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
-          className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[280px] h-[200px] sm:w-[480px] sm:h-[360px]"
+          className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}
         >
-          <Image src="/agent-duo-call.png" alt="Equipo Centinelia" fill sizes="(max-width: 640px) 280px, 480px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+          <Image src="/agent-duo-call.png" alt="Equipo Centinelia" fill sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </MeerkatReveal>
       </section>
       <IndustryFooter />

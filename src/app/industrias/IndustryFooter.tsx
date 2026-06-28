@@ -6,7 +6,7 @@ export default function IndustryFooter() {
 
   return (
     <footer
-      className="max-w-6xl mx-auto px-5 sm:px-8 pt-20 sm:pt-12 pb-28 sm:pb-10 relative"
+      className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-24 sm:py-10 relative"
       style={{ borderTop: '1px solid rgba(108,59,255,0.12)' }}
     >
       {/* Mobile: logo + links */}
