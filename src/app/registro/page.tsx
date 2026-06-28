@@ -88,20 +88,8 @@ const PLANS: PlanDef[] = [
     id: 'estandar', label: 'Comercial', price: 7990, origPrice: 9990, monthly: 3490, origMonthly: 4490, minutes: 500, recommended: true, color: '#3b82f6',
     features: [
       {
-        label: 'Recepcionista 24/7',
-        desc: 'Tu negocio siempre contesta — a las 3am, un domingo, en días festivos. El agente saluda con el nombre de tu negocio, entiende lo que necesita el cliente y responde usando la información que le proporcionaste.',
-      },
-      {
-        label: 'Captura de leads',
-        desc: 'Cuando alguien llama interesado, el agente obtiene su nombre, teléfono y qué está buscando. Recibes esos datos en tiempo real por WhatsApp — ningún prospecto se pierde aunque no hayas podido contestar.',
-      },
-      {
-        label: 'Resúmenes por WhatsApp y Email',
-        desc: 'Al terminar cada llamada recibes un mensaje: quién llamó, qué quería y qué quedó pendiente. En el correo llega la versión completa para tener historial.',
-      },
-      {
-        label: 'Portal con historial y horas pico',
-        desc: 'Panel web con todas tus llamadas, horas de mayor actividad y lo que están pidiendo tus clientes.',
+        label: 'Todo lo de Recepcionista',
+        desc: 'Incluye recepcionista 24/7, captura automática de leads, resúmenes por WhatsApp y correo después de cada llamada, y acceso completo al portal con historial de actividad.',
       },
       {
         label: 'Agendamiento de citas',
@@ -125,36 +113,8 @@ const PLANS: PlanDef[] = [
     id: 'pro', label: 'Pro', price: 12990, origPrice: 16990, monthly: 6490, origMonthly: 8490, minutes: 1000, color: '#a855f7',
     features: [
       {
-        label: 'Recepcionista 24/7',
-        desc: 'Tu negocio siempre contesta — a las 3am, un domingo, en días festivos. El agente saluda con el nombre de tu negocio y responde usando la información que le proporcionaste.',
-      },
-      {
-        label: 'Captura de leads',
-        desc: 'El agente obtiene nombre, teléfono y necesidad de cada prospecto. Recibes esos datos en tiempo real por WhatsApp.',
-      },
-      {
-        label: 'Resúmenes por WhatsApp y Email',
-        desc: 'Al terminar cada llamada recibes un resumen: quién llamó, qué quería y qué quedó pendiente. En el correo llega la versión completa.',
-      },
-      {
-        label: 'Portal con historial y horas pico',
-        desc: 'Panel web con todas tus llamadas, horas de mayor actividad y lo que están pidiendo tus clientes.',
-      },
-      {
-        label: 'Agendamiento de citas',
-        desc: 'El agente confirma disponibilidad, acuerda fecha y hora con el cliente y registra la cita — con Google Calendar, Calendly o Cal.com.',
-      },
-      {
-        label: 'Transferencia inteligente',
-        desc: 'Cuando hay una urgencia o el cliente pide hablar con alguien, el agente transfiere la llamada a tu número de celular automáticamente.',
-      },
-      {
-        label: 'Escalación a WhatsApp',
-        desc: 'Si el cliente prefiere mensaje, el agente termina la llamada y lo dirige al WhatsApp de tu negocio.',
-      },
-      {
-        label: 'Reporte semanal por email',
-        desc: 'Cada lunes: total de llamadas, leads, citas agendadas, horas pico y duración promedio de llamada.',
+        label: 'Todo lo de Comercial',
+        desc: 'Incluye todas las funciones del plan Comercial: recepcionista 24/7, captura de leads, agendamiento de citas, transferencia inteligente, escalación a WhatsApp y reportes semanales.',
       },
       {
         label: 'Toma de pedidos',
