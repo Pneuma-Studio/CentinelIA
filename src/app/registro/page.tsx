@@ -90,6 +90,7 @@ const PLANS: PlanDef[] = [
       { label: 'Memoria de cliente',            desc: 'El agente recuerda preferencias e historial de cada cliente para ofrecer atención personalizada.' },
       { label: 'Nombre + Voz personalizable',   desc: 'Elige el nombre de tu agente (Ana, Carlos, Sofía…) y la voz que mejor represente tu marca.' },
       { label: 'Multiidioma (ES + EN)',          desc: 'Tu agente detecta automáticamente el idioma del cliente y responde en español o inglés.' },
+      { label: 'Grabaciones de llamadas',        desc: 'Accede y descarga grabaciones de tus llamadas desde el portal durante 7 días.' },
     ],
   },
   {
