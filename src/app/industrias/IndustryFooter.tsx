@@ -46,6 +46,7 @@ export default function IndustryFooter() {
           <Link href="/industrias" className="text-xs transition-colors" style={{ color: textMute }}>Industrias</Link>
           <Link href="/portal/login" className="text-xs transition-colors" style={{ color: textMute }}>Portal de clientes</Link>
           <Link href="/registro" className="text-xs" style={{ color: textMute }}>Contratar</Link>
+          <Link href="/privacidad-datos" className="text-xs transition-colors" style={{ color: textMute }}>Privacidad</Link>
           <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: textMute }}>hola@centinelia.mx</a>
         </div>
       </div>

@@ -876,6 +876,9 @@ export default function LandingPage() {
             <Link href="/registro" className="text-xs" style={{ color: C.textMute }}>
               Contratar
             </Link>
+            <Link href="/privacidad-datos" className="text-xs transition-colors" style={{ color: C.textMute }}>
+              Privacidad
+            </Link>
             <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: C.textMute }}>
               hola@centinelia.mx
             </a>
