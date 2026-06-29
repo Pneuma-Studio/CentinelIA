@@ -93,6 +93,7 @@ const organizationSchema = {
   sameAs: [
     'https://www.instagram.com/centinelia.mx/',
     'https://www.linkedin.com/company/centinelia/',
+    'https://www.facebook.com/centineliamx/',
   ],
   foundingLocation: { '@type': 'Place', addressCountry: 'MX' },
 };
