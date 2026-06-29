@@ -23,8 +23,8 @@ export default function IndustryFooter() {
 
       {/* Mobile: Pneuma Studio credit */}
       <div
-        className="sm:hidden"
-        style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 6 }}
+        className="sm:hidden flex flex-col items-center"
+        style={{ position: 'absolute', bottom: 36, left: '50%', transform: 'translateX(-50%)', gap: 6 }}
       >
         <div style={{ display: 'flex', alignItems: 'center', gap: 14 }}>
           <a href="https://www.instagram.com/centinelia.mx/" target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="transition-opacity hover:opacity-70">
