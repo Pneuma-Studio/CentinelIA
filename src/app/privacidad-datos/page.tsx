@@ -43,9 +43,8 @@ export default function PrivacidadDatos() {
       {/* Nav mínimo */}
       <header style={{ borderBottom: `1px solid ${C.border}`, background: C.bg }}>
         <div className="max-w-4xl mx-auto px-5 sm:px-8" style={{ height: 64, display: 'flex', alignItems: 'center' }}>
-          <Link href="/" className="transition-opacity hover:opacity-70" style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <Image src="/logo-icon.png" alt="Centinelia" width={36} height={36} style={{ width: 36, height: 36, objectFit: 'contain' }} />
-            <span style={{ fontSize: 15, fontWeight: 600, color: C.text }}>Centinelia</span>
+          <Link href="/" className="transition-opacity hover:opacity-70">
+            <Image src="/logo.png" alt="Centinelia" width={160} height={44} style={{ height: 44, width: 'auto', objectFit: 'contain' }} />
           </Link>
         </div>
       </header>
