@@ -132,7 +132,17 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
         </p>
       </Clause>
 
-      <Clause title={`${excluded.length > 0 ? '9' : '8'}. ACEPTACIÓN`}>
+      <Clause title={`${excluded.length > 0 ? '9' : '8'}. USO DE MARCA Y CASOS DE ÉXITO`}>
+        <p>
+          Al aceptar este contrato, el Cliente autoriza a Centinelia y a Pneuma Studio a mencionar el nombre
+          y logotipo de <strong>{agent.business_name}</strong> como caso de éxito en materiales de marketing,
+          sitio web, redes sociales y presentaciones comerciales. Esta autorización no implica ningún
+          respaldo activo del Cliente hacia Centinelia y puede ser revocada en cualquier momento mediante
+          solicitud escrita a <strong>hola@centinelia.mx</strong>.
+        </p>
+      </Clause>
+
+      <Clause title={`${excluded.length > 0 ? '10' : '9'}. ACEPTACIÓN`}>
         <p>
           Al firmar este contrato, el Cliente declara haber leído, entendido y aceptado todos los términos y condiciones
           establecidos en el presente documento. Este contrato entra en vigor en la fecha de aceptación.
