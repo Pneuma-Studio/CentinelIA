@@ -177,14 +177,9 @@ export default function PrivacidadDatos() {
       <div style={{ background: C.bg, borderTop: `1px solid ${C.border}` }}>
         <footer className="max-w-6xl mx-auto px-5 sm:px-8 pt-5 pb-10 sm:py-10">
           <div className="flex items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <Link href="/" className="transition-opacity hover:opacity-70">
-                <Image src="/logo-icon.png" alt="Centinelia" width={36} height={36} style={{ width: 36, height: 36, objectFit: 'contain', display: 'block' }} />
-              </Link>
-              <span className="text-xs" style={{ color: C.textMute }}>
-                · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
-              </span>
-            </div>
+            <Link href="/" className="transition-opacity hover:opacity-70">
+              <Image src="/logo-icon.png" alt="Centinelia" width={52} height={52} style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }} />
+            </Link>
             <div className="flex items-center gap-5">
               <Link href="/" className="text-xs transition-colors" style={{ color: C.textMute }}>Inicio</Link>
               <Link href="/registro" className="text-xs" style={{ color: C.textMute }}>Contratar</Link>
