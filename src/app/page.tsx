@@ -864,7 +864,7 @@ export default function LandingPage() {
           <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer"
             style={{ fontSize: 10, color: C.textMute }}
             className="hover:opacity-80 transition-opacity whitespace-nowrap"
-          >Pneuma Studio</a>
+          >Powered by Pneuma Studio</a>
         </div>
 
         {/* Desktop: icon + Pneuma | links */}
@@ -880,7 +880,7 @@ export default function LandingPage() {
               />
             </Link>
             <span className="text-xs" style={{ color: C.textMute }}>
-              · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
+              · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: C.textMute }} className="hover:opacity-80 transition-opacity">Powered by Pneuma Studio</a>
             </span>
           </div>
           <div className="flex items-center gap-5">

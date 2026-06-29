@@ -48,7 +48,7 @@ export default function IndustryFooter() {
         <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer"
           style={{ fontSize: 10, color: textMute }}
           className="hover:opacity-80 transition-opacity whitespace-nowrap"
-        >Pneuma Studio</a>
+        >Powered by Pneuma Studio</a>
       </div>
 
       {/* Desktop */}
@@ -58,7 +58,7 @@ export default function IndustryFooter() {
             <Image src="/logo-icon.png" alt="Centinelia" width={52} height={52} style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }} />
           </Link>
           <span className="text-xs" style={{ color: textMute }}>
-            · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: textMute }} className="hover:opacity-80 transition-opacity">Pneuma Studio</a> · Hecho en México
+            · <a href="https://pneumastudio.mx" target="_blank" rel="noopener noreferrer" style={{ color: textMute }} className="hover:opacity-80 transition-opacity">Powered by Pneuma Studio</a>
           </span>
         </div>
         <div className="flex items-center gap-5">
