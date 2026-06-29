@@ -101,17 +101,17 @@ const PLANS: {
 }[] = [
   {
     name: 'Recepcionista', id: 'basico', price: 1990, origPrice: 2490, setup: 4990, origSetup: 6990, minutes: 200, color: '#6b7280',
-    includes: ['Recepcionista 24/7', 'Captura de leads', 'Resúmenes WhatsApp + Email', 'Reseña Google automática por WhatsApp', 'Portal con horas pico', '200 min/mes incluidos'],
+    includes: ['Recepcionista 24/7', 'Captura de leads', 'Resúmenes WhatsApp + Email', 'Reseña Google automática', 'Portal con horas pico', '200 min/mes incluidos'],
     meerkat: '/agent-plan-basico.png', meerkatBottom: 66,
   },
   {
     name: 'Comercial', id: 'estandar', price: 3490, origPrice: 4490, setup: 7990, origSetup: 9990, minutes: 500, color: '#6C3BFF', popular: true,
-    includes: ['Todo Recepcionista', 'Agendamiento de citas', 'Transferencia inteligente', 'Escalación a WhatsApp', 'Reseña Google automática por WhatsApp', '500 min/mes incluidos'],
+    includes: ['Todo Recepcionista', 'Agendamiento de citas', 'Transferencia inteligente', 'Escalación a WhatsApp', 'Reseña Google automática', '500 min/mes incluidos'],
     meerkat: '/agent-plan-estandar.png', meerkatBottom: 64,
   },
   {
     name: 'Pro', id: 'pro', price: 6490, origPrice: 8490, setup: 12990, origSetup: 16990, minutes: 1000, color: '#7c3aed',
-    includes: ['Todo Comercial', 'Toma de pedidos', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Memoria de cliente', 'Reseña Google automática por WhatsApp', '1,000 min/mes incluidos'],
+    includes: ['Todo Comercial', 'Toma de pedidos', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Memoria de cliente', 'Reseña Google automática', '1,000 min/mes incluidos'],
     meerkat: '/agent-plan-pro.png', meerkatBottom: 66,
   },
 ];
