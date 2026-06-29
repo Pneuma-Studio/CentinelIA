@@ -114,12 +114,10 @@ export default function PrivacidadDatos() {
             soporte. No vendemos ni compartimos tu información con terceros para fines comerciales.
           </Item>
           <Item>
-            <strong>Proveedores de infraestructura</strong>, Para operar el servicio usamos:{' '}
-            <span style={{ color: C.text }}>Supabase</span> (base de datos),{' '}
-            <span style={{ color: C.text }}>Vapi</span> (motor de voz),{' '}
-            <span style={{ color: C.text }}>ElevenLabs</span> (síntesis de voz) y{' '}
-            <span style={{ color: C.text }}>Stripe</span> (pagos).
-            Cada uno de estos proveedores tiene sus propias políticas de privacidad y seguridad.
+            <strong>Proveedores de infraestructura.</strong> Para operar el servicio trabajamos con proveedores
+            externos de confianza que procesan datos en nuestro nombre: almacenamiento de base de datos,
+            síntesis y procesamiento de voz, y pagos. Cada proveedor cuenta con sus propias políticas
+            de seguridad y privacidad.
           </Item>
         </Section>
 
