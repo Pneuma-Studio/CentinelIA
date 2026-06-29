@@ -180,8 +180,8 @@ export default function PrivacidadDatos() {
               <Image src="/logo-icon.png" alt="Centinelia" width={52} height={52} style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }} />
             </Link>
             <div className="flex items-center gap-5">
-              <Link href="/" className="text-xs transition-colors" style={{ color: C.textMute }}>Inicio</Link>
-              <Link href="/registro" className="text-xs" style={{ color: C.textMute }}>Contratar</Link>
+              <Link href="/registro" className="text-xs transition-colors" style={{ color: C.textMute }}>Contratar</Link>
+              <Link href="/industrias" className="text-xs transition-colors" style={{ color: C.textMute }}>Industrias</Link>
               <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: C.textMute }}>hola@centinelia.mx</a>
             </div>
           </div>
