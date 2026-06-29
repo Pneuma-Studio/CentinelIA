@@ -33,7 +33,7 @@ export async function POST(req: NextRequest) {
   let customerId: string = agent.stripe_customer_id ?? '';
   if (!customerId) {
     const customer = await stripe.customers.create({
-      name:     `${agent.client_name} — ${agent.business_name}`,
+      name:     `${agent.client_name}, ${agent.business_name}`,
       metadata: { agent_id: agentId },
     });
     customerId = customer.id;

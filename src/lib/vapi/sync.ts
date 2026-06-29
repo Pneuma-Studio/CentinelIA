@@ -106,7 +106,7 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
   }
 
   if (agent.features.smart_transfer) {
-    // Step 1 — notify owner via WhatsApp before the transfer
+    // Step 1, notify owner via WhatsApp before the transfer
     tools.push({
       type: 'function',
       function: {
@@ -125,7 +125,7 @@ async function createVapiTools(agent: VoiceAgent): Promise<string[]> {
       server: { url: `${base}/notificar-transferencia?agent_id=${id}` },
     });
 
-    // Step 2 — native Vapi call transfer (only if a transfer number is configured)
+    // Step 2, native Vapi call transfer (only if a transfer number is configured)
     if (agent.transfer_number) {
       tools.push({
         type: 'transferCall',
@@ -187,7 +187,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
   const agentName = agent.agent_name?.trim() || 'Centinelia';
 
   return {
-    name: `${agentName} — ${agent.business_name}`,
+    name: `${agentName}, ${agent.business_name}`,
     model: {
       provider: 'anthropic',
       model: 'claude-3-5-haiku-20241022',

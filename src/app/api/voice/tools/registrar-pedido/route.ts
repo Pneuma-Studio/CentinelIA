@@ -34,7 +34,7 @@ export async function POST(req: NextRequest) {
   // Notify owner via WhatsApp
   if (agent?.transfer_whatsapp) {
     const msg = [
-      `🛒 *Nuevo pedido — ${agent.business_name}*`,
+      `🛒 *Nuevo pedido, ${agent.business_name}*`,
       nombre   ? `👤 ${nombre}`   : null,
       telefono ? `📱 ${telefono}` : null,
       `📦 ${items}`,

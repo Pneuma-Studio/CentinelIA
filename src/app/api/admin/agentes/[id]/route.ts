@@ -5,7 +5,7 @@ import type { VoiceAgent } from '@/types/agent';
 
 import { scrapeWebsite } from '@/lib/scrape/website';
 
-// Shared resync helper — updates website_knowledge and syncs Vapi
+// Shared resync helper, updates website_knowledge and syncs Vapi
 export async function resyncWebsite(agentId: string): Promise<{ ok: boolean; chars?: number; error?: string }> {
   const supabase = createAdminClient();
 
@@ -73,7 +73,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
         await assignAssistantToPhone(agent.phone_number, agent.vapi_agent_id);
       }
     } else {
-      // First time syncing — create assistant and assign
+      // First time syncing, create assistant and assign
       const vapiAssistantId = await createVapiAssistant(agent);
       if (vapiAssistantId) {
         await supabase

@@ -52,7 +52,7 @@ export async function GET(req: NextRequest) {
 
     const hora = appt.hora ? ` a las ${appt.hora}` : '';
     const msg = [
-      `📅 *Recordatorio de cita — ${agent.business_name}*`,
+      `📅 *Recordatorio de cita, ${agent.business_name}*`,
       ``,
       `Hola${appt.nombre ? ` ${appt.nombre.split(' ')[0]}` : ''},`,
       `Le recordamos que tiene una cita mañana${hora}.`,

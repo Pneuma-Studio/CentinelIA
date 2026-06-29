@@ -119,7 +119,7 @@ export default function BuyMinutesSection({ token }: { token: string }) {
         {loading
           ? 'Redirigiendo…'
           : price
-            ? `Comprar — $${price.toLocaleString('es-MX')} MXN`
+            ? `Comprar, $${price.toLocaleString('es-MX')} MXN`
             : 'Comprar minutos'}
       </button>
     </div>

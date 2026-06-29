@@ -21,8 +21,8 @@ export default function KnowledgeBaseEditor({
   const barColor = chars <= SOFT_LIMIT ? '#22c55e' : chars <= HARD_LIMIT ? '#f59e0b' : '#ef4444';
   const hint =
     chars <= SOFT_LIMIT ? 'Ideal' :
-    chars <= HARD_LIMIT ? 'Largo pero aceptable — considera resumir' :
-    'Muy extenso — el agente puede tener dificultad usando toda esta información';
+    chars <= HARD_LIMIT ? 'Largo pero aceptable, considera resumir' :
+    'Muy extenso, el agente puede tener dificultad usando toda esta información';
 
   const handleSave = async () => {
     setSaving(true);

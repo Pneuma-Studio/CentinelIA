@@ -57,7 +57,7 @@ export async function POST(req: NextRequest, { params }: Params) {
           currency:    'mxn',
           unit_amount: setup_diff * 100,
           product_data: {
-            name:        `Upgrade a ${to_cfg.label} — Centinelia`,
+            name:        `Upgrade a ${to_cfg.label}, Centinelia`,
             description: `Diferencia de instalación: ${from_cfg.label} → ${to_cfg.label}`,
           },
         },

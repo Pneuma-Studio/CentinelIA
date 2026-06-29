@@ -7,7 +7,7 @@ const redis = new Redis({
   token: process.env.UPSTASH_REDIS_REST_TOKEN!,
 });
 
-// Sliding window limiters — one instance per policy, shared across requests
+// Sliding window limiters, one instance per policy, shared across requests
 export const limiters = {
   // Auth endpoints: 5 attempts per minute per IP
   auth: new Ratelimit({ redis, limiter: Ratelimit.slidingWindow(5, '1 m'), prefix: 'rl:auth' }),
@@ -50,5 +50,5 @@ export async function rateLimit(
     );
   }
 
-  return null; // not limited — proceed
+  return null; // not limited, proceed
 }

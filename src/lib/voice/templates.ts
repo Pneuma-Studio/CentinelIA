@@ -86,8 +86,8 @@ Horario: Lunes a Sábado 8am - 10pm, Domingo 9am - 8pm
 - Limpieza dental: $800
 
 MÉDICOS / ESPECIALISTAS:
-- Dr. García — Medicina General (Lun, Mié, Vie)
-- Dra. Martínez — Pediatría (Mar, Jue)
+- Dr. García, Medicina General (Lun, Mié, Vie)
+- Dra. Martínez, Pediatría (Mar, Jue)
 
 INFORMACIÓN:
 ¿Se necesita cita? Sí, todas las consultas son con cita previa.

@@ -172,7 +172,7 @@ export default function ActivityDetailModal({ type, item, isPro, token, onClose 
 
         <div className="flex flex-col gap-4 px-5 py-5 overflow-y-auto" style={{ maxHeight: '75vh' }}>
 
-          {/* Recording — Pro agents only */}
+          {/* Recording, Pro agents only */}
           {isPro && (
             <>
               {call === undefined ? (

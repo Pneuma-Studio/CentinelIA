@@ -122,7 +122,7 @@ export default function LandingWidgets() {
 
   return (
     <>
-      {/* ── Chat widget — bottom LEFT ──────────────────────────────────────── */}
+      {/* ── Chat widget, bottom LEFT ──────────────────────────────────────── */}
       <div style={{ position: 'fixed', bottom: 24, left: 24, zIndex: 9999 }}>
 
         {/* Chat panel */}
@@ -249,7 +249,7 @@ export default function LandingWidgets() {
               <div ref={messagesEndRef} />
             </div>
 
-            {/* Quick questions — only before first user message */}
+            {/* Quick questions, only before first user message */}
             {showQuickQ && (
               <div style={{ padding: '0 13px 10px', display: 'flex', flexDirection: 'column', gap: 5, flexShrink: 0 }}>
                 {QUICK_QUESTIONS.map(q => (
@@ -359,7 +359,7 @@ export default function LandingWidgets() {
         </button>
       </div>
 
-      {/* ── WhatsApp button — bottom RIGHT ────────────────────────────────── */}
+      {/* ── WhatsApp button, bottom RIGHT ────────────────────────────────── */}
       <a
         href={WA_LINK}
         target="_blank"

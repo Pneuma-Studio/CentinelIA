@@ -69,7 +69,7 @@ export default function LeadsSection({ initialLeads }: { initialLeads: Lead[] })
 
         {leads.length === 0 ? (
           <p className="text-xs py-6 text-center leading-relaxed" style={{ color: 'var(--c-text-4)' }}>
-            Sin leads — se registran automáticamente al terminar una llamada
+            Sin leads, se registran automáticamente al terminar una llamada
           </p>
         ) : (
           <div className="flex flex-col gap-2">

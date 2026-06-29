@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
 
     await sendEmail({
       to:      agent.client_email,
-      subject: `📊 Reporte semanal — ${agent.business_name}`,
+      subject: `📊 Reporte semanal, ${agent.business_name}`,
       html:    weeklyReportHtml({
         businessName: agent.business_name,
         portalUrl:    `${appUrl}/portal/${agent.portal_token}`,

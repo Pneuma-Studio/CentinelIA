@@ -105,7 +105,7 @@ export default function CallCard({ call, isPro, clientName }: { call: Call; isPr
 
   return (
     <>
-      {/* Card — compact, fully clickable when has details */}
+      {/* Card, compact, fully clickable when has details */}
       <div
         className={`rounded-xl flex transition-opacity ${hasDetails ? 'cursor-pointer hover:opacity-80' : ''}`}
         style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}

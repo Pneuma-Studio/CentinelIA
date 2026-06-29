@@ -40,7 +40,7 @@ function StatusBadge({ status }: { status: string }) {
   );
 }
 
-// ── Custom select — avoids native dropdown styling issues in dark mode ─────────
+// ── Custom select, avoids native dropdown styling issues in dark mode ─────────
 
 interface SelectOption<T extends string> {
   value: T;
@@ -123,13 +123,13 @@ function GenerateLinkButton({ agentId, agentName }: { agentId: string; agentName
 
   const featureOptions = (Object.entries(FEATURE_PLAN_CONFIG) as [Plan, typeof featureCfg][]).map(([key, cfg]) => ({
     value: key,
-    label: `${cfg.label} — $${cfg.setupFee.toLocaleString('es-MX')} inst.`,
+    label: `${cfg.label}, $${cfg.setupFee.toLocaleString('es-MX')} inst.`,
     sub:   `Instalación única`,
   }));
 
   const minutesOptions = (Object.entries(MINUTES_PLAN_CONFIG) as [MinutesPlan, typeof minutesCfg][]).map(([key, cfg]) => ({
     value: key,
-    label: `${cfg.label} · ${cfg.minutes} min — $${cfg.mxn.toLocaleString('es-MX')}/mes`,
+    label: `${cfg.label} · ${cfg.minutes} min, $${cfg.mxn.toLocaleString('es-MX')}/mes`,
     sub:   `Mensualidad recurrente`,
   }));
 

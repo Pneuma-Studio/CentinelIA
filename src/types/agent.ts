@@ -6,17 +6,17 @@ export type MinutesPlan = 'starter' | 'growth' | 'scale' | 'enterprise';
 // ─── Feature flags ────────────────────────────────────────────────────────────
 
 export interface AgentFeatures {
-  // Nivel 1 — todos los planes
+  // Nivel 1, todos los planes
   receptionist: boolean;        // Info del negocio 24/7
   lead_qualification: boolean;  // Calificar prospectos → CRM
   appointment_booking: boolean; // Agendar / modificar / cancelar citas
 
-  // Nivel 2 — estándar y pro
+  // Nivel 2, estándar y pro
   existing_client_support: boolean; // Consultar info del cliente en tiempo real
   smart_transfer: boolean;          // Transferir a humano + notificar por WhatsApp
   order_taking: boolean;            // Tomar pedidos y registrarlos
 
-  // Nivel 3 — solo pro
+  // Nivel 3, solo pro
   multilingual: boolean;        // Español + inglés automático
   client_memory: boolean;       // Recordar historial del cliente
   whatsapp_escalation: boolean; // WhatsApp si línea ocupada o fuera de horario

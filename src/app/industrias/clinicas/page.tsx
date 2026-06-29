@@ -48,12 +48,12 @@ const PROBLEMS = [
   {
     icon: <MessageCircle size={22} color="#8b5cf6" />,
     title: 'La recepcionista responde lo mismo todo el día',
-    desc: '"¿Cuánto cuesta la consulta?", "¿A qué hora abren?", "¿Tienen disponibilidad el viernes?" — preguntas que consumen tiempo y atención.',
+    desc: '"¿Cuánto cuesta la consulta?", "¿A qué hora abren?", "¿Tienen disponibilidad el viernes?", preguntas que consumen tiempo y atención.',
   },
 ];
 
 const FEATURES = [
-  { label: 'Agenda, modifica y cancela citas — sin intervención humana' },
+  { label: 'Agenda, modifica y cancela citas, sin intervención humana' },
   { label: 'Responde preguntas frecuentes: costos, seguros, horarios, ubicación' },
   { label: 'Captura datos de nuevos pacientes interesados' },
   { label: 'Transfiere a WhatsApp si el caso requiere atención directa' },
@@ -64,15 +64,15 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'Antes perdíamos citas porque nadie contestaba después de las 7pm. Ahora el agente las agenda solo y yo las veo en el portal al día siguiente.',
-    author: 'Médico general, consultorio privado — Monterrey',
+    author: 'Médico general, consultorio privado, Monterrey',
   },
   {
     quote: 'Mis pacientes llaman para preguntar el precio de la consulta a toda hora. El agente les responde al momento y les agenda si quieren. Ya no dependo de que alguien esté en el escritorio.',
-    author: 'Dentista, clínica dental — CDMX',
+    author: 'Dentista, clínica dental, CDMX',
   },
   {
     quote: 'Pensé que mis pacientes iban a notar que era una IA, pero la mayoría pregunta por citas y listo. El que sí pregunta, el agente le dice la verdad y no ha pasado nada.',
-    author: 'Psicóloga, consultorio — Guadalajara',
+    author: 'Psicóloga, consultorio, Guadalajara',
   },
 ];
 
@@ -134,7 +134,7 @@ export default function ClinicasPage() {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
-            Un agente de voz con IA atiende las llamadas de tu clínica las 24 horas. Agenda citas, responde preguntas frecuentes y captura nuevos pacientes — sin que tú ni tu recepcionista tengan que estar presentes.
+            Un agente de voz con IA atiende las llamadas de tu clínica las 24 horas. Agenda citas, responde preguntas frecuentes y captura nuevos pacientes, sin que tú ni tu recepcionista tengan que estar presentes.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link
@@ -153,7 +153,7 @@ export default function ClinicasPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat, desktop, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
@@ -188,7 +188,7 @@ export default function ClinicasPage() {
                 Un recepcionista que nunca falta, nunca se cansa y siempre contesta
               </h2>
               <p className="mb-8 leading-relaxed" style={{ color: C.textSub }}>
-                Centinelia configura un agente de voz entrenado con la información de tu consultorio. Sabe tus precios, tus horarios, tus servicios — y habla como parte de tu equipo.
+                Centinelia configura un agente de voz entrenado con la información de tu consultorio. Sabe tus precios, tus horarios, tus servicios, y habla como parte de tu equipo.
               </p>
               <ul className="space-y-3">
                 {FEATURES.map((f, i) => (
@@ -252,7 +252,7 @@ export default function ClinicasPage() {
                   {Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}
                 </div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
-                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>, {t.author}</p>
               </div>
             ))}
           </div>
@@ -293,7 +293,7 @@ export default function ClinicasPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat duo, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
           className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}

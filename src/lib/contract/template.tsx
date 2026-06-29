@@ -42,7 +42,7 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
         <div style={{ fontWeight: 700, fontSize: '1rem', letterSpacing: '0.05em', textTransform: 'uppercase' }}>
           Contrato de Servicios de Agente de Voz IA
         </div>
-        <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.6 }}>Centinelia — Pneuma Studio</div>
+        <div style={{ fontSize: '0.75rem', marginTop: '0.25rem', opacity: 0.6 }}>Centinelia: Pneuma Studio</div>
       </div>
 
       <Clause title="1. PARTES">
@@ -86,7 +86,7 @@ export function ContractDocument({ agent }: { agent: VoiceAgent }) {
       <Clause title={`${excluded.length > 0 ? '5' : '4'}. FACTURACIÓN`}>
         <p>
           La mensualidad del servicio es de <strong>${monthlyPrice.toLocaleString('es-MX')} MXN + IVA</strong> por mes, correspondiente
-          al plan de minutos <strong>{minutesCfg?.label ?? agent.minutes_plan ?? '—'}</strong> ({minutesIncluded} min/mes).
+          al plan de minutos <strong>{minutesCfg?.label ?? agent.minutes_plan ?? ','}</strong> ({minutesIncluded} min/mes).
           El cobro se realizará de forma automática a través de Stripe en la fecha de renovación mensual.
         </p>
         <p style={{ marginTop: '0.5rem' }}>

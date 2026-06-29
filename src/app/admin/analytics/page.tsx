@@ -37,7 +37,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
   const today = new Date();
 
   if (!days) {
-    // Monthly buckets — last 12 months
+    // Monthly buckets, last 12 months
     const buckets: Record<string, number> = {};
     for (let i = 11; i >= 0; i--) {
       const d = new Date(today.getFullYear(), today.getMonth() - i, 1);
@@ -48,7 +48,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
       if (key in buckets) buckets[key]++;
     }
     return {
-      title: 'Llamadas — últimos 12 meses',
+      title: 'Llamadas, últimos 12 meses',
       entries: Object.entries(buckets).map(([m, count]) => ({
         label: new Date(m + '-15').toLocaleDateString('es-MX', { month: 'short' }),
         count,
@@ -57,7 +57,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
   }
 
   if (days > 30) {
-    // Weekly buckets — 13 weeks
+    // Weekly buckets, 13 weeks
     const buckets = new Map<string, number>();
     for (let i = 12; i >= 0; i--) {
       const d = new Date(today);
@@ -76,7 +76,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
     }
     const sorted = [...buckets.entries()].sort((a, b) => a[0].localeCompare(b[0]));
     return {
-      title: 'Llamadas — últimas 13 semanas',
+      title: 'Llamadas, últimas 13 semanas',
       entries: sorted.map(([w, count]) => ({
         label: new Date(w + 'T12:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'short' }),
         count,
@@ -84,7 +84,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
     };
   }
 
-  // Daily buckets — 7 or 30 days
+  // Daily buckets, 7 or 30 days
   const buckets: Record<string, number> = {};
   for (let i = days - 1; i >= 0; i--) {
     const d = new Date(today);
@@ -96,7 +96,7 @@ function buildChartData(allCalls: { created_at: string }[], days?: number): { en
     if (key in buckets) buckets[key]++;
   }
   return {
-    title: `Llamadas — últimos ${days} días`,
+    title: `Llamadas, últimos ${days} días`,
     entries: Object.entries(buckets).map(([d, count]) => ({
       label: new Date(d + 'T12:00:00').toLocaleDateString('es-MX', { day: '2-digit' }),
       count,

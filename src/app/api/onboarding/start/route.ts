@@ -98,12 +98,12 @@ export async function POST(req: NextRequest) {
       adminWa
         ? sendWhatsApp(
             adminWa,
-            `🏢 *Nueva solicitud Empresarial — Centinelia*\n\nNegocio: *${business_name.trim()}*\nGiro: ${giro_template ?? 'general'}\nCiudad lada: ${area_code ?? '—'}\n\nContacto: ${client_name.trim()}\nEmail: ${email}\nWA: ${transfer_whatsapp.trim()}\n\nRequiere cotización e integración con sistema existente.`
+            `🏢 *Nueva solicitud Empresarial, Centinelia*\n\nNegocio: *${business_name.trim()}*\nGiro: ${giro_template ?? 'general'}\nCiudad lada: ${area_code ?? ','}\n\nContacto: ${client_name.trim()}\nEmail: ${email}\nWA: ${transfer_whatsapp.trim()}\n\nRequiere cotización e integración con sistema existente.`
           ).catch(console.error)
         : Promise.resolve(),
       sendEmail({
         to:      email,
-        subject: 'Recibimos tu solicitud — Centinelia Empresarial',
+        subject: 'Recibimos tu solicitud, Centinelia Empresarial',
         html:    empresarialConfirmationHtml({
           clientName:   client_name.trim(),
           businessName: business_name.trim(),
@@ -153,7 +153,7 @@ export async function POST(req: NextRequest) {
   }
 
   const customer = await stripe.customers.create({
-    name:     `${client_name.trim()} — ${business_name.trim()}`,
+    name:     `${client_name.trim()}, ${business_name.trim()}`,
     email,
     metadata: { agent_id: agent.id },
   });

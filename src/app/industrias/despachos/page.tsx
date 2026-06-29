@@ -37,7 +37,7 @@ const PROBLEMS = [
   {
     icon: <TrendingDown size={22} color="#f59e0b" />,
     title: 'Tu tiempo profesional desperdiciado en llamadas de información',
-    desc: '"¿Cuánto cobran por una consulta?", "¿Llevan casos de divorcio?", "¿Tienen disponibilidad esta semana?" — preguntas que consumen horas de trabajo facturable.',
+    desc: '"¿Cuánto cobran por una consulta?", "¿Llevan casos de divorcio?", "¿Tienen disponibilidad esta semana?", preguntas que consumen horas de trabajo facturable.',
   },
   {
     icon: <Clock size={22} color="#8b5cf6" />,
@@ -58,22 +58,22 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'Cuando estoy en audiencia o con un cliente no puedo contestar. Ahora el agente recibe al prospecto, le explica mis servicios y agenda la consulta. Cuando salgo ya tengo una cita esperándome.',
-    author: 'Abogado litigante, despacho independiente — Monterrey',
+    author: 'Abogado litigante, despacho independiente, Monterrey',
   },
   {
     quote: 'El 80% de las llamadas eran para preguntar precios o si llevamos declaraciones anuales. El agente responde todo eso y solo me pasa los prospectos que ya quieren agendar. Recuperé horas de mi semana.',
-    author: 'Contador público, despacho fiscal — CDMX',
+    author: 'Contador público, despacho fiscal, CDMX',
   },
   {
     quote: 'Pensaba que mis clientes esperarían. Pero varios me dijeron que llamaron a tres agencias y la mía fue la única que contestó de inmediato. El agente hizo la diferencia.',
-    author: 'Directora de agencia de marketing — Guadalajara',
+    author: 'Directora de agencia de marketing, Guadalajara',
   },
 ];
 
 const FAQS = [
   {
     q: '¿El agente puede explicar mis áreas de práctica o servicios específicos?',
-    a: 'Sí. Le proporcionas la información de tu despacho — áreas, tipos de casos que manejas, honorarios generales — y el agente la usa para responder con precisión.',
+    a: 'Sí. Le proporcionas la información de tu despacho, áreas, tipos de casos que manejas, honorarios generales, y el agente la usa para responder con precisión.',
   },
   {
     q: '¿Puede el agente filtrar casos que no me interesen?',
@@ -125,7 +125,7 @@ export default function DespachosPage() {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
-            Un agente de voz con IA atiende las llamadas de tu despacho las 24 horas. Califica prospectos, agenda consultas y responde preguntas — mientras tú te concentras en el trabajo que genera valor.
+            Un agente de voz con IA atiende las llamadas de tu despacho las 24 horas. Califica prospectos, agenda consultas y responde preguntas, mientras tú te concentras en el trabajo que genera valor.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/registro" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
@@ -136,7 +136,7 @@ export default function DespachosPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat, desktop, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
@@ -220,7 +220,7 @@ export default function DespachosPage() {
               <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
                 <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}</div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
-                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>, {t.author}</p>
               </div>
             ))}
           </div>
@@ -249,7 +249,7 @@ export default function DespachosPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat duo, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
           className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}

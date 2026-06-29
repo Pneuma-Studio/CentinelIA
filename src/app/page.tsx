@@ -90,7 +90,7 @@ const PAINS = [
   {
     icon:  <Clock size={22} color="#eab308" />,
     stat:  '16 h',
-    label: 'al día en promedio tu negocio está cerrado — pero tus clientes no dejan de llamar.',
+    label: 'al día en promedio tu negocio está cerrado, pero tus clientes no dejan de llamar.',
     color: '#eab308',
   },
 ];
@@ -139,7 +139,7 @@ export default function LandingPage() {
     <div style={{ background: C.bg, color: C.text, overflowX: 'hidden' }}>
       <LandingNav />
 
-      {/* ── HERO — full-screen cinematic image ───────────────────────────── */}
+      {/* ── HERO, full-screen cinematic image ───────────────────────────── */}
       <section className="relative film-grain" style={{ minHeight: '100svh', display: 'flex', alignItems: 'flex-start', overflow: 'hidden', clipPath: 'inset(0 0 0 0)' }}>
 
         {/* Background image */}
@@ -154,9 +154,9 @@ export default function LandingPage() {
           style={{ objectFit: 'cover' }}
         />
 
-        {/* Base dark overlay — ensures readability on mobile */}
+        {/* Base dark overlay, ensures readability on mobile */}
         <div style={{ position: 'absolute', inset: 0, background: 'rgba(5,1,18,0.55)' }} />
-        {/* Left-to-right gradient — adds depth on larger screens */}
+        {/* Left-to-right gradient, adds depth on larger screens */}
         <div className="hidden sm:block" style={{
           position:   'absolute',
           inset:      0,
@@ -191,7 +191,7 @@ export default function LandingPage() {
           zIndex:     2,
         }} />
 
-        {/* Content — centered on mobile, left-aligned on sm+ */}
+        {/* Content, centered on mobile, left-aligned on sm+ */}
         <div className="relative w-full max-w-6xl mx-auto px-5 sm:px-8 text-center sm:text-left" style={{ paddingTop: 100, paddingBottom: 80, zIndex: 3 }}>
           <div className="mx-auto sm:mx-0" style={{ maxWidth: 560 }}>
 
@@ -239,7 +239,7 @@ export default function LandingPage() {
               style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)' }}
             >
               Centinelia atiende tus llamadas, captura leads, agenda citas y
-              toma pedidos con IA — las 24 horas, los 7 días, mientras tú
+              toma pedidos con IA, las 24 horas, los 7 días, mientras tú
               atiendes lo que importa.
             </p>
 
@@ -283,7 +283,7 @@ export default function LandingPage() {
 
       {/* ── PROBLEMA ─────────────────────────────────────────────────────── */}
       <section id="problema" style={{ background: '#0D0520', position: 'relative', transform: 'translateZ(0)' }}>
-        {/* Clip layer separate from animated content — prevents Framer Motion repaint flicker */}
+        {/* Clip layer separate from animated content, prevents Framer Motion repaint flicker */}
         <div style={{ position: 'absolute', inset: 0, overflow: 'hidden', pointerEvents: 'none' }}>
           {/* Pure gradient orb */}
           <div style={{
@@ -295,7 +295,7 @@ export default function LandingPage() {
           }} />
         </div>
 
-        {/* Suricata — dinero volando, cortada por el borde inferior */}
+        {/* Suricata, dinero volando, cortada por el borde inferior */}
         <MeerkatReveal className="meerkat-money">
           <Image
             src="/agent-money.png"
@@ -310,7 +310,7 @@ export default function LandingPage() {
 
           {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4">
-            {/* Suricata — ancla su bottom justo en el top de las tarjetas */}
+            {/* Suricata, ancla su bottom justo en el top de las tarjetas */}
             <MeerkatReveal className="absolute" style={{ bottom: -16, left: -5, width: 105, height: 188, zIndex: 0, pointerEvents: 'none', userSelect: 'none' }}>
               <Image
                 src="/agent-money.png"
@@ -390,7 +390,7 @@ export default function LandingPage() {
                 Centinelia resuelve los tres problemas a la vez.
               </p>
               <p className="text-sm" style={{ color: 'rgba(255,255,255,0.52)' }}>
-                Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda —
+                Un agente de voz entrenado con la información de tu negocio que atiende, captura y agenda,
                 sin que tú tengas que estar presente.
               </p>
             </div>
@@ -412,7 +412,7 @@ export default function LandingPage() {
       >
         <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
 
-          {/* Desktop: 2-col — texto izquierda, suricata derecha asomándose sobre las tarjetas */}
+          {/* Desktop: 2-col, texto izquierda, suricata derecha asomándose sobre las tarjetas */}
           <div className="hidden lg:flex items-end gap-10 mb-0">
             <AnimatedSection className="flex-1">
               <p className="text-xs font-semibold tracking-widest uppercase mb-3" style={{ color: C.accent }}>
@@ -459,7 +459,7 @@ export default function LandingPage() {
             </div>
           </div>
 
-          {/* Tarjetas — z-index:1 cubre los pies de la suricata */}
+          {/* Tarjetas, z-index:1 cubre los pies de la suricata */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 lg:mt-12"
             style={{ position: 'relative', zIndex: 1 }}>
             {FEATURES.map((f, i) => (
@@ -485,7 +485,7 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Marquee — debajo de las tarjetas */}
+          {/* Marquee, debajo de las tarjetas */}
           <div style={{ marginTop: 40, marginLeft: -20, marginRight: -20 }}>
             <Marquee />
           </div>
@@ -531,7 +531,7 @@ export default function LandingPage() {
             ))}
           </div>
 
-          {/* Character — desktop: lateral en el flex, mobile: oculto aquí */}
+          {/* Character, desktop: lateral en el flex, mobile: oculto aquí */}
           <MeerkatReveal className="agent-float-slow meerkat-duo-stand overflow-hidden">
             <Image src="/agent-duo-stand2.png" alt="Agentes Centinelia" fill
               sizes="340px"
@@ -539,7 +539,7 @@ export default function LandingPage() {
           </MeerkatReveal>
         </div>
 
-        {/* Duo mobile — asomándose desde el borde inferior de la sección */}
+        {/* Duo mobile, asomándose desde el borde inferior de la sección */}
         <div className="agent-float-slow meerkat-duo-mob">
           <MeerkatReveal style={{ position: 'relative', width: '100%', height: '100%' }}>
             <Image src="/agent-duo-stand2.png" alt="" fill sizes="220px"
@@ -550,7 +550,7 @@ export default function LandingPage() {
 
       {/* ── DEMO EN VIVO ─────────────────────────────────────────────────── */}
       <section id="demo" style={{ background: C.bgAlt, borderTop: `1px solid ${C.border}`, position: 'relative', overflow: 'hidden' }}>
-        {/* Headset meerkat — mobile: overflows from Demo into Planes section below */}
+        {/* Headset meerkat, mobile: overflows from Demo into Planes section below */}
         <div className="meerkat-headset-mob">
           <MeerkatReveal style={{ position: 'relative', width: '100%', height: '100%' }}>
             <Image src="/agent-headset.png" alt="" fill sizes="170px"
@@ -575,7 +575,7 @@ export default function LandingPage() {
             </h2>
             <p className="max-w-lg mx-auto" style={{ color: C.textSub }}>
               Llama al agente demo y pruébalo en vivo. Invéntate el negocio que quieras
-              o pídele que elija un escenario por ti — él lleva la conversación.
+              o pídele que elija un escenario por ti, él lleva la conversación.
             </p>
           </AnimatedSection>
 
@@ -596,7 +596,7 @@ export default function LandingPage() {
           ['--orb-dur' as string]: '13s',
         }} />
 
-        {/* Suit-phone meerkat — right side of Planes section */}
+        {/* Suit-phone meerkat, right side of Planes section */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk">
           <Image src="/agent-suit-phone.png" alt="" fill sizes="260px"
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
@@ -654,12 +654,12 @@ export default function LandingPage() {
                   </span>
                 </div>
 
-                {/* Precio regular tachado — contexto */}
+                {/* Precio regular tachado, contexto */}
                 <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
                   Próximamente: ${fmt(p.origPrice)}/mes
                 </p>
 
-                {/* Precio de lanzamiento — prominente */}
+                {/* Precio de lanzamiento, prominente */}
                 <div className="flex items-baseline gap-1 mb-4">
                   <span className="text-4xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
                     ${fmt(p.price)}
@@ -691,7 +691,7 @@ export default function LandingPage() {
                   ))}
                 </ul>
 
-                {/* Mobile peeking meerkat — right side of button */}
+                {/* Mobile peeking meerkat, right side of button */}
                 <MeerkatReveal className="block sm:hidden" style={{
                   position: 'absolute', bottom: p.meerkatBottom, right: 10,
                   width: 108, height: 108, zIndex: 0, pointerEvents: 'none', userSelect: 'none',
@@ -756,7 +756,7 @@ export default function LandingPage() {
           zIndex:       0,
         }} />
 
-        {/* Centered text — bottom padding creates space for the duo below */}
+        {/* Centered text, bottom padding creates space for the duo below */}
         <div className="relative max-w-3xl mx-auto px-5 sm:px-8 pt-24 sm:pt-28 text-center" style={{ zIndex: 2, paddingBottom: 'clamp(160px, 30vw, 280px)' }}>
         <AnimatedSection>
           <p className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: '#9B6DFF' }}>
@@ -798,7 +798,7 @@ export default function LandingPage() {
         </AnimatedSection>
         </div>
 
-        {/* Duo flotante — peeking up from the bottom edge */}
+        {/* Duo flotante, peeking up from the bottom edge */}
         <MeerkatReveal className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]" style={{ zIndex: 1 }}>
           <Image src="/agent-duo-call.png" alt="Equipo Centinelia" fill
             sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />

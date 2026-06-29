@@ -35,14 +35,14 @@ export async function GET(req: NextRequest) {
     if (agent.transfer_whatsapp) {
       await sendWhatsApp(
         agent.transfer_whatsapp,
-        `📴 *Agente pausado — ${agent.business_name}*\n\nEl período de gracia venció sin recibir el pago. Tu agente de voz ha sido pausado.\n\nActualiza tu método de pago para reactivar el servicio.`
+        `📴 *Agente pausado, ${agent.business_name}*\n\nEl período de gracia venció sin recibir el pago. Tu agente de voz ha sido pausado.\n\nActualiza tu método de pago para reactivar el servicio.`
       ).catch(console.error);
     }
 
     if (agent.client_email) {
       await sendEmail({
         to: agent.client_email,
-        subject: `📴 Agente pausado — ${agent.business_name}`,
+        subject: `📴 Agente pausado, ${agent.business_name}`,
         html: agentPausedHtml(agent.business_name),
       }).catch(console.error);
     }

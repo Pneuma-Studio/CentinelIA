@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
   const digits = numero_cliente.replace(/\D/g, '');
   const waNumber = digits.startsWith('52') ? `+${digits}` : `+52${digits}`;
 
-  const msg = `Hola, te escribo de parte de *${agent.business_name}*. Notamos que intentaste comunicarte con nosotros${motivo ? ` (${motivo})` : ''}. Estamos aquí para ayudarte — escríbenos con gusto. 😊`;
+  const msg = `Hola, te escribo de parte de *${agent.business_name}*. Notamos que intentaste comunicarte con nosotros${motivo ? ` (${motivo})` : ''}. Estamos aquí para ayudarte, escríbenos con gusto. 😊`;
 
   await sendWhatsApp(waNumber, msg);
 

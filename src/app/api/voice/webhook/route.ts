@@ -61,7 +61,7 @@ export async function POST(req: NextRequest) {
         break;
       }
 
-      // Duration: call.startedAt/endedAt may not be in webhook payload — also check message level
+      // Duration: call.startedAt/endedAt may not be in webhook payload, also check message level
       const rawStartedAt = call?.startedAt ?? message.startedAt;
       const rawEndedAt   = call?.endedAt   ?? message.endedAt;
       const startedAt    = rawStartedAt ? new Date(rawStartedAt).getTime() : 0;
@@ -180,7 +180,7 @@ export async function POST(req: NextRequest) {
           };
           await sendEmail({
             to:      agentForEmail.client_email,
-            subject: `${outcomeSubjects[outcome] ?? '📱 Llamada'} — ${agentForEmail.business_name}`,
+            subject: `${outcomeSubjects[outcome] ?? '📱 Llamada'}, ${agentForEmail.business_name}`,
             html:    newLeadHtml({
               businessName:  agentForEmail.business_name,
               callerNumber,
@@ -196,7 +196,7 @@ export async function POST(req: NextRequest) {
         }
       }
 
-      // 3. Update minutes — only if the call was successfully logged
+      // 3. Update minutes, only if the call was successfully logged
       if (callInsertError) {
         console.error('webhook: voice_calls insert failed, skipping minutes increment', callInsertError);
         break;
@@ -217,9 +217,9 @@ export async function POST(req: NextRequest) {
 
       const resetDateStr = agent?.minutes_reset_date
         ? new Date(agent.minutes_reset_date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })
-        : '—';
+        : ',';
 
-      // 5. WhatsApp call summary to owner — runs before auto-pause so it always fires
+      // 5. WhatsApp call summary to owner, runs before auto-pause so it always fires
       if (agent?.transfer_whatsapp && (agent.notify_whatsapp ?? true)) {
         const outcomeLabels: Record<string, string> = {
           lead_created:       '🎯 Nuevo lead',
@@ -259,12 +259,12 @@ export async function POST(req: NextRequest) {
       if (agent?.active && used >= included) {
         await supabase.from('voice_agents').update({ active: false }).eq('id', resolvedAgentId);
         if (agent.phone_number) await pauseVapiAgent(agent.phone_number);
-        const pauseMsg = `⚠️ *Límite de minutos alcanzado — ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`;
+        const pauseMsg = `⚠️ *Límite de minutos alcanzado, ${agent.business_name}*\n\nTu agente de voz ha sido *pausado automáticamente* al haber utilizado los ${included} minutos de tu plan.\n\nContacta a tu asesor de Centinelia para reactivar el servicio o adquirir minutos adicionales.`;
         if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, pauseMsg);
         if (agent.client_email) {
           await sendEmail({
             to: agent.client_email,
-            subject: `⚠️ Agente pausado — ${agent.business_name}`,
+            subject: `⚠️ Agente pausado, ${agent.business_name}`,
             html: minutesAlertHtml({ businessName: agent.business_name, pct: 100, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }
@@ -273,12 +273,12 @@ export async function POST(req: NextRequest) {
 
       // 7. Warning at 80%
       if (agent?.active && pct >= 80 && (pct - (minutes / included) * 100) < 80) {
-        const warnMsg = `📊 *Aviso de minutos — ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de Centinelia si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`;
+        const warnMsg = `📊 *Aviso de minutos, ${agent.business_name}*\n\nHas usado el *${Math.round(pct)}%* de tus ${included} minutos incluidos (${used} usados).\n\nContacta a tu asesor de Centinelia si necesitas ampliar tu plan antes de que el agente se pause automáticamente.`;
         if (agent.transfer_whatsapp) await sendWhatsApp(agent.transfer_whatsapp, warnMsg);
         if (agent.client_email) {
           await sendEmail({
             to: agent.client_email,
-            subject: `📊 Aviso: ${Math.round(pct)}% de minutos usados — ${agent.business_name}`,
+            subject: `📊 Aviso: ${Math.round(pct)}% de minutos usados, ${agent.business_name}`,
             html: minutesAlertHtml({ businessName: agent.business_name, pct, used, included, resetDate: resetDateStr, portalUrl: `${process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx'}/portal/${agent.portal_token}` }),
           }).catch(console.error);
         }

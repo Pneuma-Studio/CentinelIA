@@ -73,7 +73,7 @@ export default function LiveNotifications({ token }: { token: string }) {
           lastSeen.current = data.calls[0].created_at;
           data.calls.forEach(addToast);
         }
-      } catch { /* network error — ignore */ }
+      } catch { /* network error, ignore */ }
     };
 
     const interval = setInterval(poll, 30_000);

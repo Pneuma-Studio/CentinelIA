@@ -100,7 +100,7 @@ export default function UpgradePlanSection({
 
   return (
     <div className="flex flex-col gap-2">
-      {/* Shared feature — all plans */}
+      {/* Shared feature, all plans */}
       <div className="flex items-center gap-2.5 px-3 py-2.5 rounded-xl mb-1"
         style={{ background: 'rgba(66,133,244,0.08)', border: '1px solid rgba(66,133,244,0.2)' }}>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" className="flex-shrink-0">
@@ -133,7 +133,7 @@ export default function UpgradePlanSection({
               transition: 'border-color 0.15s, background 0.15s',
             }}
           >
-            {/* Collapsed header — always visible, tap to toggle */}
+            {/* Collapsed header, always visible, tap to toggle */}
             <button
               className="w-full flex items-center gap-3 px-4 py-3 text-left"
               onClick={() => setExpanded(isExpanded ? null : plan.key)}

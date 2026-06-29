@@ -11,7 +11,7 @@ export function getStripe(): Stripe {
   return _stripe;
 }
 
-// Keep named export for backwards compat — lazily resolved on first call
+// Keep named export for backwards compat, lazily resolved on first call
 export const stripe: Stripe = new Proxy({} as Stripe, {
   get(_target, prop) {
     return (getStripe() as any)[prop];

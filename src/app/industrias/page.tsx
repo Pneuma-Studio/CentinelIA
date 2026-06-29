@@ -7,8 +7,8 @@ import LandingWidgets from '@/app/LandingWidgets';
 const BASE_URL = 'https://www.centinelia.mx';
 
 export const metadata: Metadata = {
-  title: 'Centinelia por Industria — Agente de Voz IA para tu Giro',
-  description: 'Elige tu industria y descubre cómo Centinelia atiende llamadas, agenda citas y captura leads 24/7 — adaptado a clínicas, restaurantes, despachos, inmobiliarias y tiendas.',
+  title: 'Centinelia por Industria, Agente de Voz IA para tu Giro',
+  description: 'Elige tu industria y descubre cómo Centinelia atiende llamadas, agenda citas y captura leads 24/7, adaptado a clínicas, restaurantes, despachos, inmobiliarias y tiendas.',
   alternates: { canonical: `${BASE_URL}/industrias` },
   openGraph: {
     title: 'Centinelia por Industria | Agente de Voz IA',
@@ -25,7 +25,7 @@ const INDUSTRIES = [
     href: '/industrias/clinicas',
     icon: <Stethoscope size={28} color="#6C3BFF" />,
     label: 'Clínicas y Consultorios',
-    desc: 'Agenda citas, confirma recordatorios y filtra urgencias — sin interrumpir la consulta.',
+    desc: 'Agenda citas, confirma recordatorios y filtra urgencias, sin interrumpir la consulta.',
   },
   {
     href: '/industrias/restaurantes',

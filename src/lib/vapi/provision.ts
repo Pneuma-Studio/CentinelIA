@@ -116,7 +116,7 @@ export async function provisionPhoneNumber(vapiAssistantId: string, areaCode?: s
 
   const vapiPhoneId = await importToVapi(phoneNumber);
   if (!vapiPhoneId) {
-    // Number bought but Vapi import failed — still return so DB records it
+    // Number bought but Vapi import failed, still return so DB records it
     console.error('provision: number bought but Vapi import failed:', phoneNumber);
     return phoneNumber;
   }

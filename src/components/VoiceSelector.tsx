@@ -35,26 +35,26 @@ const DESC_LABEL: Record<string, string> = {
   classy:         'Elegante',
 };
 
-// Description overrides — checked first, before the ElevenLabs `descriptive` label
+// Description overrides, checked first, before the ElevenLabs `descriptive` label
 const VOICE_DESC_OVERRIDE: Record<string, string> = {
   // Female
-  'jUxkp8eMgszgJX3XU2pV': 'Bilingüe',  // Annie — EL label 'casual', pero es bilingüe
-  'nTkjq09AuYgsNR8E4sDe': 'Regia',      // Cristina — EL label 'excited'
-  'crQgCQuWgUucmYHEPsrB': 'Enérgica',   // Fran — EL label 'excited', pero es más energética
-  'cAvMBIZ0VNTU8XdsUpEq': 'Cálida',     // Susana — EL label 'casual', pero es "Warm, Soft"
+  'jUxkp8eMgszgJX3XU2pV': 'Bilingüe',  // Annie, EL label 'casual', pero es bilingüe
+  'nTkjq09AuYgsNR8E4sDe': 'Regia',      // Cristina, EL label 'excited'
+  'crQgCQuWgUucmYHEPsrB': 'Enérgica',   // Fran, EL label 'excited', pero es más energética
+  'cAvMBIZ0VNTU8XdsUpEq': 'Cálida',     // Susana, EL label 'casual', pero es "Warm, Soft"
   // Male
-  'htFfPSZGJwjBv1CL0aMD': 'Neutral',    // Antonio — EL label 'confident'
-  'id7LQ3n0ft94moeTT1ER': 'Intenso',    // David — EL label 'professional', pero es "Intense, Rapid"
-  'dlGxemPxFMTY7iXagmOj': 'Persuasivo', // Fernando — EL label 'casual', pero es "Rapid, Persuasive"
-  'sDh3eviBhiuHKi0MjTNq': 'Elegante',   // Francis — EL label 'professional', pero es "Corporate, Elegant"
-  '3mmJ2Z5SLZ9OkeZZcv5p': 'Fluido',     // Oscar — EL label 'confident', pero es "Fluid pitch"
+  'htFfPSZGJwjBv1CL0aMD': 'Neutral',    // Antonio, EL label 'confident'
+  'id7LQ3n0ft94moeTT1ER': 'Intenso',    // David, EL label 'professional', pero es "Intense, Rapid"
+  'dlGxemPxFMTY7iXagmOj': 'Persuasivo', // Fernando, EL label 'casual', pero es "Rapid, Persuasive"
+  'sDh3eviBhiuHKi0MjTNq': 'Elegante',   // Francis, EL label 'professional', pero es "Corporate, Elegant"
+  '3mmJ2Z5SLZ9OkeZZcv5p': 'Fluido',     // Oscar, EL label 'confident', pero es "Fluid pitch"
 };
 
-// Name overrides — removes last names and fixes non-standard dash patterns
+// Name overrides, removes last names and fixes non-standard dash patterns
 const VOICE_NAME_OVERRIDE: Record<string, string> = {
   // Female
   'j7e3J6ksqsziQcIGyAWI': 'Valentina',   // Valentina
-  'jUxkp8eMgszgJX3XU2pV': 'Centinelia', // Annie KPasa — voz oficial
+  'jUxkp8eMgszgJX3XU2pV': 'Centinelia', // Annie KPasa, voz oficial
   'hrlCBOGwBPZYViXHeZjS': 'Sofía',      // "Sofía Juliette - ..."
   'cAvMBIZ0VNTU8XdsUpEq': 'Susana',     // "Susana Elizabeth - ..."
   'nTkjq09AuYgsNR8E4sDe': 'Cristina',   // "Cristina Campos - ..."

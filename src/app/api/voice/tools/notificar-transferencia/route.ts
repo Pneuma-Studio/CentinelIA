@@ -23,7 +23,7 @@ export async function POST(req: NextRequest) {
 
   if (agent?.transfer_whatsapp) {
     const msg = [
-      `📞 *Transferencia entrante — ${agent.business_name}*`,
+      `📞 *Transferencia entrante, ${agent.business_name}*`,
       nombre  ? `👤 Cliente: ${nombre}`  : null,
       `📋 Motivo: ${motivo}`,
       resumen ? `📝 ${resumen}`          : null,

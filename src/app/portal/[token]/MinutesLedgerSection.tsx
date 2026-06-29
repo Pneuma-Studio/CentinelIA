@@ -91,7 +91,7 @@ export default async function MinutesLedgerSection({
       id:          'initial-plan',
       date:        firstDate,
       amount:      minutesIncluded,
-      description: `Plan incluido — ${minutesIncluded} minutos`,
+      description: `Plan incluido, ${minutesIncluded} minutos`,
       source:      'activacion' as Source,
     });
   }
@@ -127,7 +127,7 @@ export default async function MinutesLedgerSection({
 
   return (
     <div className="flex flex-col gap-1">
-      {/* Current balance header — sticky so it stays visible while scrolling */}
+      {/* Current balance header, sticky so it stays visible while scrolling */}
       <div className="flex items-center justify-between mb-2 pb-2 sticky top-0 z-10"
         style={{ borderBottom: '1px solid var(--c-divider)', background: 'var(--c-bg)' }}>
         <span className="text-xs" style={{ color: 'var(--c-text-3)' }}>Saldo actual</span>

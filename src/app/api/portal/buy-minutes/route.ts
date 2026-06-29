@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
   let customerId: string = agent.stripe_customer_id ?? '';
   if (!customerId) {
     const customer = await stripe.customers.create({
-      name:     `${agent.client_name} — ${agent.business_name}`,
+      name:     `${agent.client_name}, ${agent.business_name}`,
       metadata: { agent_id: agent.id },
     });
     customerId = customer.id;
@@ -54,7 +54,7 @@ export async function POST(req: NextRequest) {
         currency:     'mxn',
         unit_amount:  priceMxn * 100,
         product_data: {
-          name:        `${minutes} minutos extra — Centinelia`,
+          name:        `${minutes} minutos extra, Centinelia`,
           description: `Se suman inmediatamente al saldo de ${agent.business_name}`,
         },
       },

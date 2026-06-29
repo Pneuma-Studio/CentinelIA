@@ -154,7 +154,7 @@ export default async function AgentDetailPage({ params }: Props) {
                 })}
               </div>
             ) : (
-              <div className="text-xs" style={{ color: '#22c55e' }}>24/7 — sin restricción de horario</div>
+              <div className="text-xs" style={{ color: '#22c55e' }}>24/7, sin restricción de horario</div>
             )}
           </div>
 

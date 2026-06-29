@@ -24,7 +24,7 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ result: 'El calendario no está configurado. Pregunta directamente al cliente qué fecha y hora prefiere.' });
   }
 
-  // Build date range — default: today + 7 days
+  // Build date range, default: today + 7 days
   const tz = agent.timezone ?? 'America/Monterrey';
   const now = new Date();
   const startTime = fecha_inicio

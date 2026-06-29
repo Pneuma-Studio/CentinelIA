@@ -47,7 +47,7 @@ export default function CallsSearch({ calls, isPro, callerNames = {} }: {
         )}
       </div>
 
-      {/* Scroll wrapper separated from flex layout — prevents overflow-y from clipping flex gaps/borders */}
+      {/* Scroll wrapper separated from flex layout, prevents overflow-y from clipping flex gaps/borders */}
       <div style={{ maxHeight: 340, overflowY: 'auto' }}>
         <div className="flex flex-col gap-2" style={{ padding: '1px 1px 6px' }}>
           {filtered.length === 0

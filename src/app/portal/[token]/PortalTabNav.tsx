@@ -30,7 +30,7 @@ export default function PortalTabNav({ token, currentTab, tabs }: { token: strin
         ))}
       </div>
 
-      {/* Mobile: current tab name + hamburger — whole row is clickable */}
+      {/* Mobile: current tab name + hamburger, whole row is clickable */}
       <button
         onClick={() => setOpen(o => !o)}
         className="flex sm:hidden w-full items-center justify-between py-2.5 text-left"
@@ -47,7 +47,7 @@ export default function PortalTabNav({ token, currentTab, tabs }: { token: strin
         </span>
       </button>
 
-      {/* Mobile dropdown — inline expansion, negative margins to fill nav bar width */}
+      {/* Mobile dropdown, inline expansion, negative margins to fill nav bar width */}
       {open && (
         <div className="sm:hidden" style={{ marginLeft: '-1rem', marginRight: '-1rem', borderTop: '1px solid var(--c-border)' }}>
           {tabs.map((t, i) => (

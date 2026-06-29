@@ -65,57 +65,57 @@ export default function PrivacidadDatos() {
 
         <Section title="1. Qué datos recopilamos">
           <Item>
-            <strong>Grabaciones de llamadas</strong> — Solo si tu plan las incluye y el agente está configurado para grabar.
+            <strong>Grabaciones de llamadas</strong>, Solo si tu plan las incluye y el agente está configurado para grabar.
             Las grabaciones quedan disponibles en tu portal de cliente.
           </Item>
           <Item>
-            <strong>Transcripciones de llamadas</strong> — El texto de cada conversación que tuvo el agente con tus llamantes.
+            <strong>Transcripciones de llamadas</strong>, El texto de cada conversación que tuvo el agente con tus llamantes.
             Se usa para mostrar el historial en tu portal.
           </Item>
           <Item>
-            <strong>Datos del negocio</strong> — Nombre, giro, número de teléfono y la información que configuras en el
+            <strong>Datos del negocio</strong>, Nombre, giro, número de teléfono y la información que configuras en el
             perfil de tu agente (horarios, servicios, precios, etc.).
           </Item>
           <Item>
-            <strong>Datos del dueño o responsable</strong> — Nombre, correo electrónico y número de contacto que proporcionas
+            <strong>Datos del dueño o responsable</strong>, Nombre, correo electrónico y número de contacto que proporcionas
             al crear tu cuenta.
           </Item>
           <Item>
-            <strong>Datos de facturación</strong> — El pago se procesa directamente por Stripe. Nosotros nunca vemos ni
-            almacenamos los números de tarjeta — Stripe se encarga de eso de forma segura.
+            <strong>Datos de facturación</strong>, El pago se procesa directamente por Stripe. Nosotros nunca vemos ni
+            almacenamos los números de tarjeta, Stripe se encarga de eso de forma segura.
           </Item>
         </Section>
 
         <Section title="2. Para qué usamos esos datos">
           <Item>
-            <strong>Operar tu agente de voz</strong> — El agente necesita conocer la información de tu negocio para
+            <strong>Operar tu agente de voz</strong>, El agente necesita conocer la información de tu negocio para
             responder correctamente a tus clientes.
           </Item>
           <Item>
-            <strong>Mostrar el historial en tu portal</strong> — Las llamadas, leads y citas capturadas aparecen en tu
+            <strong>Mostrar el historial en tu portal</strong>, Las llamadas, leads y citas capturadas aparecen en tu
             panel para que puedas darles seguimiento.
           </Item>
           <Item>
-            <strong>Mejorar el desempeño del agente</strong> — Con tu consentimiento, podemos revisar transcripciones
+            <strong>Mejorar el desempeño del agente</strong>, Con tu consentimiento, podemos revisar transcripciones
             para detectar áreas de mejora en la configuración del agente.
           </Item>
           <Item>
-            <strong>Facturación y soporte</strong> — Usamos tu correo y datos de contacto para enviarte recibos,
+            <strong>Facturación y soporte</strong>, Usamos tu correo y datos de contacto para enviarte recibos,
             notificaciones del servicio y atender cualquier duda.
           </Item>
         </Section>
 
         <Section title="3. Quién tiene acceso">
           <Item>
-            <strong>Tú</strong> — Como cliente, tienes acceso completo a los datos de tu negocio y el historial de
+            <strong>Tú</strong>, Como cliente, tienes acceso completo a los datos de tu negocio y el historial de
             llamadas a través de tu portal.
           </Item>
           <Item>
-            <strong>Centinelia</strong> — Solo accedemos a tus datos para operar el servicio o atender solicitudes de
+            <strong>Centinelia</strong>, Solo accedemos a tus datos para operar el servicio o atender solicitudes de
             soporte. No vendemos ni compartimos tu información con terceros para fines comerciales.
           </Item>
           <Item>
-            <strong>Proveedores de infraestructura</strong> — Para operar el servicio usamos:{' '}
+            <strong>Proveedores de infraestructura</strong>, Para operar el servicio usamos:{' '}
             <span style={{ color: C.text }}>Supabase</span> (base de datos),{' '}
             <span style={{ color: C.text }}>Vapi</span> (motor de voz),{' '}
             <span style={{ color: C.text }}>ElevenLabs</span> (síntesis de voz) y{' '}
@@ -126,29 +126,29 @@ export default function PrivacidadDatos() {
 
         <Section title="4. Cuánto tiempo guardamos los datos">
           <Item>
-            <strong>Grabaciones y transcripciones</strong> — Se conservan 90 días por defecto.
+            <strong>Grabaciones y transcripciones</strong>, Se conservan 90 días por defecto.
             Si necesitas un período diferente, escríbenos y lo ajustamos para tu cuenta.
           </Item>
           <Item>
-            <strong>Datos de cuenta y configuración</strong> — Los mantenemos mientras tu cuenta esté activa.
+            <strong>Datos de cuenta y configuración</strong>, Los mantenemos mientras tu cuenta esté activa.
             Tras la cancelación, los conservamos 30 días adicionales como respaldo y luego los eliminamos definitivamente.
           </Item>
         </Section>
 
         <Section title="5. Tus derechos">
           <Item>
-            <strong>Solicitar eliminación</strong> — Puedes pedir que eliminemos todos tus datos escribiéndonos a{' '}
+            <strong>Solicitar eliminación</strong>, Puedes pedir que eliminemos todos tus datos escribiéndonos a{' '}
             <a href="mailto:hola@centinelia.mx" style={{ color: C.accent, textDecoration: 'none' }} className="hover:opacity-80 transition-opacity">
               hola@centinelia.mx
             </a>
             . Lo procesamos en un plazo máximo de 10 días hábiles.
           </Item>
           <Item>
-            <strong>Exportar tu historial</strong> — Puedes descargar el historial de llamadas directamente desde
+            <strong>Exportar tu historial</strong>, Puedes descargar el historial de llamadas directamente desde
             tu portal de cliente.
           </Item>
           <Item>
-            <strong>Corregir información</strong> — Si algún dato de tu cuenta o negocio es incorrecto,
+            <strong>Corregir información</strong>, Si algún dato de tu cuenta o negocio es incorrecto,
             puedes actualizarlo desde tu portal o contactarnos.
           </Item>
         </Section>

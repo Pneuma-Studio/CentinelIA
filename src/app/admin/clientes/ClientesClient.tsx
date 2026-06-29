@@ -260,7 +260,7 @@ export default function ClientesClient({ clients }: { clients: ClientGroup[] }) 
                           <div className="px-5 py-4 flex flex-col gap-3"
                             style={{ background: 'rgba(245,158,11,0.04)', borderTop: '1px solid rgba(245,158,11,0.15)' }}>
                             <p className="text-xs font-semibold" style={{ color: 'var(--c-text-2)' }}>
-                              Acceso al portal — <span style={{ color: 'var(--c-text-3)', fontWeight: 400 }}>{agent.business_name}</span>
+                              Acceso al portal, <span style={{ color: 'var(--c-text-3)', fontWeight: 400 }}>{agent.business_name}</span>
                             </p>
 
                             <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">

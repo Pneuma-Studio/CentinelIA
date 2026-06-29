@@ -125,7 +125,7 @@ export default async function DashboardPage() {
 
           {agentList.length === 0 ? (
             <p className="text-xs py-6 text-center" style={{ color: 'var(--c-text-4)' }}>
-              Sin agentes — crea el primero con el botón de arriba
+              Sin agentes, crea el primero con el botón de arriba
             </p>
           ) : (
             <div className="flex flex-col gap-2">
@@ -192,7 +192,7 @@ export default async function DashboardPage() {
           <h2 className="text-xs font-semibold tracking-widest uppercase mb-4" style={{ color: 'var(--c-text-3)' }}>Llamadas recientes</h2>
           {(recentCalls ?? []).length === 0 ? (
             <p className="text-xs py-6 text-center" style={{ color: 'var(--c-text-4)' }}>
-              Sin llamadas — asegúrate de que los números estén activos en Vapi
+              Sin llamadas, asegúrate de que los números estén activos en Vapi
             </p>
           ) : (
             <div className="flex flex-col gap-1.5">

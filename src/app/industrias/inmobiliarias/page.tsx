@@ -58,15 +58,15 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'Estaba en una visita y llegaron tres llamadas. El agente las atendió, filtró a los que tenían presupuesto real y me mandó un resumen. Cuando salí ya tenía tres citas agendadas para esa semana.',
-    author: 'Agente inmobiliario independiente — Monterrey',
+    author: 'Agente inmobiliario independiente, Monterrey',
   },
   {
     quote: 'Recibíamos muchas llamadas de personas con presupuesto muy por debajo del inventario. El agente hace las preguntas correctas y solo agenda a los prospectos que sí califican.',
-    author: 'Directora comercial, desarrolladora inmobiliaria — CDMX',
+    author: 'Directora comercial, desarrolladora inmobiliaria, CDMX',
   },
   {
     quote: 'Mis propiedades son de renta y la gente llama a toda hora para preguntar disponibilidad. El agente les da la información, toma sus datos y me los manda. Ya no estoy pegado al teléfono.',
-    author: 'Inversionista con cartera de rentas — Guadalajara',
+    author: 'Inversionista con cartera de rentas, Guadalajara',
   },
 ];
 
@@ -125,7 +125,7 @@ export default function InmobiliariasPage() {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
-            Un agente de voz con IA atiende a tus prospectos al instante, filtra por presupuesto y agenda visitas — mientras tú estás mostrando propiedades o cerrando otros tratos.
+            Un agente de voz con IA atiende a tus prospectos al instante, filtra por presupuesto y agenda visitas, mientras tú estás mostrando propiedades o cerrando otros tratos.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/registro" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
@@ -136,7 +136,7 @@ export default function InmobiliariasPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat, desktop, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
@@ -214,7 +214,7 @@ export default function InmobiliariasPage() {
               <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
                 <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}</div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
-                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>, {t.author}</p>
               </div>
             ))}
           </div>
@@ -243,7 +243,7 @@ export default function InmobiliariasPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat duo, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
           className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}

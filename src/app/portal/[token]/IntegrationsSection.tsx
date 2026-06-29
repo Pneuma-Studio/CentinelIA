@@ -25,7 +25,7 @@ const INTEGRATIONS: IntegrationDef[] = [
   {
     id:           'cal_com',
     label:        'Cal.com',
-    description:  'Agendamiento directo — el agente crea la cita durante la llamada',
+    description:  'Agendamiento directo, el agente crea la cita durante la llamada',
     requiredPlan: 'basico',
     accentColor:  '#000',
     icon: (
@@ -38,7 +38,7 @@ const INTEGRATIONS: IntegrationDef[] = [
   {
     id:           'calendly',
     label:        'Calendly',
-    description:  'Agendamiento vía link — el agente comparte tu URL por WhatsApp',
+    description:  'Agendamiento vía link, el agente comparte tu URL por WhatsApp',
     requiredPlan: 'basico',
     accentColor:  '#006BFF',
     icon: (
@@ -51,7 +51,7 @@ const INTEGRATIONS: IntegrationDef[] = [
   {
     id:           'google',
     label:        'Google Calendar',
-    description:  'Agendamiento vía link — el agente comparte tu URL por WhatsApp',
+    description:  'Agendamiento vía link, el agente comparte tu URL por WhatsApp',
     requiredPlan: 'basico',
     accentColor:  '#4285F4',
     icon: (
@@ -182,7 +182,7 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
                           type="password"
                           value={state.cal_api_key}
                           onChange={e => set('cal_api_key', e.target.value)}
-                          placeholder={state.cal_api_configured ? '••••••••• (guardada — pega nueva para cambiar)' : 'cal_live_...'}
+                          placeholder={state.cal_api_configured ? '••••••••• (guardada, pega nueva para cambiar)' : 'cal_live_...'}
                           className="w-full px-3 py-2 rounded-lg text-sm focus:outline-none"
                           style={{ background: 'var(--c-input-bg)', border: '1px solid var(--c-border)', color: 'var(--c-text)' }}
                         />
@@ -294,7 +294,7 @@ export default function IntegrationsSection({ token, plan }: { token: string; pl
         style={{ background: 'var(--c-surface-2)', border: '1px solid var(--c-border)' }}>
         <div>
           <p className="text-xs font-medium" style={{ color: 'var(--c-text-2)' }}>¿No encuentras tu herramienta?</p>
-          <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>Podemos conectar cualquier sistema — escríbenos</p>
+          <p className="text-xs mt-0.5" style={{ color: 'var(--c-text-3)' }}>Podemos conectar cualquier sistema, escríbenos</p>
         </div>
         {SUPPORT_WA && (
           <a href={`https://wa.me/${SUPPORT_WA}?text=${encodeURIComponent('¡Hola! Quiero saber cómo puedo contratar un agente 24/7 para mi negocio.')}`}

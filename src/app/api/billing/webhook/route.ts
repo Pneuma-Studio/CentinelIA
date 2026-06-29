@@ -77,7 +77,7 @@ export async function POST(req: NextRequest) {
           await supabase.from('minutes_ledger').insert({
             agent_id:    agentId,
             amount:      newIncluded - (prevForUpgrade?.minutes_included ?? 0),
-            description: `Upgrade a ${newMinutesCfg.label} — ajuste inmediato de minutos`,
+            description: `Upgrade a ${newMinutesCfg.label}, ajuste inmediato de minutos`,
             source:      'activacion',
           });
         }
@@ -144,7 +144,7 @@ export async function POST(req: NextRequest) {
       await supabase.from('minutes_ledger').insert({
         agent_id:    agentId,
         amount:      minutesCfg.minutes,
-        description: `Activación plan — ${minutesCfg.minutes} minutos incluidos`,
+        description: `Activación plan, ${minutesCfg.minutes} minutos incluidos`,
         source:      'activacion',
       });
 
@@ -205,7 +205,7 @@ export async function POST(req: NextRequest) {
             : `⚠️ Pendiente: asignar número de teléfono manualmente`;
           await sendWhatsApp(
             adminWa,
-            `🎉 *Nuevo cliente — Centinelia*\n\nNegocio: *${agent.business_name}*\nPlan: ${planLabels[featurePlan ?? ''] ?? featurePlan}\nEmail: ${agent.client_email}\nWA: ${(agent as any).transfer_whatsapp ?? '—'}\n${phoneInfo}`
+            `🎉 *Nuevo cliente, Centinelia*\n\nNegocio: *${agent.business_name}*\nPlan: ${planLabels[featurePlan ?? ''] ?? featurePlan}\nEmail: ${agent.client_email}\nWA: ${(agent as any).transfer_whatsapp ?? ','}\n${phoneInfo}`
           ).catch(console.error);
         }
       }
@@ -250,14 +250,14 @@ export async function POST(req: NextRequest) {
       await supabase.from('minutes_ledger').insert({
         agent_id:    agentId,
         amount:      minutesCfg.minutes,
-        description: `Renovación mensual — ${minutesCfg.minutes} minutos`,
+        description: `Renovación mensual, ${minutesCfg.minutes} minutos`,
         source:      'renovacion',
       });
       if (rollover > 0) {
         await supabase.from('minutes_ledger').insert({
           agent_id:    agentId,
           amount:      rollover,
-          description: `Rollover — ${rollover} minutos del mes anterior`,
+          description: `Rollover, ${rollover} minutos del mes anterior`,
           source:      'rollover',
         });
       }
@@ -301,13 +301,13 @@ export async function POST(req: NextRequest) {
       if (agent?.transfer_whatsapp) {
         await sendWhatsApp(
           agent.transfer_whatsapp,
-          `⚠️ *Pago fallido — ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción Centinelia. Tienes *3 días* para regularizar el pago antes de que el agente sea pausado automáticamente.\n\nActualiza tu método de pago para continuar el servicio sin interrupciones.`
+          `⚠️ *Pago fallido, ${agent.business_name}*\n\nNo pudimos procesar el pago de tu suscripción Centinelia. Tienes *3 días* para regularizar el pago antes de que el agente sea pausado automáticamente.\n\nActualiza tu método de pago para continuar el servicio sin interrupciones.`
         );
       }
       if (agent?.client_email) {
         await sendEmail({
           to: agent.client_email,
-          subject: `💳 Pago fallido — ${agent.business_name}`,
+          subject: `💳 Pago fallido, ${agent.business_name}`,
           html: paymentFailedHtml(agent.business_name),
         }).catch(console.error);
       }
@@ -337,7 +337,7 @@ export async function POST(req: NextRequest) {
       if (agent?.transfer_whatsapp) {
         await sendWhatsApp(
           agent.transfer_whatsapp,
-          `📴 *Suscripción cancelada — ${agent.business_name}*\n\nTu agente de voz ha sido desactivado. Contáctanos para reactivar el servicio.`
+          `📴 *Suscripción cancelada, ${agent.business_name}*\n\nTu agente de voz ha sido desactivado. Contáctanos para reactivar el servicio.`
         );
       }
       break;

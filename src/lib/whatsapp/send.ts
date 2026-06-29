@@ -9,7 +9,7 @@ function toWaNumber(num: string) {
 
 export async function sendWhatsApp(to: string, body: string, fromNumber?: string): Promise<boolean> {
   if (!TWILIO_SID || !TWILIO_TOKEN || !TWILIO_WA) {
-    console.warn('WhatsApp not configured — missing TWILIO_* env vars');
+    console.warn('WhatsApp not configured, missing TWILIO_* env vars');
     return false;
   }
 

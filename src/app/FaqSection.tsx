@@ -26,7 +26,7 @@ const FAQS = [
   },
   {
     q: '¿Funciona para mi tipo de negocio?',
-    a: 'Funciona para cualquier negocio que reciba llamadas: clínicas, restaurantes, despachos, inmobiliarias, tiendas, academias y más. El agente aprende sobre tu negocio específico — no es un bot genérico.',
+    a: 'Funciona para cualquier negocio que reciba llamadas: clínicas, restaurantes, despachos, inmobiliarias, tiendas, academias y más. El agente aprende sobre tu negocio específico, no es un bot genérico.',
   },
   {
     q: '¿Puedo cancelar cuando quiera?',

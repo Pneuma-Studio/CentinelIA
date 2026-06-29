@@ -36,7 +36,7 @@ const PROBLEMS = [
   },
   {
     icon: <MessageCircle size={22} color="#f59e0b" />,
-    title: '"¿Tienen el modelo X en talla M?" — veinte veces al día',
+    title: '"¿Tienen el modelo X en talla M?", veinte veces al día',
     desc: 'Las mismas preguntas sobre disponibilidad, precios y horarios consumen tiempo que deberías dedicar a los clientes frente a ti o a hacer crecer tu negocio.',
   },
   {
@@ -58,15 +58,15 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'Tenemos una floristería y en temporadas altas como San Valentín no dábamos abasto ni en el local ni en el teléfono. El agente tomó pedidos toda la noche del 13 y llegamos al 14 con el doble de ventas.',
-    author: 'Dueña de floristería — Monterrey',
+    author: 'Dueña de floristería, Monterrey',
   },
   {
     quote: 'Mis clientes llaman para preguntar si tenemos repuesto de tal modelo antes de venir. El agente consulta lo que le cargué y les responde al momento. Ya no pierdo esa venta porque nadie contestó.',
-    author: 'Dueño de taller de electrónica — Guadalajara',
+    author: 'Dueño de taller de electrónica, Guadalajara',
   },
   {
     quote: 'Vendemos uniformes y en agosto nos caen cientos de llamadas de papás preguntando tallas y precios. El agente los atiende a todos y me manda los pedidos. Fue el agosto más ordenado que hemos tenido.',
-    author: 'Administrador de tienda de uniformes escolares — CDMX',
+    author: 'Administrador de tienda de uniformes escolares, CDMX',
   },
 ];
 
@@ -125,7 +125,7 @@ export default function TiendasPage() {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
-            Un agente de voz con IA atiende las llamadas de tu negocio a cualquier hora. Responde sobre disponibilidad, toma pedidos y captura clientes — mientras tú atiendes el local o descansas.
+            Un agente de voz con IA atiende las llamadas de tu negocio a cualquier hora. Responde sobre disponibilidad, toma pedidos y captura clientes, mientras tú atiendes el local o descansas.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/registro" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
@@ -136,7 +136,7 @@ export default function TiendasPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat, desktop, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
@@ -214,7 +214,7 @@ export default function TiendasPage() {
               <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
                 <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}</div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
-                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>, {t.author}</p>
               </div>
             ))}
           </div>
@@ -243,7 +243,7 @@ export default function TiendasPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat duo, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
           className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}

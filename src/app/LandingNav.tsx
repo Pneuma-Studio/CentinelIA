@@ -106,7 +106,7 @@ export default function LandingNav() {
         {/* Right side */}
         <div className="flex items-center gap-2 relative">
 
-          {/* Hamburger — same on mobile and desktop */}
+          {/* Hamburger, same on mobile and desktop */}
           <button
             onClick={() => { setMenuOpen(v => !v); setIndustrias(false); }}
             className="p-2 rounded-xl transition-colors"
@@ -116,7 +116,7 @@ export default function LandingNav() {
             {menuOpen ? <X size={20} /> : <Menu size={20} />}
           </button>
 
-          {/* Contratar — always visible */}
+          {/* Contratar, always visible */}
           <Link
             href="/registro"
             className="px-4 py-2 rounded-xl text-sm font-semibold transition-opacity hover:opacity-90"
@@ -125,7 +125,7 @@ export default function LandingNav() {
             Contratar
           </Link>
 
-          {/* Desktop dropdown — right-aligned below button */}
+          {/* Desktop dropdown, right-aligned below button */}
           {menuOpen && (
             <div
               className="hidden sm:block absolute right-0 top-full mt-2 w-64 rounded-2xl shadow-xl overflow-hidden"

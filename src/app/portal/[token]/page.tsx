@@ -113,7 +113,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const rolloverMinutes = Math.max(0, minutesIncluded - planBaseMinutes);
   const resetDate       = agent.minutes_reset_date
     ? new Date(agent.minutes_reset_date + 'T00:00:00').toLocaleDateString('es-MX', { day: 'numeric', month: 'long' })
-    : '—';
+    : ',';
 
   const supportWhatsApp    = process.env.NEXT_PUBLIC_SUPPORT_WHATSAPP ?? '';
   const supportEmail       = process.env.NEXT_PUBLIC_SUPPORT_EMAIL ?? 'hola@centinelia.mx';
@@ -123,7 +123,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   const since = days ? new Date(Date.now() - days * 86400000).toISOString() : undefined;
 
   const [callsRes, leadsRes, ordersRes, apptsRes, allCallsRes] = await Promise.all([
-    // Calls — always needed (resumen + minutos tab for allCalls)
+    // Calls, always needed (resumen + minutos tab for allCalls)
     since
       ? supabase.from('voice_calls').select('*').eq('agent_id', agent.id).gte('created_at', since).order('created_at', { ascending: false }).limit(100)
       : supabase.from('voice_calls').select('*').eq('agent_id', agent.id).order('created_at', { ascending: false }).limit(100),
@@ -182,7 +182,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
   return (
     <ThemeProvider storageKey="centinelia-portal-theme" defaultTheme="dark">
       <div className="min-h-screen relative overflow-hidden" style={{ background: 'var(--c-bg)', color: 'var(--c-text)' }}>
-        {/* Ambient orb — top center */}
+        {/* Ambient orb, top center */}
         <div style={{ position: 'absolute', width: 900, height: 500, top: -320, left: '50%', transform: 'translateX(-50%)', background: 'radial-gradient(ellipse, rgba(108,59,255,0.13) 0%, transparent 70%)', pointerEvents: 'none', zIndex: 0 }} />
 
         {/* Header */}
@@ -260,7 +260,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                 <AlertTriangle size={15} color="#fbbf24" className="flex-shrink-0 mt-0.5" />
                 <div>
                   <p className="text-sm font-medium" style={{ color: 'var(--c-text)' }}>
-                    Estás al {Math.round(minutesPct)}% de tus minutos — te quedan {minutesRemain} min
+                    Estás al {Math.round(minutesPct)}% de tus minutos, te quedan {minutesRemain} min
                   </p>
                   <p className="text-xs mt-0.5" style={{ color: '#fbbf24' }}>Reset el {resetDate}</p>
                 </div>
@@ -523,7 +523,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
                       style={{ objectFit: 'contain', objectPosition: 'bottom' }} />
                   </div>
                   <div className="text-center">
-                    <p className="text-sm font-medium" style={{ color: 'var(--c-text-2)' }}>Tu equipo está listo — esperando la primera llamada</p>
+                    <p className="text-sm font-medium" style={{ color: 'var(--c-text-2)' }}>Tu equipo está listo, esperando la primera llamada</p>
                     <p className="text-xs mt-1" style={{ color: 'var(--c-text-3)' }}>Leads, pedidos y citas están disponibles en planes superiores</p>
                   </div>
                 </div>
@@ -663,7 +663,7 @@ export default async function ClientPortalPage({ params, searchParams }: Props) 
         {/* Footer */}
         <div className="mt-1 px-4 sm:px-6 pt-2 pb-20 sm:pb-4" style={{ borderTop: '1px solid var(--c-border)', position: 'relative', zIndex: 1 }}>
 
-          {/* Review badge — absolute in the pb space, same pattern as landing footer */}
+          {/* Review badge, absolute in the pb space, same pattern as landing footer */}
           {centineliReviewUrl && (
             <a
               href={centineliReviewUrl}

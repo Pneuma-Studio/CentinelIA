@@ -38,7 +38,7 @@ const PROBLEMS = [
   {
     icon: <PhoneOff size={22} color="#ef4444" />,
     title: 'El teléfono suena en hora pico y nadie puede contestar',
-    desc: 'A la hora de la comida o la cena, todo el equipo está sirviendo mesas. Las llamadas entran y nadie las atiende — esas ventas se van.',
+    desc: 'A la hora de la comida o la cena, todo el equipo está sirviendo mesas. Las llamadas entran y nadie las atiende, esas ventas se van.',
   },
   {
     icon: <Clock size={22} color="#f59e0b" />,
@@ -64,22 +64,22 @@ const FEATURES = [
 const TESTIMONIALS = [
   {
     quote: 'En viernes a las 8pm no podíamos contestar el teléfono sin descuidar las mesas. Ahora el agente toma los pedidos y me los manda por WhatsApp. Ya no perdemos ventas en horas pico.',
-    author: 'Dueño de restaurante familiar — Monterrey',
+    author: 'Dueño de restaurante familiar, Monterrey',
   },
   {
     quote: 'Mis clientes llaman para preguntar si tenemos opción vegetariana o sin gluten. El agente les responde al momento y si quieren hacer reservación, la agenda ahí mismo.',
-    author: 'Dueña de café brunch — Guadalajara',
+    author: 'Dueña de café brunch, Guadalajara',
   },
   {
     quote: 'Antes anotábamos los pedidos en un papel y había errores constantemente. Ahora el agente los captura y yo los recibo en el celular. Cero confusiones.',
-    author: 'Administrador de taquería con servicio a domicilio — CDMX',
+    author: 'Administrador de taquería con servicio a domicilio, CDMX',
   },
 ];
 
 const FAQS = [
   {
     q: '¿El agente puede manejar un menú extenso con variantes y modificadores?',
-    a: 'Sí. Le proporcionas tu menú en el portal — platillos, precios, variantes (tamaño, sin cebolla, extra queso) — y el agente lo maneja en la conversación de forma natural.',
+    a: 'Sí. Le proporcionas tu menú en el portal, platillos, precios, variantes (tamaño, sin cebolla, extra queso), y el agente lo maneja en la conversación de forma natural.',
   },
   {
     q: '¿Cómo me llegan los pedidos y reservaciones?',
@@ -133,7 +133,7 @@ export default function RestaurantesPage() {
             </span>
           </h1>
           <p className="mb-8 max-w-2xl mx-auto" style={{ fontSize: 'clamp(1rem, 1.8vw, 1.15rem)', color: 'rgba(255,255,255,0.62)', lineHeight: 1.7 }}>
-            Un agente de voz con IA atiende las llamadas de tu restaurante a cualquier hora. Toma pedidos, agenda reservaciones y responde sobre el menú — mientras tú y tu equipo se concentran en el servicio.
+            Un agente de voz con IA atiende las llamadas de tu restaurante a cualquier hora. Toma pedidos, agenda reservaciones y responde sobre el menú, mientras tú y tu equipo se concentran en el servicio.
           </p>
           <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
             <Link href="/registro" className="inline-flex items-center gap-2 px-7 py-3.5 rounded-2xl text-sm font-bold transition-all hover:opacity-90 hover:scale-[1.02]" style={{ background: 'linear-gradient(135deg, #6C3BFF, #9B6DFF)', color: '#fff' }}>
@@ -144,7 +144,7 @@ export default function RestaurantesPage() {
             </a>
           </div>
         </div>
-        {/* Meerkat — desktop, peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat, desktop, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal className="agent-sway meerkat-headset-desk" style={{ zIndex: 2 }}>
           <Image src="/agent-headset.png" alt="" fill sizes="260px" style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
@@ -230,7 +230,7 @@ export default function RestaurantesPage() {
               <div key={i} className="rounded-2xl p-6 flex flex-col gap-4" style={{ background: '#fff', border: `1px solid ${C.border}` }}>
                 <div className="flex gap-0.5">{Array.from({ length: 5 }).map((_, j) => <Star key={j} size={13} fill="#6C3BFF" color="#6C3BFF" />)}</div>
                 <p className="text-sm leading-relaxed flex-1" style={{ color: C.textSub }}>"{t.quote}"</p>
-                <p className="text-xs font-semibold" style={{ color: C.accent }}>— {t.author}</p>
+                <p className="text-xs font-semibold" style={{ color: C.accent }}>, {t.author}</p>
               </div>
             ))}
           </div>
@@ -265,7 +265,7 @@ export default function RestaurantesPage() {
             Activar mi agente ahora <ArrowRight size={15} />
           </Link>
         </div>
-        {/* Meerkat duo — peeks from bottom edge (clipped by overflow:hidden) */}
+        {/* Meerkat duo, peeks from bottom edge (clipped by overflow:hidden) */}
         <MeerkatReveal
           className="agent-sway absolute bottom-[-50px] sm:bottom-[-80px] left-1/2 -translate-x-1/2 pointer-events-none select-none w-[300px] h-[216px] sm:w-[580px] sm:h-[420px]"
           style={{ zIndex: 1 }}

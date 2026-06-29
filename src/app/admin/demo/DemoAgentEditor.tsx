@@ -162,7 +162,7 @@ export default function DemoAgentEditor({ agent }: { agent: VoiceAgent }) {
           onChange={setDescription}
           textarea
           rows={3}
-          placeholder="Agente demo de Centinelia — adopta cualquier papel que se le indique."
+          placeholder="Agente demo de Centinelia: adopta cualquier papel que se le indique."
         />
       </div>
 

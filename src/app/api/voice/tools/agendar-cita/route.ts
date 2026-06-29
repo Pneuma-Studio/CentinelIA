@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
   if (agent?.transfer_whatsapp) {
     const accionLabel = { agendar: '📅 Nueva cita', modificar: '✏️ Cita modificada', cancelar: '❌ Cita cancelada' }[accion as string] ?? '📅 Cita';
     const msg = [
-      `${accionLabel} — *${agent.business_name}*`,
+      `${accionLabel}, *${agent.business_name}*`,
       nombre   ? `👤 ${nombre}`   : null,
       servicio ? `📋 ${servicio}` : null,
       fecha    ? `📅 ${fecha}${hora ? ` a las ${hora}` : ''}` : null,

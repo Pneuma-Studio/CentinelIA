@@ -40,7 +40,7 @@ export async function POST(req: NextRequest) {
   let calBooked = false;
   if (agent.calendar_type === 'cal_com' && agent.calendar_api_key && agent.calendar_event_type_id) {
     try {
-      // Build ISO datetime — assumes Mexico City timezone
+      // Build ISO datetime, assumes Mexico City timezone
       const startIso = fechaIso
         ? new Date(`${fechaIso}T${hora}:00-06:00`).toISOString()
         : null;
@@ -89,7 +89,7 @@ export async function POST(req: NextRequest) {
 
   // 4. Notify business owner
   if (agent.transfer_whatsapp) {
-    const ownerMsg = `📅 *Nueva cita — ${agent.business_name}*\n\nCliente: ${nombre}\nServicio: ${servicio ?? '—'}\nFecha: ${fecha} · ${hora}${whatsapp_cliente ? `\nWA: ${whatsapp_cliente}` : ''}${calBooked ? '\n✅ Confirmada en Cal.com' : agent.calendar_link ? '\n📎 Link enviado al cliente' : ''}`;
+    const ownerMsg = `📅 *Nueva cita, ${agent.business_name}*\n\nCliente: ${nombre}\nServicio: ${servicio ?? ','}\nFecha: ${fecha} · ${hora}${whatsapp_cliente ? `\nWA: ${whatsapp_cliente}` : ''}${calBooked ? '\n✅ Confirmada en Cal.com' : agent.calendar_link ? '\n📎 Link enviado al cliente' : ''}`;
     await sendWhatsApp(agent.transfer_whatsapp, ownerMsg).catch(console.error);
   }
 

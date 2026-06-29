@@ -36,17 +36,17 @@ export async function POST(req: NextRequest, { params }: Params) {
   if (action === 'credit') {
     update = { minutes_included: agent.minutes_included + amount };
     ledgerAmount = amount;
-    if (!ledgerDescription) ledgerDescription = `Crédito manual — ${amount} min acreditados`;
+    if (!ledgerDescription) ledgerDescription = `Crédito manual, ${amount} min acreditados`;
   } else if (action === 'debit') {
     update = { minutes_used: agent.minutes_used + amount };
     ledgerAmount = -amount;
-    if (!ledgerDescription) ledgerDescription = `Descuento manual — ${amount} min descontados`;
+    if (!ledgerDescription) ledgerDescription = `Descuento manual, ${amount} min descontados`;
   } else {
     // set_used
     const delta = amount - agent.minutes_used;
     update = { minutes_used: Math.max(0, amount) };
     ledgerAmount = -delta;
-    if (!ledgerDescription) ledgerDescription = `Corrección — uso ajustado a ${amount} min`;
+    if (!ledgerDescription) ledgerDescription = `Corrección, uso ajustado a ${amount} min`;
   }
 
   const { data, error } = await supabase

@@ -78,15 +78,15 @@ export async function POST(req: NextRequest) {
       }
       callerName = lead?.nombre ?? '';
       if (callerName) {
-        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\n${parts.join('\n')}\nNO preguntes su nombre — ya lo sabes. Salúdale por su nombre de pila y continúa la conversación naturalmente.`;
+        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\n${parts.join('\n')}\nNO preguntes su nombre, ya lo sabes. Salúdale por su nombre de pila y continúa la conversación naturalmente.`;
       } else {
-        // History exists but no name captured yet — don't ask again, just acknowledge naturally
-        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\nCliente frecuente — ${history.length} llamada${history.length > 1 ? 's' : ''} previa${history.length > 1 ? 's' : ''}.\n${history[0]?.summary ? `Última llamada: ${history[0].summary}` : ''}\nSaluda cordialmente pero sí puedes preguntarle su nombre si es necesario para la solicitud.`;
+        // History exists but no name captured yet, don't ask again, just acknowledge naturally
+        callerContext = `\n\nCONTEXTO DEL LLAMANTE (${phoneNumber}):\nCliente frecuente, ${history.length} llamada${history.length > 1 ? 's' : ''} previa${history.length > 1 ? 's' : ''}.\n${history[0]?.summary ? `Última llamada: ${history[0].summary}` : ''}\nSaluda cordialmente pero sí puedes preguntarle su nombre si es necesario para la solicitud.`;
       }
     }
   }
 
-  // Check business hours — respond with closed message if outside schedule
+  // Check business hours, respond with closed message if outside schedule
   if (!isWithinBusinessHours(typedAgent.business_hours, typedAgent.timezone)) {
     const next = typedAgent.business_hours ? nextOpenTime(typedAgent.business_hours, typedAgent.timezone) : null;
     const closedMsg = next
@@ -134,7 +134,7 @@ export async function POST(req: NextRequest) {
   // Return Vapi-compatible assistant configuration
   return NextResponse.json({
     assistant: {
-      name: `${agentName} — ${typedAgent.business_name}`,
+      name: `${agentName}, ${typedAgent.business_name}`,
       model: {
         provider: 'anthropic',
         model: 'claude-haiku-4-5-20251001',

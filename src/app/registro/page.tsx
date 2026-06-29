@@ -68,7 +68,7 @@ const PLANS: PlanDef[] = [
     features: [
       {
         label: 'Recepcionista 24/7',
-        desc: 'Contesta a cualquier hora — noches, domingos, días festivos — con el nombre de tu negocio y la información que le proporcionaste.',
+        desc: 'Contesta a cualquier hora, noches, domingos, días festivos, con el nombre de tu negocio y la información que le proporcionaste.',
       },
       {
         label: 'Captura de leads',
@@ -118,7 +118,7 @@ const PLANS: PlanDef[] = [
       },
       {
         label: 'Toma de pedidos',
-        desc: 'Recibe pedidos completos durante la llamada — producto, cantidad y entrega — y los manda a tu WhatsApp listos para preparar.',
+        desc: 'Recibe pedidos completos durante la llamada, producto, cantidad y entrega, y los manda a tu WhatsApp listos para preparar.',
       },
       {
         label: 'Memoria de cliente',
@@ -163,7 +163,7 @@ const PLANS: PlanDef[] = [
       },
       {
         label: 'SLA y soporte dedicado',
-        desc: 'Tiempo de respuesta garantizado y línea directa con el equipo técnico — no un ticket, una persona.',
+        desc: 'Tiempo de respuesta garantizado y línea directa con el equipo técnico, no un ticket, una persona.',
       },
     ],
   },
@@ -555,7 +555,7 @@ function RegistroInner() {
                         </div>
                       </div>
 
-                      {/* Row 2: Price — hero element */}
+                      {/* Row 2: Price, hero element */}
                       {p.custom ? (
                         <div className="ml-8 mb-4">
                           <p className="text-2xl font-bold text-white">Cotización personalizada</p>
@@ -638,7 +638,7 @@ function RegistroInner() {
               style={{ background: selectedPlan.custom ? `linear-gradient(135deg, #f59e0b, #fbbf24)` : 'linear-gradient(135deg, #6C3BFF, #9B6DFF)' }}
             >
               {selectedPlan.custom
-                ? <>Solicitar propuesta — {selectedPlan.label} <ChevronRight size={16} /></>
+                ? <>Solicitar propuesta, {selectedPlan.label} <ChevronRight size={16} /></>
                 : <>Continuar con plan {selectedPlan.label} <ChevronRight size={16} /></>
               }
             </button>
@@ -732,7 +732,7 @@ function RegistroInner() {
                 <div>
                   <label style={labelStyle}>
                     Nombre del agente
-                    <span style={{ color: 'rgba(255,255,255,0.25)', marginLeft: 6 }}>(opcional — default: Centinelia)</span>
+                    <span style={{ color: 'rgba(255,255,255,0.25)', marginLeft: 6 }}>(opcional, default: Centinelia)</span>
                   </label>
                   <input
                     value={agentName}

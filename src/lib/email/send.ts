@@ -15,7 +15,7 @@ export async function sendEmail(opts: {
 }): Promise<boolean> {
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
-    console.warn('Email not configured — missing RESEND_API_KEY');
+    console.warn('Email not configured, missing RESEND_API_KEY');
     return false;
   }
 
@@ -47,7 +47,7 @@ export function minutesAlertHtml(opts: {
   const accentColor = isPaused ? '#ef4444' : '#f59e0b';
   const badge       = isPaused ? '⚠️ Agente pausado' : `📊 ${Math.round(opts.pct)}% de minutos usados`;
   const bodyText    = isPaused
-    ? `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha sido <strong style="color:#ef4444">pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Puedes reactivarlo comprando minutos adicionales o cambiando de plan — ambas opciones disponibles directamente desde tu portal.`
+    ? `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha sido <strong style="color:#ef4444">pausado automáticamente</strong> al agotar los ${opts.included} minutos de tu plan.<br><br>Puedes reactivarlo comprando minutos adicionales o cambiando de plan, ambas opciones disponibles directamente desde tu portal.`
     : `Tu agente de voz <strong style="color:#fff">${opts.businessName}</strong> ha usado <strong style="color:#f59e0b">${opts.used} de ${opts.included} minutos</strong> (${Math.round(opts.pct)}%).<br><br>Si crees que necesitarás más minutos antes del ${opts.resetDate}, puedes comprar minutos adicionales ahora o ampliar tu plan.`;
 
   const buttons = `

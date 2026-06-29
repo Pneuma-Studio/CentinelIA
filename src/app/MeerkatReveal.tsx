@@ -9,7 +9,7 @@ export default function MeerkatReveal({ children, className, style }: {
   style?:     CSSProperties;
 }) {
   const ref    = useRef(null);
-  // Only fires when element is 25% inside from viewport bottom — cards appear first
+  // Only fires when element is 25% inside from viewport bottom, cards appear first
   const inView = useInView(ref, { once: true, margin: '0px 0px -25% 0px' });
 
   return (
