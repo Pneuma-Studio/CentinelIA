@@ -882,6 +882,9 @@ export default function LandingPage() {
             <a href="https://www.instagram.com/centinelia.mx/" target="_blank" rel="noopener noreferrer" className="text-xs transition-colors" style={{ color: C.textMute }}>
               Instagram
             </a>
+            <a href="https://www.linkedin.com/company/centinelia/" target="_blank" rel="noopener noreferrer" className="text-xs transition-colors" style={{ color: C.textMute }}>
+              LinkedIn
+            </a>
             <a href="mailto:hola@centinelia.mx" className="text-xs" style={{ color: C.textMute }}>
               hola@centinelia.mx
             </a>

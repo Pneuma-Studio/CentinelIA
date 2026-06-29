@@ -90,7 +90,10 @@ const organizationSchema = {
     availableLanguage: ['Spanish', 'English'],
     areaServed: 'MX',
   },
-  sameAs: ['https://www.instagram.com/centinelia.mx/'],
+  sameAs: [
+    'https://www.instagram.com/centinelia.mx/',
+    'https://www.linkedin.com/company/centinelia/',
+  ],
   foundingLocation: { '@type': 'Place', addressCountry: 'MX' },
 };
 
