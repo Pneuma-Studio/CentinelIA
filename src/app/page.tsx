@@ -97,7 +97,7 @@ const PAINS = [
 
 const PLANS: {
   name: string; id: string; price: number; origPrice: number; setup: number; origSetup: number;
-  minutes: number; color: string; popular?: boolean; includes: string[]; meerkat: string; meerkatBottom: number;
+  minutes: number; color: string; popular?: boolean; custom?: boolean; includes: string[]; meerkat: string; meerkatBottom: number;
 }[] = [
   {
     name: 'Recepcionista', id: 'basico', price: 1990, origPrice: 2490, setup: 4990, origSetup: 6990, minutes: 200, color: '#6b7280',
@@ -112,6 +112,11 @@ const PLANS: {
   {
     name: 'Pro', id: 'pro', price: 6490, origPrice: 8490, setup: 12990, origSetup: 16990, minutes: 1000, color: '#7c3aed',
     includes: ['Todo Comercial', 'Toma de pedidos', 'Voz + nombre personalizable', 'Multiidioma (ES + EN)', 'Memoria de cliente', 'Reseña Google automática', '1,000 min/mes incluidos'],
+    meerkat: '/agent-plan-pro.png', meerkatBottom: 66,
+  },
+  {
+    name: 'Empresarial', id: 'empresarial', price: 0, origPrice: 0, setup: 0, origSetup: 0, minutes: 0, color: '#f59e0b', custom: true,
+    includes: ['Todo el plan Pro', 'Integración con tu sistema (POS, CRM, calendario)', 'Flujos conversacionales a medida', 'Múltiples agentes / sucursales', 'Onboarding y capacitación', 'SLA y soporte dedicado'],
     meerkat: '/agent-plan-pro.png', meerkatBottom: 66,
   },
 ];
@@ -617,7 +622,7 @@ export default function LandingPage() {
             <p style={{ color: 'rgba(255,255,255,0.5)' }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
             {PLANS.map((p, i) => (
               <AnimatedSection key={p.name} delay={i * 0.09}>
               <div
@@ -648,38 +653,48 @@ export default function LandingPage() {
                       </span>
                     )}
                   </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
-                    style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
-                    Lanzamiento
-                  </span>
+                  {!p.custom && (
+                    <span className="text-xs px-2 py-0.5 rounded-full font-semibold"
+                      style={{ background: 'rgba(34,197,94,0.15)', color: '#4ade80', border: '1px solid rgba(74,222,128,0.25)' }}>
+                      Lanzamiento
+                    </span>
+                  )}
                 </div>
 
-                {/* Precio regular tachado, contexto */}
-                <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
-                  Próximamente: ${fmt(p.origPrice)}/mes
-                </p>
-
-                {/* Precio de lanzamiento, prominente */}
-                <div className="flex items-baseline gap-1 mb-4">
-                  <span className="text-4xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
-                    ${fmt(p.price)}
-                  </span>
-                  <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>/mes</span>
-                </div>
+                {/* Precio */}
+                {p.custom ? (
+                  <div className="mb-4">
+                    <div className="text-3xl font-bold" style={{ color: p.color }}>A consultar</div>
+                    <div className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.35)' }}>Cotización sin compromiso</div>
+                  </div>
+                ) : (
+                  <>
+                    <p className="text-xs mb-1" style={{ color: 'rgba(255,255,255,0.32)' }}>
+                      Próximamente: ${fmt(p.origPrice)}/mes
+                    </p>
+                    <div className="flex items-baseline gap-1 mb-4">
+                      <span className="text-4xl font-bold tabular-nums" style={{ color: p.popular ? p.color : '#fff' }}>
+                        ${fmt(p.price)}
+                      </span>
+                      <span className="text-sm font-medium" style={{ color: 'rgba(255,255,255,0.4)' }}>/mes</span>
+                    </div>
+                  </>
+                )}
 
                 {/* Bloque instalación + minutos */}
                 <div className="rounded-xl px-3 py-2.5 mb-5 flex flex-col gap-2"
                   style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.08)' }}>
                   <div className="flex items-center justify-between text-xs">
                     <span style={{ color: 'rgba(255,255,255,0.45)' }}>Instalación</span>
-                    <div className="flex items-center gap-2">
-                      <span className="line-through" style={{ color: 'rgba(255,255,255,0.25)' }}>${fmt(p.origSetup)}</span>
-                      <span className="font-semibold" style={{ color: '#fff' }}>${fmt(p.setup)}</span>
-                    </div>
+                    <span className="font-semibold" style={{ color: '#fff' }}>
+                      {p.custom ? 'Incluida' : `$${fmt(p.setup)}`}
+                    </span>
                   </div>
                   <div className="flex items-center justify-between text-xs">
                     <span style={{ color: 'rgba(255,255,255,0.45)' }}>Minutos incluidos</span>
-                    <span className="font-semibold" style={{ color: '#fff' }}>{fmt(p.minutes)} min/mes</span>
+                    <span className="font-semibold" style={{ color: '#fff' }}>
+                      {p.custom ? 'A definir' : `${fmt(p.minutes)} min/mes`}
+                    </span>
                   </div>
                 </div>
 
@@ -703,14 +718,14 @@ export default function LandingPage() {
                   href={`/registro?plan=${p.id}`}
                   className="block text-center py-2.5 rounded-xl text-sm font-semibold transition-all hover:opacity-90 hover:scale-[1.02]"
                   style={{
-                    background: p.popular ? p.color : 'rgba(108,59,255,0.2)',
+                    background: p.custom ? p.color : p.popular ? p.color : 'rgba(108,59,255,0.2)',
                     color:      '#fff',
-                    border:     p.popular ? 'none' : `1.5px solid rgba(108,59,255,0.4)`,
+                    border:     p.popular || p.custom ? 'none' : `1.5px solid rgba(108,59,255,0.4)`,
                     position:   'relative',
                     zIndex:     1,
                   }}
                 >
-                  Contratar
+                  {p.custom ? 'Contactar' : 'Contratar'}
                 </Link>
               </div>
               </AnimatedSection>
