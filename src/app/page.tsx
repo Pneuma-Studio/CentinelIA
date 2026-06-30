@@ -601,13 +601,13 @@ export default function LandingPage() {
           ['--orb-dur' as string]: '13s',
         }} />
 
-        {/* Suit-phone meerkat, right side of Planes section */}
-        <MeerkatReveal className="agent-sway meerkat-headset-desk">
-          <Image src="/agent-suit-phone.png" alt="" fill sizes="260px"
-            style={{ objectFit: 'contain', objectPosition: 'top center' }} />
-        </MeerkatReveal>
-
         <div className="max-w-7xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
+          {/* Empresarial meerkat - desktop only, overflows above the 4th card column */}
+          <MeerkatReveal className="meerkat-empresarial-desk">
+            <Image src="/meerkat-transparente-07.png" alt="" fill sizes="220px"
+              style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+          </MeerkatReveal>
+
           <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
               style={{ background: 'rgba(108,59,255,0.18)', border: '1px solid rgba(108,59,255,0.35)', color: '#C4A8FF' }}>
@@ -622,11 +622,11 @@ export default function LandingPage() {
             <p style={{ color: 'rgba(255,255,255,0.5)' }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 xl:pt-20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
             {PLANS.map((p, i) => (
               <AnimatedSection key={p.name} delay={i * 0.09}>
               <div
-                className={`rounded-2xl p-6 flex flex-col relative h-full ${p.custom ? 'overflow-hidden sm:overflow-visible' : 'overflow-hidden'}`}
+                className="rounded-2xl p-6 flex flex-col relative overflow-hidden h-full"
                 style={{
                   background: p.popular
                     ? `linear-gradient(145deg, ${p.color}22, ${p.color}0a)`
@@ -705,17 +705,6 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
-
-                {/* Desktop overflowing meerkat for Empresarial card */}
-                {p.custom && (
-                  <MeerkatReveal className="hidden sm:block agent-float-slow" style={{
-                    position: 'absolute', top: -110, right: -8,
-                    width: 130, height: 140, zIndex: 2, pointerEvents: 'none', userSelect: 'none',
-                  }}>
-                    <Image src={p.meerkat} alt="" fill sizes="130px"
-                      style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
-                  </MeerkatReveal>
-                )}
 
                 {/* Mobile peeking meerkat, right side of button */}
                 <MeerkatReveal className="block sm:hidden" style={{
