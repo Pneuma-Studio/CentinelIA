@@ -117,7 +117,7 @@ const PLANS: {
   {
     name: 'Empresarial', id: 'empresarial', price: 0, origPrice: 0, setup: 0, origSetup: 0, minutes: 0, color: '#f59e0b', custom: true,
     includes: ['Todo el plan Pro', 'Integración con tu sistema (POS, CRM, calendario)', 'Flujos conversacionales a medida', 'Múltiples agentes / sucursales', 'Onboarding y capacitación', 'SLA y soporte dedicado'],
-    meerkat: '/agent-plan-pro.png', meerkatBottom: 66,
+    meerkat: '/meerkat-transparente-07.png', meerkatBottom: 66,
   },
 ];
 
@@ -622,11 +622,11 @@ export default function LandingPage() {
             <p style={{ color: 'rgba(255,255,255,0.5)' }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 xl:pt-20">
             {PLANS.map((p, i) => (
               <AnimatedSection key={p.name} delay={i * 0.09}>
               <div
-                className="rounded-2xl p-6 flex flex-col relative overflow-hidden h-full"
+                className={`rounded-2xl p-6 flex flex-col relative h-full ${p.custom ? 'overflow-hidden sm:overflow-visible' : 'overflow-hidden'}`}
                 style={{
                   background: p.popular
                     ? `linear-gradient(145deg, ${p.color}22, ${p.color}0a)`
@@ -705,6 +705,17 @@ export default function LandingPage() {
                     </li>
                   ))}
                 </ul>
+
+                {/* Desktop overflowing meerkat for Empresarial card */}
+                {p.custom && (
+                  <MeerkatReveal className="hidden sm:block agent-float-slow" style={{
+                    position: 'absolute', top: -110, right: -8,
+                    width: 130, height: 140, zIndex: 2, pointerEvents: 'none', userSelect: 'none',
+                  }}>
+                    <Image src={p.meerkat} alt="" fill sizes="130px"
+                      style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+                  </MeerkatReveal>
+                )}
 
                 {/* Mobile peeking meerkat, right side of button */}
                 <MeerkatReveal className="block sm:hidden" style={{
