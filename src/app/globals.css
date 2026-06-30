@@ -204,7 +204,7 @@ h1, h2, h3, h4, h5, h6 {
     display: block;
     position: absolute;
     bottom: -110px;
-    left: 15px;
+    left: -20px;
     width: 360px;
     height: 600px;
     z-index: 0;

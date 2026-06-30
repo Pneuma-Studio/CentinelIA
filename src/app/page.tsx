@@ -300,18 +300,17 @@ export default function LandingPage() {
           }} />
         </div>
 
-        {/* Suricata, dinero volando, cortada por el borde inferior */}
-        <MeerkatReveal className="meerkat-money">
-          <Image
-            src="/agent-money.png"
-            alt=""
-            fill
-            sizes="(min-width: 1024px) 360px, 140px"
-            style={{ objectFit: 'contain', objectPosition: 'top center' }}
-          />
-        </MeerkatReveal>
-
         <div className="max-w-5xl mx-auto px-5 sm:px-8 lg:pl-80 py-20 sm:py-28" style={{ position: 'relative', zIndex: 1 }}>
+          {/* Suricata, dinero volando — dentro del contenedor para centrar en el espacio lg:pl-80 */}
+          <MeerkatReveal className="meerkat-money">
+            <Image
+              src="/agent-money.png"
+              alt=""
+              fill
+              sizes="(min-width: 1024px) 360px, 140px"
+              style={{ objectFit: 'contain', objectPosition: 'top center' }}
+            />
+          </MeerkatReveal>
 
           {/* Mobile: suricata absoluta izquierda, desborda hacia tarjetas */}
           <div className="lg:hidden relative mb-4">
