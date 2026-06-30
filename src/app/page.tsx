@@ -616,7 +616,7 @@ export default function LandingPage() {
             <p style={{ color: 'rgba(255,255,255,0.5)' }}>Sin contratos de permanencia. Cancela cuando quieras.</p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 xl:items-start">
             {PLANS.map((p, i) => (
               <AnimatedSection key={p.name} delay={i * 0.09} className={p.custom ? 'flex flex-col' : ''}>
               {p.custom && (
