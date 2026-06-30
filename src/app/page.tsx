@@ -607,7 +607,7 @@ export default function LandingPage() {
             style={{ objectFit: 'contain', objectPosition: 'top center' }} />
         </MeerkatReveal>
 
-        <div className="max-w-5xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
           <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
               style={{ background: 'rgba(108,59,255,0.18)', border: '1px solid rgba(108,59,255,0.35)', color: '#C4A8FF' }}>
