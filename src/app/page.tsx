@@ -602,12 +602,6 @@ export default function LandingPage() {
         }} />
 
         <div className="max-w-7xl mx-auto px-5 sm:px-8" style={{ position: 'relative', zIndex: 1 }}>
-          {/* Empresarial meerkat - desktop only, overflows above the 4th card column */}
-          <MeerkatReveal className="meerkat-empresarial-desk">
-            <Image src="/meerkat-transparente-07.png" alt="" fill sizes="220px"
-              style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
-          </MeerkatReveal>
-
           <AnimatedSection className="text-center mb-14">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-bold mb-4"
               style={{ background: 'rgba(108,59,255,0.18)', border: '1px solid rgba(108,59,255,0.35)', color: '#C4A8FF' }}>
@@ -624,9 +618,15 @@ export default function LandingPage() {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5">
             {PLANS.map((p, i) => (
-              <AnimatedSection key={p.name} delay={i * 0.09}>
+              <AnimatedSection key={p.name} delay={i * 0.09} className={p.custom ? 'flex flex-col' : ''}>
+              {p.custom && (
+                <div className="hidden xl:flex justify-center items-end flex-shrink-0" style={{ height: 240, position: 'relative' }}>
+                  <Image src={p.meerkat} alt="" fill sizes="260px"
+                    style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
+                </div>
+              )}
               <div
-                className="rounded-2xl p-6 flex flex-col relative overflow-hidden h-full"
+                className={`rounded-2xl p-6 flex flex-col relative overflow-hidden ${p.custom ? 'flex-1' : 'h-full'}`}
                 style={{
                   background: p.popular
                     ? `linear-gradient(145deg, ${p.color}22, ${p.color}0a)`

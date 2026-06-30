@@ -275,27 +275,6 @@ h1, h2, h3, h4, h5, h6 {
   .meerkat-headset-mob { display: none; }
 }
 
-/* ── Empresarial pricing meerkat (xl only, above 4th card column) ────────
-   Positioned relative to the max-w-7xl container (which has position:relative).
-   top: places it in the heading area so it straddles the top edge of the card.
-   right: aligns with the 4th card column (accounts for px-8 = 32px padding).
-   No animation — meerkat is static in this section.                          */
-.meerkat-empresarial-desk {
-  display: none;
-}
-@media (min-width: 1280px) {
-  .meerkat-empresarial-desk {
-    display: block;
-    position: absolute;
-    top: 90px;
-    right: 40px;
-    width: 220px;
-    height: 280px;
-    z-index: 3;
-    pointer-events: none;
-    user-select: none;
-  }
-}
 
 .meerkat-headset-desk {
   display: none;
