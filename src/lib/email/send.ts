@@ -27,8 +27,8 @@ function shell(body: string) {
   <div style="max-width:560px;margin:0 auto;padding:32px 16px 48px">
 
     <!-- Header lavanda -->
-    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:36px 32px 28px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
-      <img src="${LOGO_URL}" alt="Centinelia" width="260" height="100" style="width:260px;height:auto;display:inline-block">
+    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:20px 32px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
+      <img src="${LOGO_URL}" alt="Centinelia" width="200" height="77" style="width:200px;height:auto;display:inline-block">
     </div>
 
     <!-- Body oscuro -->
@@ -168,6 +168,7 @@ export function welcomeHtml(opts: { businessName: string; setupUrl: string }) {
       Mientras tanto, configura tu acceso al portal para monitorear tus llamadas, leads y minutos:
     </p>
     ${btn('Acceder a mi portal →', opts.setupUrl)}
+    <div style="height:16px"></div>
     ${infoCard(`
       ${sectionLabel('¿Qué sigue?')}
       <p style="color:${C.sub};font-size:13px;line-height:1.8;margin:0">
