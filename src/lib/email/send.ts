@@ -1,5 +1,5 @@
 const FROM     = process.env.RESEND_FROM_EMAIL ?? 'Centinelia <notificaciones@centinelia.mx>';
-const LOGO_URL = 'https://www.centinelia.mx/logo-icon.png';
+const LOGO_URL = 'https://www.centinelia.mx/logo.png';
 
 const C = {
   bg:     '#120726',
@@ -27,17 +27,8 @@ function shell(body: string) {
   <div style="max-width:560px;margin:0 auto;padding:32px 16px 48px">
 
     <!-- Header lavanda -->
-    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:24px 32px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
-      <table cellpadding="0" cellspacing="0" style="margin:0 auto;border-collapse:collapse">
-        <tr>
-          <td style="padding-right:10px;vertical-align:middle">
-            <img src="${LOGO_URL}" alt="" width="36" height="36" style="display:block;width:36px;height:36px;object-fit:contain">
-          </td>
-          <td style="vertical-align:middle">
-            <span style="font-family:Arial,Helvetica,sans-serif;font-size:18px;font-weight:700;color:#1A0A3B;letter-spacing:-0.01em">centinelia</span>
-          </td>
-        </tr>
-      </table>
+    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
+      <img src="${LOGO_URL}" alt="Centinelia" width="140" height="38" style="width:140px;height:auto;display:inline-block">
     </div>
 
     <!-- Body oscuro -->
