@@ -85,7 +85,7 @@ export default function WaitlistSection() {
           >
             Lo que viene
           </h2>
-          <p className="max-w-xl mx-auto text-base" style={{ color: C.textSub }}>
+          <p className="max-w-xl mx-auto text-base whitespace-nowrap" style={{ color: C.textSub }}>
             Centinelia sigue creciendo. Estas son las funciones que estamos construyendo.
           </p>
         </AnimatedSection>
