@@ -14,6 +14,7 @@ import AnimatedSection from './AnimatedSection';
 import MeerkatReveal from './MeerkatReveal';
 import AudioWaveform from './AudioWaveform';
 import Marquee from './Marquee';
+import WaitlistSection from './WaitlistSection';
 
 // ─── Demo agent ───────────────────────────────────────────────────────────────
 // Reemplaza con el número real del agente demo cuando esté configurado
@@ -821,6 +822,9 @@ export default function LandingPage() {
             sizes="(max-width: 640px) 300px, 580px" style={{ objectFit: 'contain', objectPosition: 'bottom center' }} />
         </MeerkatReveal>
       </section>
+
+      {/* ── PRÓXIMAMENTE ─────────────────────────────────────────────────── */}
+      <WaitlistSection />
 
       {/* ── FOOTER ───────────────────────────────────────────────────────── */}
       <footer
