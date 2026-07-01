@@ -212,7 +212,7 @@ function buildVapiAssistant(agent: VoiceAgent, toolIds: string[] = []) {
         punctuationBoundaries: ['.', '!', '?', ',', ';', ':'],
       },
     },
-    firstMessage: agent.first_message?.trim() || `Gracias por llamar a ${agent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`,
+    firstMessage: agent.first_message?.trim() || `Hola, gracias por llamar a ${agent.business_name}. Le habla ${agentName}. ¿En qué le puedo ayudar?`,
     endCallMessage: 'Hasta luego, que tenga un excelente día.',
     endCallPhrases: ['hasta luego', 'hasta pronto', 'que tenga un excelente día', 'que tenga buen día', 'adiós', 'fue un placer atenderle'],
     transcriber: {

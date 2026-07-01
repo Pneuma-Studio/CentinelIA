@@ -122,13 +122,13 @@ export async function POST(req: NextRequest) {
   const tools = buildTools(typedAgent);
 
   const defaultGreeting = typedAgent.speech_style === 'tu'
-    ? `Gracias por llamar a ${typedAgent.business_name}, te habla ${agentName}. ¿En qué te puedo ayudar?`
-    : `Gracias por llamar a ${typedAgent.business_name}, le habla ${agentName}. ¿En qué le puedo ayudar?`;
+    ? `Hola, gracias por llamar a ${typedAgent.business_name}. Te habla ${agentName}. ¿En qué te puedo ayudar?`
+    : `Hola, gracias por llamar a ${typedAgent.business_name}. Le habla ${agentName}. ¿En qué le puedo ayudar?`;
 
   const firstMessage = callerName
     ? (typedAgent.speech_style === 'tu'
-        ? `Hola ${callerName.split(' ')[0]}, ¿en qué te puedo ayudar hoy?`
-        : `Hola ${callerName.split(' ')[0]}, ¿en qué le puedo ayudar hoy?`)
+        ? `Hola ${callerName.split(' ')[0]}. ¿En qué te puedo ayudar hoy?`
+        : `Hola ${callerName.split(' ')[0]}. ¿En qué le puedo ayudar hoy?`)
     : (typedAgent.first_message?.trim() || defaultGreeting);
 
   // Return Vapi-compatible assistant configuration
