@@ -28,7 +28,7 @@ function shell(body: string) {
 
     <!-- Header lavanda -->
     <div style="background:${C.header};border-radius:16px 16px 0 0;padding:20px 32px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
-      <img src="${LOGO_URL}" alt="Centinelia" width="200" height="77" style="width:200px;height:auto;display:inline-block">
+      <img src="${LOGO_URL}" alt="Centinelia" width="230" height="89" style="width:230px;height:auto;display:inline-block">
     </div>
 
     <!-- Body oscuro -->
