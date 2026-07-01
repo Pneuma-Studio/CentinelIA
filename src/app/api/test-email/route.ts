@@ -4,12 +4,8 @@ import { sendEmail, weeklyReportHtml, newLeadHtml, welcomeHtml } from '@/lib/ema
 // Temporary test endpoint — delete after verifying email templates
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
-  const secret = searchParams.get('secret');
-  if (secret !== process.env.CRON_SECRET) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-  }
 
-  const to      = searchParams.get('to') ?? 'nazre20@gmail.com';
+  const to      = 'nazre20@gmail.com';
   const type    = searchParams.get('type') ?? 'weekly';
   const appUrl  = process.env.NEXT_PUBLIC_APP_URL ?? 'https://www.centinelia.mx';
   const portal  = `${appUrl}/portal/test-token`;
