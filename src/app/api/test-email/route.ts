@@ -29,10 +29,8 @@ export async function GET(req: NextRequest) {
   } else if (type === 'welcome') {
     subject = 'Bienvenido a Centinelia';
     html = welcomeHtml({
-      clientName:  'Nazre',
-      agentName:   'Sofia',
       businessName: 'Restaurante El Fuego',
-      setupUrl:    portal,
+      setupUrl:     portal,
     });
   } else {
     subject = 'Reporte semanal — Restaurante El Fuego';
