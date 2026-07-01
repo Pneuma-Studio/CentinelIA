@@ -27,8 +27,9 @@ function shell(body: string) {
   <div style="max-width:560px;margin:0 auto;padding:32px 16px 48px">
 
     <!-- Header lavanda -->
-    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:28px 32px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
-      <img src="${LOGO_URL}" alt="Centinelia" width="140" height="38" style="width:140px;height:auto;display:inline-block">
+    <div style="background:${C.header};border-radius:16px 16px 0 0;padding:36px 32px 28px;text-align:center;border-bottom:1px solid rgba(108,59,255,0.15)">
+      <img src="${LOGO_URL}" alt="Centinelia" width="200" height="54" style="width:200px;height:auto;display:inline-block;margin-bottom:10px">
+      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;color:rgba(26,10,59,0.55);letter-spacing:0.01em">Tu negocio nunca pierde una llamada</p>
     </div>
 
     <!-- Body oscuro -->
