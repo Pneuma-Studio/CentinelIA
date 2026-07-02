@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- CentinelIA — WhatsApp Agents Schema
+-- Centinelia — WhatsApp Agents Schema
 -- Run this in your Supabase SQL editor
 -- ─────────────────────────────────────────────────────────────────────────────
 

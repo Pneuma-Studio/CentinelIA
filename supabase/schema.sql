@@ -1,5 +1,5 @@
 -- ─────────────────────────────────────────────────────────────────────────────
--- CentinelIA — Supabase Schema
+-- Centinelia — Supabase Schema
 -- Run this in your Supabase SQL editor
 -- ─────────────────────────────────────────────────────────────────────────────
 
@@ -38,6 +38,7 @@ create table if not exists voice_agents (
   timezone              text not null default 'America/Monterrey',
   transfer_number       text,
   transfer_whatsapp     text,
+  registration_ip       text,
   calendar_url          text,
   crm_webhook           text,
   knowledge_base        text,

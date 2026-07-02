@@ -65,6 +65,41 @@ export async function POST(req: NextRequest) {
   const supabase = createAdminClient();
   const email    = client_email.trim().toLowerCase();
 
+  // ── Rate limiting ────────────────────────────────────────────────────────────
+  const ip       = req.headers.get('x-forwarded-for')?.split(',')[0]?.trim() ?? 'unknown';
+  const oneHour  = new Date(Date.now() - 60 * 60 * 1000).toISOString();
+
+  // Block same email if already attempted in the last hour
+  const { count: emailCount } = await supabase
+    .from('voice_agents')
+    .select('id', { count: 'exact', head: true })
+    .eq('client_email', email)
+    .eq('billing_status', 'pendiente')
+    .eq('active', false)
+    .gte('created_at', oneHour);
+
+  if ((emailCount ?? 0) >= 1) {
+    return NextResponse.json(
+      { error: 'Ya existe un registro reciente con este correo. Intenta en unos minutos.' },
+      { status: 429 }
+    );
+  }
+
+  // Block IP with more than 3 pending registrations in the last hour
+  const { count: ipCount } = await supabase
+    .from('voice_agents')
+    .select('id', { count: 'exact', head: true })
+    .eq('registration_ip', ip)
+    .eq('billing_status', 'pendiente')
+    .gte('created_at', oneHour);
+
+  if ((ipCount ?? 0) >= 3) {
+    return NextResponse.json(
+      { error: 'Demasiados intentos desde esta conexión. Intenta más tarde.' },
+      { status: 429 }
+    );
+  }
+
   const resetDate = new Date();
   resetDate.setMonth(resetDate.getMonth() + 1, 1);
 
@@ -74,6 +109,7 @@ export async function POST(req: NextRequest) {
       client_name:            client_name.trim(),
       client_email:           email,
       portal_email:           email,
+      registration_ip:        ip,
       business_name:          business_name.trim(),
       business_description:   business_description.trim(),
       business_phone_display: business_phone_display?.trim() ?? '',
@@ -129,6 +165,7 @@ export async function POST(req: NextRequest) {
       client_name:            client_name.trim(),
       client_email:           email,
       portal_email:           email,
+      registration_ip:        ip,
       business_name:          business_name.trim(),
       business_description:   business_description.trim(),
       business_phone_display: business_phone_display.trim(),
