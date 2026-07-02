@@ -83,8 +83,9 @@ function Field({ label, name, value, onChange, textarea, rows = 4, placeholder, 
 }
 
 export default function DemoAgentEditor({ agent }: { agent: VoiceAgent }) {
-  const [agentName,    setAgentName]    = useState(agent.agent_name ?? '');
-  const [description,  setDescription]  = useState(agent.business_description ?? '');
+  const [agentName,     setAgentName]     = useState(agent.agent_name ?? '');
+  const [firstMessage,  setFirstMessage]  = useState(agent.first_message ?? '');
+  const [description,   setDescription]   = useState(agent.business_description ?? '');
   const [knowledgeBase, setKnowledgeBase] = useState(agent.knowledge_base ?? '');
   const [saving, setSaving] = useState(false);
   const [saved,  setSaved]  = useState(false);
@@ -99,6 +100,7 @@ export default function DemoAgentEditor({ agent }: { agent: VoiceAgent }) {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
         agent_name:           agentName || null,
+        first_message:        firstMessage || null,
         business_description: description,
         knowledge_base:       knowledgeBase,
         // keep everything else unchanged
@@ -154,6 +156,14 @@ export default function DemoAgentEditor({ agent }: { agent: VoiceAgent }) {
           onChange={setAgentName}
           placeholder="Centinelia"
           hint="El nombre con el que se presenta antes de adoptar un papel."
+        />
+        <Field
+          label="Primer mensaje"
+          name="first_message"
+          value={firstMessage}
+          onChange={setFirstMessage}
+          placeholder="Hola. Soy Centinelia y en este demo puedo simular cualquier tipo de negocio…"
+          hint="Lo primero que dice el agente al contestar la llamada."
         />
         <Field
           label="Descripción de negocio (contexto por defecto)"
