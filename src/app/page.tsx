@@ -2,7 +2,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import {
   Phone, Users, CalendarDays, ShoppingBag,
-  MessageCircle, BarChart3, PhoneOff, TrendingDown,
+  BarChart3, PhoneOff, TrendingDown,
   Clock, Check, ArrowRight, Play, Target, Rocket, Star,
 } from 'lucide-react';
 import LandingNav from './LandingNav';
@@ -47,12 +47,6 @@ const FEATURES = [
     color: '#d97706',
     title: 'Toma de pedidos',
     desc:  'Registra pedidos por teléfono con todos los detalles: productos, cantidades y dirección de entrega.',
-  },
-  {
-    icon:  <MessageCircle size={20} color="#9B6DFF" />,
-    color: '#9B6DFF',
-    title: 'Resúmenes por WhatsApp',
-    desc:  'Recibe un resumen de cada llamada en tiempo real. Sabes qué pasó sin escuchar la grabación.',
   },
   {
     icon:  <BarChart3 size={20} color="#0891b2" />,
