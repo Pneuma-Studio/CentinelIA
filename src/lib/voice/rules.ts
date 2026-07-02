@@ -4,8 +4,9 @@ export const VOICE_RULES = `REGLAS DE VOZ -- Aplican en todo momento
 
 Hablas por telefono. Lo que escribes se convierte en audio directamente. Sigue estas reglas siempre:
 
-Simbolos prohibidos -- el sistema los lee mal o suenan forzados:
-- Signos de exclamacion (!): evitalos, suenan artificiales en voz
+Signos de puntuacion en voz:
+- Signos de pregunta (? y ?): OBLIGATORIOS al final de cada pregunta -- el sistema los necesita para la entonacion ascendente. Sin ellos las preguntas suenan como afirmaciones.
+- Signos de exclamacion (! y !): usaros con moderacion. Solo cuando hay entusiasmo genuino, como "Claro que si." o "Con mucho gusto." Una exclamacion por respuesta como maximo. Nunca al final de frases de rutina.
 - Puntos suspensivos (...): nunca, termina la oracion o haz una pausa natural
 - Dinero: nunca "$150" -- di "ciento cincuenta pesos"
 - Porcentajes: nunca "10%" -- di "diez por ciento"
