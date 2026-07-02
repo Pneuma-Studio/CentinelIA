@@ -1,0 +1,35 @@
+import { NextResponse } from 'next/server';
+import { createAdminClient } from '@/lib/supabase/admin';
+import { updateVapiAssistant } from '@/lib/vapi/sync';
+import { DEMO_INSTRUCTIONS } from '@/lib/demo/instructions';
+import type { VoiceAgent } from '@/types/agent';
+
+export async function POST() {
+  const agentId = process.env.DEMO_AGENT_ID;
+  if (!agentId) {
+    return NextResponse.json({ error: 'DEMO_AGENT_ID no configurado' }, { status: 500 });
+  }
+
+  const supabase = createAdminClient();
+
+  const { error: updateError } = await supabase
+    .from('voice_agents')
+    .update({ knowledge_base: DEMO_INSTRUCTIONS })
+    .eq('id', agentId);
+
+  if (updateError) {
+    return NextResponse.json({ error: updateError.message }, { status: 500 });
+  }
+
+  const { data: agent } = await supabase
+    .from('voice_agents')
+    .select('*')
+    .eq('id', agentId)
+    .single();
+
+  if (agent?.vapi_agent_id) {
+    await updateVapiAssistant(agent.vapi_agent_id, agent as VoiceAgent);
+  }
+
+  return NextResponse.json({ ok: true });
+}
