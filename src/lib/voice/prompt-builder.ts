@@ -1,5 +1,6 @@
 ﻿import type { VoiceAgent } from '@/types/agent';
 import { TEMPLATE_MAP } from '@/lib/voice/templates';
+import { VOICE_RULES } from '@/lib/voice/rules';
 
 export function buildSystemPrompt(agent: VoiceAgent): string {
   const { features, business_hours, timezone } = agent;
@@ -35,8 +36,6 @@ TONO Y ESTILO DE VOZ:
 - Cuando confirmes datos o cierres una solicitud, sé directo y breve: "Quedamos para el martes a las diez. ¿Algo más?", no recites todos los datos capturados de una sola vez.
 - Si el cliente tiene un problema, muestra empatía con una frase corta: "Entiendo, con gusto le ayudo."
 - Varía la longitud de tus respuestas según el contexto. Respuestas cortas para confirmaciones; un poco más largas para explicaciones.
-- PUNTUACIÓN DE VOZ: Usa puntos para pausas naturales entre ideas. Evita los signos de exclamación (!) en tus respuestas — suenan forzados en voz. Nunca uses puntos suspensivos (...). Las comas son suficientes para pausas cortas. Nunca uses paréntesis — integra la idea directamente en la oración. Nunca uses la diagonal "/" como separador: di "lunes a viernes" no "lunes/viernes". Nunca uses formatos de hora como "9:00 AM" o "10:00 - 18:00" — di "de las nueve de la mañana" o "de diez a seis de la tarde".
-- FORMATO DE RESPUESTA: Habla en oraciones completas y conversacionales. Nunca respondas con listas, viñetas ni puntos numerados — encadena las ideas con "y", "además" o "también". Una idea por turno.
 - TRATO AL CLIENTE: ${agent.speech_style === 'tu' ? 'Tutea al cliente en todo momento, usa "tú", "te", "tu". Ej: "¿Cómo te puedo ayudar?", "¿Cuál es tu nombre?"' : 'Trata al cliente de usted en todo momento, usa "usted", "le", "su". Ej: "¿En qué le puedo ayudar?", "¿Cuál es su nombre?"'}. Mantén este trato durante toda la llamada sin mezclar.`);
 
   // ── Date/time context ─────────────────────────────────────────────────────
@@ -163,9 +162,10 @@ Usa esta información como referencia complementaria. Si hay algún conflicto co
 - Llamadas abusivas o inapropiadas: termina la llamada con un aviso cortés.
 - NO ENTENDISTE, Si recibes texto que parece mal transcrito, incomprensible o con palabras sin sentido (por ruido o mala conexión), di únicamente: "Perdón, no te entendí bien, ¿me lo podrías repetir?" y espera. No intentes adivinar ni inventar lo que dijo el cliente.
 - UNA PREGUNTA A LA VEZ, Nunca hagas más de una pregunta en el mismo turno. Haz la pregunta, escucha la respuesta, y solo entonces continúa con la siguiente. Nunca enumeres ni recites una lista de preguntas de golpe.
-- SOLO HABLA, Nunca escribas descripciones de acciones físicas, gestos o emociones entre asteriscos, corchetes o paréntesis (por ejemplo: *agita la mano*, [sonríe], (saluda)). Esto es una llamada de voz: solo di en voz alta lo que el cliente debe escuchar.
-- PRECIOS EN PALABRAS, Cuando menciones precios o cantidades de dinero, exprésalos siempre en palabras habladas. Di "quince mil pesos" en lugar de "$15,000 MXN". Di "mil novecientos noventa pesos al mes" en lugar de "$1,990/mes". Nunca uses el símbolo $, comas numéricas, siglas de moneda (MXN, USD) ni barras diagonales al hablar.
-- PORCENTAJES EN PALABRAS, Nunca uses el símbolo %. Di "diez por ciento" en lugar de "10%", "cincuenta por ciento de descuento" en lugar de "50% off".`);
+`);
+
+  // ── Shared voice rules ────────────────────────────────────────────────────
+  blocks.push(VOICE_RULES);;
 
   return blocks.join('\n\n');
 }
